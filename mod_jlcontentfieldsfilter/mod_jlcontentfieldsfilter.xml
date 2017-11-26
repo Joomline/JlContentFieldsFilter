@@ -10,8 +10,10 @@
 	<version>1.0.0</version>
 	<description>MOD_JLCONTENTFIELDSFILTER_XML_DESCRIPTION</description>
 	<files>
+		<folder>assets</folder>
 		<folder>elements</folder>
 		<folder>language</folder>
+		<folder>layouts</folder>
 		<folder>tmpl</folder>
 		<filename module="mod_jlcontentfieldsfilter">mod_jlcontentfieldsfilter.php</filename>
 		<filename>helper.php</filename>
