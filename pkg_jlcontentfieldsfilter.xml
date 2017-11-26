@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<extension type="package" version="3.8" method="upgrade">
+    <name>jlcontentfieldsfilter</name>
+    <author>Joomline</author>
+	<packagename>jlcontentfieldsfilter</packagename>
+    <creationDate>26.11.2017</creationDate>
+	<copyright>(C) 2017 Joomline. All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later; see	LICENSE.txt</license>
+	<authorEmail>sales@joomline.ru</authorEmail>
+	<packager>JoomLine</packager>
+	<packagerurl>http://joomline.ru</packagerurl>
+    <version>1.0.0</version>
+    <description><![CDATA[Content field filter. In the package, the plugin and the module. After installation, activate the plugin plg_system_jlcontentfieldsfilter. Set up and output the module.]]></description>
+<files>
+        <file type="module" id="mod_jlcontentfieldsfilter" method="upgrade" client="site">mod_jlcontentfieldsfilter.zip</file>
+        <file type="plugin" id="jlcontentfieldsfilter" group="system" method="upgrade" client="site">plg_system_jlcontentfieldsfilter.zip</file>
+</files>
+
+</extension>
