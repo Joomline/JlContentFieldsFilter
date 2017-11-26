@@ -30,7 +30,7 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 			$catid = $id;
 		}
 
-		if($option != 'com_content' || $catid == 0)
+		if($option != 'com_content' || $catid == 0 || class_exists('ContentModelCategory'))
 		{
 			return;
 		}
