@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension version="3.8" type="plugin" group="system" method="upgrade">
 	<name>PLG_JLCONTENTFIELDSFILTER</name>
-	<author>Arkadiy Sedelnikov</author>
-	<creationDate>18.05.2017</creationDate>
-	<copyright>(C) 2013 - 2017 Arkadiy Sedelnikov. All rights reserved.</copyright>
+	<author>Joomline</author>
+	<creationDate>26.11.2017</creationDate>
+	<copyright>(C) 2017 Arkadiy Sedelnikov. All rights reserved.</copyright>
 	<license>GNU General Public License version 2 or later; see	LICENSE.txt</license>
-	<authorEmail>a.sedelnikov@gmail.com</authorEmail>
-	<authorUrl>http://argens.ru</authorUrl>
-	<version>3.0.4</version>
+	<authorEmail>sales@joomline.ru</authorEmail>
+	<authorUrl>https://joomline.ru</authorUrl>
+	<version>1.0.0</version>
 	<description>PLG_JLCONTENTFIELDSFILTER_XML_DESCRIPTION</description>
 
 	<files>
