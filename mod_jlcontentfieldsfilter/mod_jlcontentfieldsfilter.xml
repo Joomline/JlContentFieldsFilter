@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" version="3.8" client="site" method="upgrade">
+	<name>MOD_JLCONTENTFIELDSFILTER</name>
+	<author>Joomline</author>
+	<creationDate>25.11.2017</creationDate>
+	<copyright>(C) 2017 Joomline. All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later</license>
+	<authorEmail>sales@joomlime.ru</authorEmail>
+	<authorUrl>joomlime.ru</authorUrl>
+	<version>1.0.0</version>
+	<description>MOD_JLCONTENTFIELDSFILTER_XML_DESCRIPTION</description>
+	<files>
+		<folder>elements</folder>
+		<folder>language</folder>
+		<folder>tmpl</folder>
+		<filename module="mod_jlcontentfieldsfilter">mod_jlcontentfieldsfilter.php</filename>
+		<filename>helper.php</filename>
+		<filename>index.html</filename>
+		<filename>mod_jlcontentfieldsfilter.xml</filename>
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB/en-GB.mod_jlcontentfieldsfilter.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.mod_jlcontentfieldsfilter.sys.ini</language>
+		<language tag="ru-RU">language/ru-RU/ru-RU.mod_jlcontentfieldsfilter.ini</language>
+		<language tag="ru-RU">language/ru-RU/ru-RU.mod_jlcontentfieldsfilter.sys.ini</language>
+	</languages>
+
+	<config>
+		<fields name="params" addfieldpath="/modules/mod_jlcontentfieldsfilter/elements">
+			<fieldset name="basic">
+				<field
+					name="searchfields"
+					type="searchfields"
+					default=""
+                    multiple="multiple"
+					label="MOD_JLCONTENTFIELDSFILTER_SEARCHFIELDS"
+					description="MOD_JLCONTENTFIELDSFILTER_SEARCHFIELDS_DESC" />
+                <field
+                        name="categories"
+                        type="category"
+                        extension='com_content'
+                        default="0"
+                        multiple="multiple"
+                        label="MOD_JLCONTENTFIELDSFILTER_ALLOWED_CATEGORY"
+                        description="MOD_JLCONTENTFIELDSFILTER_ALLOWED_CATEGORY_DESC"
+                        >
+                    <option value="-1">JALL</option>
+                        </field>
+			</fieldset>
+
+            <fieldset name="advanced">
+                <field
+                        name="layout"
+                        type="modulelayout"
+                        label="JFIELD_ALT_LAYOUT_LABEL"
+                        description="JFIELD_ALT_MODULE_LAYOUT_DESC"/>
+
+                <field
+                        name="moduleclass_sfx"
+                        type="textarea" rows="3"
+                        label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL"
+                        description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC"/>
+
+                <field
+                        name="cache"
+                        type="list"
+                        default="1"
+                        label="COM_MODULES_FIELD_CACHING_LABEL"
+                        description="COM_MODULES_FIELD_CACHING_DESC">
+                    <option
+                            value="1">JGLOBAL_USE_GLOBAL
+                    </option>
+                    <option
+                            value="0">COM_MODULES_FIELD_VALUE_NOCACHING
+                    </option>
+                </field>
+                <field
+                        name="cache_time"
+                        type="text"
+                        default="900"
+                        label="COM_MODULES_FIELD_CACHE_TIME_LABEL"
+                        description="COM_MODULES_FIELD_CACHE_TIME_DESC"/>
+                <field
+                        name="cachemode"
+                        type="hidden"
+                        default="itemid">
+                    <option value="itemid"></option>
+                </field>
+            </fieldset>
+		</fields>
+	</config>
+</extension>

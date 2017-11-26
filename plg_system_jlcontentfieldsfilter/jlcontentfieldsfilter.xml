@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.8" type="plugin" group="system" method="upgrade">
+	<name>PLG_JLCONTENTFIELDSFILTER</name>
+	<author>Arkadiy Sedelnikov</author>
+	<creationDate>18.05.2017</creationDate>
+	<copyright>(C) 2013 - 2017 Arkadiy Sedelnikov. All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later; see	LICENSE.txt</license>
+	<authorEmail>a.sedelnikov@gmail.com</authorEmail>
+	<authorUrl>http://argens.ru</authorUrl>
+	<version>3.0.4</version>
+	<description>PLG_JLCONTENTFIELDSFILTER_XML_DESCRIPTION</description>
+
+	<files>
+		<folder>classes</folder>
+		<folder>language</folder>
+        <filename>index.html</filename>
+		<filename plugin="jlcontentfieldsfilter">jlcontentfieldsfilter.php</filename>
+	</files>
+	
+	<languages folder="language">
+        <language tag="en-GB">en-GB/en-GB.plg_system_jlcontentfieldsfilter.ini</language>
+        <language tag="en-GB">en-GB/en-GB.plg_system_jlcontentfieldsfilter.sys.ini</language>
+        <language tag="ru-RU">ru-RU/ru-RU.plg_system_jlcontentfieldsfilter.ini</language>
+        <language tag="ru-RU">ru-RU/ru-RU.plg_system_jlcontentfieldsfilter.sys.ini</language>
+    </languages>
+
+	<config>
+		<fields name="params" addfieldpath="/plugins/system/minicck/elements">
+            <fieldset name="basic">
+
+            </fieldset>
+		</fields>
+	</config>
+</extension>
