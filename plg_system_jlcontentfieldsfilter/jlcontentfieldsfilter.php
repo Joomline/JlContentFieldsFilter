@@ -68,84 +68,67 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 			return;
 		}
 
-		$filterArticles = $catArticles = array();
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
 
-		$enableFilter = count($filterData) > 0;
-		$isFilteredInput = false;
+		$query->select('id, type');
+		$query->from('#__fields');
+		$query->where('context = '.$db->quote('com_content.article'));
+		$fieldsTypes = $db->setQuery($query)->loadObjectList('id');
 
-		if($enableFilter)
+		$query->clear()->select('`item_id`');
+		$query->from('`#__fields_values`');
+		
+		$where = array();
+		foreach($filterData as $k=>$v)
 		{
-			$db = JFactory::getDbo();
-			$query = $db->getQuery(true);
-
-			$query->select('id, type');
-			$query->from('#__fields');
-			$query->where('context = '.$db->quote('com_content.article'));
-			$fieldsTypes = $db->setQuery($query)->loadObjectList('id');
-
-			$query->clear()->select('`item_id`');
-			$query->from('`#__fields_values`');
-
-
-			$where = array();
-			foreach($filterData as $k=>$v)
-			{
-				if(!isset($fieldsTypes[$k])){
-					continue;
-				}
-
-
-
-				switch ($fieldsTypes[$k]->type){
-					case 'radio':
-					case 'checkboxes':
-						if(is_array($v) && count($v)){
-							$where[] = '(`field_id` = '.(int)$k.' AND `value` IN(\''.implode("', '", $v).'\'))';
-						}
-
-						break;
-					case 'list':
-						if(!empty($v)){
-							$where[] = '(`field_id` = '.(int)$k.' AND `value` = '.$db->quote($v).')';
-						}
-						break;
-					case 'text':
-						if(!empty($v)){
-							$where[] = '(`field_id` = '.(int)$k.' AND `value` LIKE '.$db->quote('%'.$v.'%').')';
-						}
-						break;
-					default:
-
-						break;
-				}
-			}
-			$count = count($where);
-
-			if($count == 0){
-				return;
-			}
-			$query->where(implode(' OR ', $where));
-			$query->having("COUNT(`item_id`) = " . (int) $count);
-			$query->group('item_id');
-
-			$filterArticles = $db->setQuery($query)->loadColumn();
-			$filterArticles = (empty($filterArticles)) ? array() : $filterArticles;
-			$result = $filterArticles;
-		}
-		else
-		{
-			$result = array();
-		}
-
-		if(count($result) || $isFilteredInput)
-		{
-			if(!count($result))
-			{
-				$result = array(0);
+			if(!isset($fieldsTypes[$k])){
+				continue;
 			}
 
-			$itemsModel->setState('filter.article_id.include', true);
-			$itemsModel->setState('filter.article_id', $result);
+			switch ($fieldsTypes[$k]->type){
+				case 'radio':
+				case 'checkboxes':
+					if(is_array($v) && count($v)){
+						$where[] = '(`field_id` = '.(int)$k.' AND `value` IN(\''.implode("', '", $v).'\'))';
+					}
+
+					break;
+				case 'list':
+					if(!empty($v)){
+						$where[] = '(`field_id` = '.(int)$k.' AND `value` = '.$db->quote($v).')';
+					}
+					break;
+				case 'text':
+					if(!empty($v)){
+						$where[] = '(`field_id` = '.(int)$k.' AND `value` LIKE '.$db->quote('%'.$v.'%').')';
+					}
+					break;
+				default:
+
+					break;
+			}
 		}
+		$count = count($where);
+
+		if($count == 0){
+			return;
+		}
+
+		$query->where(implode(' OR ', $where));
+		$query->having("COUNT(`item_id`) = " . (int) $count);
+		$query->group('item_id');
+
+		$filterArticles = $db->setQuery($query)->loadColumn();
+		$filterArticles = (empty($filterArticles)) ? array() : $filterArticles;
+		$result = $filterArticles;
+
+		if(!count($result))
+		{
+			$result = array(0);
+		}
+
+		$itemsModel->setState('filter.article_id.include', true);
+		$itemsModel->setState('filter.article_id', $result);
 	}
 }
