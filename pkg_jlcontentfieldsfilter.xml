@@ -9,7 +9,7 @@
 	<authorEmail>sales@joomline.ru</authorEmail>
 	<packager>JoomLine</packager>
 	<packagerurl>http://joomline.ru</packagerurl>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <description><![CDATA[Content field filter. In the package, the plugin and the module. After installation, activate the plugin plg_system_jlcontentfieldsfilter. Set up and output the module.]]></description>
 <files>
         <file type="module" id="mod_jlcontentfieldsfilter" method="upgrade" client="site">mod_jlcontentfieldsfilter.zip</file>

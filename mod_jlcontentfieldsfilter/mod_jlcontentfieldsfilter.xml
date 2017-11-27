@@ -7,7 +7,7 @@
 	<license>GNU General Public License version 2 or later</license>
 	<authorEmail>sales@joomline.ru</authorEmail>
 	<authorUrl>joomline.ru</authorUrl>
-	<version>1.0.1</version>
+	<version>1.0.2</version>
 	<description>MOD_JLCONTENTFIELDSFILTER_XML_DESCRIPTION</description>
 	<files>
 		<folder>assets</folder>
@@ -47,17 +47,7 @@
                         description="MOD_JLCONTENTFIELDSFILTER_ALLOWED_CATEGORY_DESC"
                         >
                     <option value="-1">JALL</option>
-				</field>
-                <field
-                        name="form_method"
-                        type="list"
-                        default="post"
-                        label="MOD_JLCONTENTFIELDSFILTER_FORM_METHOD"
-                        description="MOD_JLCONTENTFIELDSFILTER_FORM_METHOD_DESC"
-                        >
-                    <option value="post">POST</option>
-                    <option value="get">GET</option>
-				</field>
+                        </field>
 			</fieldset>
 
             <fieldset name="advanced">
