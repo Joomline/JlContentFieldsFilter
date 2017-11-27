@@ -7,7 +7,7 @@
 	<license>GNU General Public License version 2 or later</license>
 	<authorEmail>sales@joomline.ru</authorEmail>
 	<authorUrl>joomline.ru</authorUrl>
-	<version>1.0.2</version>
+	<version>1.0.3</version>
 	<description>MOD_JLCONTENTFIELDSFILTER_XML_DESCRIPTION</description>
 	<files>
 		<folder>assets</folder>
@@ -91,4 +91,5 @@
             </fieldset>
 		</fields>
 	</config>
+	<updateservers><server type="extension" priority="1" name="Joomline">https://joomline.net/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=32&amp;dummy=extension.xml</server></updateservers>
 </extension>
