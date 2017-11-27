@@ -15,7 +15,7 @@ if (!key_exists('field', $displayData))
 
 $field = $displayData['field'];
 $label = JText::_($field->label);
-$value = $field->value;
+$value = is_array($field->value) ? $field->value : array();
 $options = (array)$field->fieldparams->get('options', array());
 
 if(!is_array($options) || !count($options)){

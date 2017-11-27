@@ -24,6 +24,7 @@ $jlContentFieldsFilter = $input->get('jlcontentfieldsfilter', array(), 'array');
 
 $allowedCats = $params->get('categories', array());
 $moduleclass_sfx = $params->get('moduleclass_sfx', '');
+$form_method = $params->get('form_method', 'post');
 
 if($view == 'category')
 {

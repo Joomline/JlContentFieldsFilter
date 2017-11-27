@@ -47,7 +47,17 @@
                         description="MOD_JLCONTENTFIELDSFILTER_ALLOWED_CATEGORY_DESC"
                         >
                     <option value="-1">JALL</option>
-                        </field>
+				</field>
+                <field
+                        name="form_method"
+                        type="list"
+                        default="post"
+                        label="MOD_JLCONTENTFIELDSFILTER_FORM_METHOD"
+                        description="MOD_JLCONTENTFIELDSFILTER_FORM_METHOD_DESC"
+                        >
+                    <option value="post">POST</option>
+                    <option value="get">GET</option>
+				</field>
 			</fieldset>
 
             <fieldset name="advanced">

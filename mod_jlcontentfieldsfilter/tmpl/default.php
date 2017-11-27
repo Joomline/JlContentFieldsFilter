@@ -11,7 +11,7 @@ defined('_JEXEC') or die;
 JFactory::getDocument()->addScript(JUri::root().'modules/mod_jlcontentfieldsfilter/assets/javascript/jlcontentfilter.js');
 ?>
 
-<form id="mod-finder-searchform" action="<?php echo $action; ?>" method="post" class="form-search">
+<form id="mod-finder-searchform" action="<?php echo $action; ?>" method="<?php echo $form_method; ?>" class="form-search">
 	<div class="jlcontentfieldsfilter<?php echo $moduleclass_sfx; ?> row-fluid">
         <?php foreach($fields as $v) : ?>
             <?php echo $v; ?>
