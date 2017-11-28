@@ -28,7 +28,10 @@ $doc->addScriptDeclaration('
             <div style="clear: both;"></div>
         <?php endforeach; ?>
         <?php if(!$autho_send) : ?>
-            <input type="submit" title="Submit" class="btn btn-primary btn-block"/>
+            <input type="submit"
+                   title="<?php echo JText::_('MOD_JLCONTENTFIELDSFILTER_SUBMIT'); ?>"
+                   value="<?php echo JText::_('MOD_JLCONTENTFIELDSFILTER_SUBMIT'); ?>"
+                   class="btn btn-primary btn-block"/>
         <?php endif; ?>
         <button class="btn btn-info btn-block" onclick="return JlContentFieldsFilter.clearForm(this);">
             <?php echo JText::_('MOD_JLCONTENTFIELDSFILTER_RESET'); ?>
