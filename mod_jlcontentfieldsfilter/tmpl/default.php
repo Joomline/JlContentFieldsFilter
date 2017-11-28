@@ -8,7 +8,17 @@
  */
 
 defined('_JEXEC') or die;
-JFactory::getDocument()->addScript(JUri::root().'modules/mod_jlcontentfieldsfilter/assets/javascript/jlcontentfilter.js');
+JHtml::_('jquery.framework');
+$doc = JFactory::getDocument();
+$doc->addScript(JUri::root().'modules/mod_jlcontentfieldsfilter/assets/javascript/jlcontentfilter.js', array('version' => 'auto'));
+$doc->addScriptDeclaration('
+	JlContentFieldsFilter.init({
+		"autho_send" : '.$autho_send.',
+		"form_identifier" : "#mod-finder-searchform",
+		"ajax" : '.$ajax.',
+		"ajax_selector" : "'.$ajax_selector.'"
+	});
+');
 ?>
 
 <form id="mod-finder-searchform" action="<?php echo $action; ?>" method="<?php echo $form_method; ?>" class="form-search">
@@ -20,7 +30,7 @@ JFactory::getDocument()->addScript(JUri::root().'modules/mod_jlcontentfieldsfilt
         <?php if(!$autho_send) : ?>
             <input type="submit" title="Submit" class="btn btn-primary btn-block"/>
         <?php endif; ?>
-        <button class="btn btn-info btn-block" onclick="clearJlContentFieldsFilterForm();">
+        <button class="btn btn-info btn-block" onclick="return JlContentFieldsFilter.clearForm(this);">
             <?php echo JText::_('MOD_JLCONTENTFIELDSFILTER_RESET'); ?>
         </button>
 	</div>

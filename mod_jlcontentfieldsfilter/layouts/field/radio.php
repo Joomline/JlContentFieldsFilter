@@ -52,6 +52,6 @@ if(!is_array($options) || !count($options)){
     <input type="button"
            class="btn btn-small"
            value="<?php echo JText::_('MOD_JLCONTENTFIELDSFILTER_RADIO_RESET')?>"
-           onclick="clearJlContentFieldsRadio(this);"
+           onclick="JlContentFieldsFilter.clearRadio(this);"
     >
 </div>

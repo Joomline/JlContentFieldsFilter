@@ -68,6 +68,26 @@
                     <option value="1">JYES</option>
                     <option value="0">JNO</option>
 				</field>
+                <field
+                        name="ajax"
+                        type="list"
+                        default="0"
+                        label="MOD_JLCONTENTFIELDSFILTER_AJAX"
+                        description="MOD_JLCONTENTFIELDSFILTER_AJAX_DESC"
+                        >
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+				</field>
+                <field
+                        name="ajax_selector"
+                        type="text"
+                        default="#content"
+                        label="MOD_JLCONTENTFIELDSFILTER_AJAX_SELECTOR"
+                        description="MOD_JLCONTENTFIELDSFILTER_AJAX_SELECTOR_DESC"
+                        >
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+				</field>
 
 			</fieldset>
 
