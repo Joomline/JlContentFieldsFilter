@@ -17,7 +17,9 @@ JFactory::getDocument()->addScript(JUri::root().'modules/mod_jlcontentfieldsfilt
             <?php echo $v; ?>
             <div style="clear: both;"></div>
         <?php endforeach; ?>
-        <input type="submit" title="Submit" class="btn btn-primary btn-block"/>
+        <?php if(!$autho_send) : ?>
+            <input type="submit" title="Submit" class="btn btn-primary btn-block"/>
+        <?php endif; ?>
         <button class="btn btn-info btn-block" onclick="clearJlContentFieldsFilterForm();">
             <?php echo JText::_('MOD_JLCONTENTFIELDSFILTER_RESET'); ?>
         </button>

@@ -25,6 +25,7 @@ $jlContentFieldsFilter = $input->get('jlcontentfieldsfilter', array(), 'array');
 $allowedCats = $params->get('categories', array());
 $moduleclass_sfx = $params->get('moduleclass_sfx', '');
 $form_method = $params->get('form_method', 'post');
+$autho_send = $params->get('autho_send', 0);
 
 if($view == 'category')
 {
@@ -36,7 +37,7 @@ if($option != 'com_content' || (!in_array($catid, $allowedCats) && $allowedCats[
     return;
 }
 
-JHtml::_('behavior.framework');
+JHtml::_('jquery.framework');
 
 $action = JRoute::_(ContentHelperRoute::getCategoryRoute($catid));
 
@@ -50,6 +51,12 @@ else{
 
 $fields = ModJlContentFieldsFilterHelper::getFields($params, $catid, $jlContentFieldsFilter);
 
+$doc = JFactory::getDocument();
+$doc->addScriptDeclaration('
+	var jlcffsettings = {
+		"autho_send" : "'.$autho_send.'"
+	};
+');
 if(count($fields)){
 	require JModuleHelper::getLayoutPath('mod_jlcontentfieldsfilter', $params->get('layout', 'default'));
 }
