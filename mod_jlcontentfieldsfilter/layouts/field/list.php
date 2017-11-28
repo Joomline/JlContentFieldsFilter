@@ -1,11 +1,13 @@
 <?php
 /**
- * @package     Joomla.Site
- * @subpackage  com_fields
+ * JL Content Fields Filter
  *
- * @copyright   Copyright (C) 2005 - 2017 Open Source Matters, Inc. All rights reserved.
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ * @version 	1.0.4
+ * @author		Joomline
+ * @copyright	(C) 2017 Arkadiy Sedelnikov. All rights reserved.
+ * @license 	GNU General Public License version 2 or later; see	LICENSE.txt
  */
+
 defined('_JEXEC') or die;
 
 if (!key_exists('field', $displayData))
