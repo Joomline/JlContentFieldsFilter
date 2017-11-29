@@ -76,8 +76,8 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 		$query->where('context = '.$db->quote('com_content.article'));
 		$fieldsTypes = $db->setQuery($query)->loadObjectList('id');
 
-		$query->clear()->select('`item_id`');
-		$query->from('`#__fields_values`');
+		$query->clear()->select('item_id');
+		$query->from('#__fields_values');
 		
 		$where = array();
 		foreach($filterData as $k=>$v)
@@ -90,18 +90,18 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 				case 'radio':
 				case 'checkboxes':
 					if(is_array($v) && count($v)){
-						$where[] = '(`field_id` = '.(int)$k.' AND `value` IN(\''.implode("', '", $v).'\'))';
+						$where[] = '(field_id = '.(int)$k.' AND value IN(\''.implode("', '", $v).'\'))';
 					}
 
 					break;
 				case 'list':
 					if(!empty($v)){
-						$where[] = '(`field_id` = '.(int)$k.' AND `value` = '.$db->quote($v).')';
+						$where[] = '(field_id = '.(int)$k.' AND value = '.$db->quote($v).')';
 					}
 					break;
 				case 'text':
 					if(!empty($v)){
-						$where[] = '(`field_id` = '.(int)$k.' AND `value` LIKE '.$db->quote('%'.$v.'%').')';
+						$where[] = '(field_id = '.(int)$k.' AND value LIKE '.$db->quote('%'.$v.'%').')';
 					}
 					break;
 				default:
@@ -116,7 +116,7 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 		}
 
 		$query->where(implode(' OR ', $where));
-		$query->having("COUNT(`item_id`) = " . (int) $count);
+		$query->having("COUNT(item_id) = " . (int) $count);
 		$query->group('item_id');
 
 		$filterArticles = $db->setQuery($query)->loadColumn();
