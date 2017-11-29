@@ -1,8 +1,11 @@
 <?php
 /**
- * @version        1.1 from Arkadiy Sedelnikov
- * @copyright      Copyright (C) 2013 Arkadiy Sedelnikov. All rights reserved.
- * @license        GNU General Public License version 2 or later;
+ * JL Content Fields Filter
+ *
+ * @version 	1.0.4
+ * @author		Joomline
+ * @copyright	(C) 2017 Arkadiy Sedelnikov. All rights reserved.
+ * @license 	GNU General Public License version 2 or later; see	LICENSE.txt
  */
 
 defined('_JEXEC') or die;
