@@ -37,5 +37,4 @@ $doc->addScriptDeclaration('
             <?php echo JText::_('MOD_JLCONTENTFIELDSFILTER_RESET'); ?>
         </button>
 	</div>
-    <input type="hidden" name="jlcontentfieldsfilter[is_minicck_filter]" value="1"/>
 </form>
