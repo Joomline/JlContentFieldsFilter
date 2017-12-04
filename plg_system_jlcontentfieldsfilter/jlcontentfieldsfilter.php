@@ -133,5 +133,37 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 
 		$itemsModel->setState('filter.article_id.include', true);
 		$itemsModel->setState('filter.article_id', $result);
+
+		if(!empty($filterData['ordering']))
+		{
+			list($ordering, $dirn) = explode('.', $filterData['ordering']);
+			$dirn = !empty($dirn) ? strtoupper($dirn) : 'ASC';
+
+			switch ($ordering){
+				case 'ordering':
+					$ordering = 'a.ordering';
+					break;
+				case 'title':
+					$ordering = 'a.title';
+					break;
+				case 'created':
+					$ordering = 'a.created';
+					break;
+				case 'created_by':
+					$ordering = 'a.created_by';
+					break;
+				case 'hits':
+					$ordering = 'a.hits';
+					break;
+				default:
+					$ordering = '';
+					break;
+			}
+
+			if(!empty($ordering)){
+				$itemsModel->setState('list.ordering', $ordering);
+				$itemsModel->setState('list.direction', $dirn);
+			}
+		}
 	}
 }

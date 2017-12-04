@@ -29,6 +29,7 @@ $form_method = $params->get('form_method', 'post');
 $autho_send = (int)$params->get('autho_send', 0);
 $ajax = (int)$params->get('ajax', 0);
 $ajax_selector = $params->get('ajax_selector', '#content');
+$enableOrdering = $params->get('enable_ordering', 0);
 
 if($view == 'category')
 {
@@ -53,6 +54,10 @@ else{
 $fields = ModJlContentFieldsFilterHelper::getFields($params, $catid, $jlContentFieldsFilter);
 
 if(count($fields)){
+	if($enableOrdering){
+		$selectedOrdering = !empty($jlContentFieldsFilter['ordering']) ? $jlContentFieldsFilter['ordering'] : '';
+		$orderingSelect = ModJlContentFieldsFilterHelper::getOrderingSelect($selectedOrdering);
+	}
 	require JModuleHelper::getLayoutPath('mod_jlcontentfieldsfilter', $params->get('layout', 'default'));
 }
 

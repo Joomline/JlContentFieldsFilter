@@ -28,6 +28,9 @@ $doc->addScriptDeclaration('
             <?php echo $v; ?>
             <div style="clear: both;"></div>
         <?php endforeach; ?>
+        <?php if($enableOrdering) : ?>
+            <?php echo $orderingSelect; ?>
+        <?php endif; ?>
         <?php if(!$autho_send) : ?>
             <input type="submit"
                    title="<?php echo JText::_('MOD_JLCONTENTFIELDSFILTER_SUBMIT'); ?>"
