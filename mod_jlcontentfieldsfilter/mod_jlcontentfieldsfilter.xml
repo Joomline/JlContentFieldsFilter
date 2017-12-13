@@ -99,6 +99,14 @@
 			</fieldset>
 
             <fieldset name="advanced">
+				<field
+						name="count_cols"
+						type="text"
+						label="MOD_JLCONTENTFIELDSFILTER_COUNT_COLS"
+						description="MOD_JLCONTENTFIELDSFILTER_COUNT_COLS_DESC"
+						default="2"
+						filter="integer"
+				/>
                 <field
                         name="layout"
                         type="modulelayout"

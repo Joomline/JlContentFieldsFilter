@@ -60,7 +60,7 @@ class ModJlContentFieldsFilterHelper
 
 				$new[$key] = JLayoutHelper::render(
 					'mod_jlcontentfieldsfilter.'.$field->type,
-					array('field' => $field),
+					array('field' => $field, 'params' => $params),
 					$basePath,
 					array('component' => 'auto', 'client' => 0, 'suffixes' => array())
 				);
