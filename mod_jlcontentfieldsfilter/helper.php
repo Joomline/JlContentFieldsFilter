@@ -57,6 +57,7 @@ class ModJlContentFieldsFilterHelper
 				$basePath = is_file(JPATH_ROOT.'/templates/'.$template.'/html/layouts/mod_jlcontentfieldsfilter/'.$field->type.'.php')
 					? JPATH_ROOT.'/templates/'.$template.'/html/layouts'
 					: JPATH_ROOT.'/modules/mod_jlcontentfieldsfilter/layouts';
+
 				$new[$key] = JLayoutHelper::render(
 					'mod_jlcontentfieldsfilter.'.$field->type,
 					array('field' => $field),
@@ -70,6 +71,9 @@ class ModJlContentFieldsFilterHelper
 	}
 
 	public static function getOrderingSelect($selectedOrdering){
+		$app = JFactory::getApplication();
+		$template = $app->getTemplate();
+
 		$options = array();
 		$options[] = JHtml::_('select.option', '', JText::_('MOD_JLCONTENTFIELDSFILTER_ORDERING_DEFAULT'));
 		$options[] = JHtml::_('select.option', 'ordering.asc', JText::_('MOD_JLCONTENTFIELDSFILTER_ORDERING_ASC'));
@@ -83,10 +87,14 @@ class ModJlContentFieldsFilterHelper
 		$options[] = JHtml::_('select.option', 'hits.asc', JText::_('MOD_JLCONTENTFIELDSFILTER_HITS_ASC'));
 		$options[] = JHtml::_('select.option', 'hits.desc', JText::_('MOD_JLCONTENTFIELDSFILTER_HITS_DESC'));
 
+		$basePath = is_file(JPATH_ROOT.'/templates/'.$template.'/html/layouts/mod_jlcontentfieldsfilter/ordering.php')
+			? JPATH_ROOT.'/templates/'.$template.'/html/layouts'
+			: JPATH_ROOT.'/modules/mod_jlcontentfieldsfilter/layouts';
+
 		$html = JLayoutHelper::render(
-			'ordering',
+			'mod_jlcontentfieldsfilter.ordering',
 			array('options' => $options, 'selected' => $selectedOrdering),
-			JPATH_ROOT.'/modules/mod_jlcontentfieldsfilter/layouts',
+			$basePath,
 			array('component' => 'auto', 'client' => 0)
 		);
 
