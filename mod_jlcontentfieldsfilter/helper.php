@@ -19,7 +19,7 @@ class ModJlContentFieldsFilterHelper
 		$app = JFactory::getApplication();
 		$fields = array();
         $enabledFields = $params->get('searchfields', array());
-
+		$template = $app->getTemplate();
         if(!is_array($enabledFields) && !count($enabledFields))
         {
             return $fields;
@@ -54,11 +54,14 @@ class ModJlContentFieldsFilterHelper
 				$field->value = isset($values[$field->id]) ? $values[$field->id] : '';
 				$field->rawvalue = $field->value;
 
+				$basePath = is_file(JPATH_ROOT.'/templates/'.$template.'/html/layouts/mod_jlcontentfieldsfilter/'.$field->type.'.php')
+					? JPATH_ROOT.'/templates/'.$template.'/html/layouts'
+					: JPATH_ROOT.'/modules/mod_jlcontentfieldsfilter/layouts';
 				$new[$key] = JLayoutHelper::render(
-					'field.'.$field->type,
+					'mod_jlcontentfieldsfilter.'.$field->type,
 					array('field' => $field),
-					JPATH_ROOT.'/modules/mod_jlcontentfieldsfilter/layouts',
-					array('component' => 'auto', 'client' => 0)
+					$basePath,
+					array('component' => 'auto', 'client' => 0, 'suffixes' => array())
 				);
 			}
 			$fields = $new;
