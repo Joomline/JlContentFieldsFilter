@@ -31,14 +31,17 @@ $doc->addScriptDeclaration('
         <?php if($enableOrdering) : ?>
             <?php echo $orderingSelect; ?>
         <?php endif; ?>
-        <?php if(!$autho_send) : ?>
-            <input type="submit"
-                   title="<?php echo JText::_('MOD_JLCONTENTFIELDSFILTER_SUBMIT'); ?>"
-                   value="<?php echo JText::_('MOD_JLCONTENTFIELDSFILTER_SUBMIT'); ?>"
-                   class="btn btn-primary btn-block"/>
-        <?php endif; ?>
-        <button class="btn btn-info btn-block" onclick="return JlContentFieldsFilter.clearForm(this);">
-            <?php echo JText::_('MOD_JLCONTENTFIELDSFILTER_RESET'); ?>
-        </button>
+		<div class="btn-group">
+			<?php if(!$autho_send) : ?>
+				<input type="submit"
+					   title="<?php echo JText::_('MOD_JLCONTENTFIELDSFILTER_SUBMIT'); ?>"
+					   value="<?php echo JText::_('MOD_JLCONTENTFIELDSFILTER_SUBMIT'); ?>"
+					   class="btn btn-primary"/>
+			<?php endif; ?>
+		
+			<button class="btn btn-default" onclick="return JlContentFieldsFilter.clearForm(this);">
+				<?php echo JText::_('MOD_JLCONTENTFIELDSFILTER_RESET'); ?>
+			</button>
+		</div>	
 	</div>
 </form>
