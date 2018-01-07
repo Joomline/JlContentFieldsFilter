@@ -112,27 +112,26 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 					break;
 			}
 		}
+
 		$count = count($where);
 
-		if($count == 0){
-			return;
+		if($count > 0){
+			$query->where(implode(' OR ', $where));
+			$query->having("COUNT(item_id) = " . (int) $count);
+			$query->group('item_id');
+
+			$filterArticles = $db->setQuery($query)->loadColumn();
+			$filterArticles = (empty($filterArticles)) ? array() : $filterArticles;
+			$result = $filterArticles;
+
+			if(!count($result))
+			{
+				$result = array(0);
+			}
+
+			$itemsModel->setState('filter.article_id.include', true);
+			$itemsModel->setState('filter.article_id', $result);
 		}
-
-		$query->where(implode(' OR ', $where));
-		$query->having("COUNT(item_id) = " . (int) $count);
-		$query->group('item_id');
-
-		$filterArticles = $db->setQuery($query)->loadColumn();
-		$filterArticles = (empty($filterArticles)) ? array() : $filterArticles;
-		$result = $filterArticles;
-
-		if(!count($result))
-		{
-			$result = array(0);
-		}
-
-		$itemsModel->setState('filter.article_id.include', true);
-		$itemsModel->setState('filter.article_id', $result);
 
 		if(!empty($filterData['ordering']))
 		{
