@@ -11,9 +11,9 @@
 	<packagerurl>http://joomline.ru</packagerurl>
     <version>1.1.0</version>
     <description><![CDATA[Content field filter. In the package, the plugin and the module. After installation, activate the plugin plg_system_jlcontentfieldsfilter. Set up and publish the module.]]></description>
-<files>
-        <file type="module" id="mod_jlcontentfieldsfilter" method="upgrade" client="site">mod_jlcontentfieldsfilter.zip</file>
-        <file type="plugin" id="jlcontentfieldsfilter" group="system" method="upgrade" client="site">plg_system_jlcontentfieldsfilter.zip</file>
-</files>
-
+    <files>
+            <file type="module" id="mod_jlcontentfieldsfilter" method="upgrade" client="site">mod_jlcontentfieldsfilter.zip</file>
+            <file type="plugin" id="jlcontentfieldsfilter" group="system" method="upgrade" client="site">plg_system_jlcontentfieldsfilter.zip</file>
+    </files>
+    <updateservers><server type="extension" priority="1" name="Joomline">https://joomline.net/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=32&amp;dummy=extension.xml</server></updateservers>
 </extension>
