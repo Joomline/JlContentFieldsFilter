@@ -9,8 +9,8 @@
 	<authorEmail>sales@joomline.ru</authorEmail>
 	<packager>JoomLine</packager>
 	<packagerurl>http://joomline.ru</packagerurl>
-    <version>1.1.0</version>
-    <description><![CDATA[Content field filter. In the package, the plugin and the module. After installation, activate the plugin plg_system_jlcontentfieldsfilter. Set up and publish the module.]]></description>
+    <version>1.1.1</version>
+    <description><![CDATA[Content field filter. In the package, the plugin and the module. After installation, activate the plugin plg_system_jlcontentfieldsfilter. Set up and publish the module. <iframe frameborder='0' allowtransparency='true' scrolling='no' src='https://joomline.ru/donateen.html' width='100%' height='700'>]]></description>
     <files>
             <file type="module" id="mod_jlcontentfieldsfilter" method="upgrade" client="site">mod_jlcontentfieldsfilter.zip</file>
             <file type="plugin" id="jlcontentfieldsfilter" group="system" method="upgrade" client="site">plg_system_jlcontentfieldsfilter.zip</file>
