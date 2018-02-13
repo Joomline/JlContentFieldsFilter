@@ -30,6 +30,8 @@ $autho_send = (int)$params->get('autho_send', 0);
 $ajax = (int)$params->get('ajax', 0);
 $ajax_selector = $params->get('ajax_selector', '#content');
 $enableOrdering = $params->get('enable_ordering', 0);
+$ajax_loader = $params->get('ajax_loader', '');
+$ajax_loader = !empty(($ajax_loader)) ? JUri::root().$ajax_loader : '';
 
 if($view == 'category')
 {

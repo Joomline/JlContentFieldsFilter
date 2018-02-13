@@ -2,6 +2,7 @@ var JlContentFieldsFilter = {
     autho_send: 0,
     ajax: 0,
     ajax_selector: '#content',
+    ajax_loader: '/modules/mod_jlcontentfieldsfilter/assets/images/ajax_loader.gif',
     form_identifier: '#mod-finder-searchform',
     init: function (data) {
         if (typeof data.autho_send !== 'undefined') {
@@ -12,6 +13,9 @@ var JlContentFieldsFilter = {
         }
         if (typeof data.ajax_selector !== 'undefined') {
             this.ajax_selector = data.ajax_selector;
+        }
+        if (typeof data.ajax_loader !== 'undefined' && data.ajax_loader != '') {
+            this.ajax_loader = data.ajax_loader;
         }
         if (typeof data.form_identifier !== 'undefined') {
             this.form_identifier = data.form_identifier;
@@ -50,6 +54,9 @@ var JlContentFieldsFilter = {
         jQuery('input[type="text"]', form).val('');
         if (this.ajax === 1 && this.autho_send === 1) {
             this.loadData();
+        }
+        else if(this.autho_send === 1){
+            jQuery($this.form_identifier).submit();
         }
         return false;
     },
@@ -96,7 +103,7 @@ var JlContentFieldsFilter = {
                 .css('position', "absolute")
                 .css('left', "50%")
                 .css('top', "50%")
-                .append('<img src="/modules/mod_jlcontentfieldsfilter/assets/images/ajax_loader.gif" id="id_fade_div_img" />')
+                .append('<img src="'+this.ajax_loader+'" id="id_fade_div_img" />')
                 .css('width', "32");
         }
 

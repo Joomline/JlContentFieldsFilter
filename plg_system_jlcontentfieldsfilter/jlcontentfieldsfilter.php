@@ -12,6 +12,39 @@ defined('_JEXEC') or die;
 
 class plgSystemJlContentFieldsFilter extends JPlugin
 {
+	public function onContentPrepareForm($form, $data)
+	{
+		if(!($form instanceof JForm))
+		{
+			return FALSE;
+		}
+
+		$name = $form->getName();
+
+		$app = JFactory::getApplication();
+
+		if(!in_array($name, array( 'com_fields.fieldcom_content.article' )) || !$app->isAdmin())
+		{
+			return TRUE;
+		}
+
+
+		JFactory::getLanguage()->load('plg_system_jlcontentfieldsfilter', JPATH_ROOT . '/plugins/system/jlcontentfieldsfilter');
+
+		JForm::addFormPath(__DIR__ . '/params');
+		$form->loadFile('params', FALSE);
+
+		$dataType = $data->type;
+		if($dataType == 'list' && !empty($data->fieldparams["multiple"])){
+			$dataType = 'multiselect';
+		}
+
+		$form->setFieldAttribute('content_filter', 'dataType', $dataType, 'params');
+		$form->setFieldAttribute('content_filter', 'fieldId', $data->id, 'params');
+
+		return TRUE;
+	}
+
 	/** Подмена модели категории контента.
 	 * @throws Exception
 	 */
@@ -92,13 +125,11 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 			switch ($fieldsTypes[$k]->type){
 				case 'radio':
 				case 'checkboxes':
+				case 'list':
 					if(is_array($v) && count($v)){
 						$where[] = '(field_id = '.(int)$k.' AND value IN(\''.implode("', '", $v).'\'))';
 					}
-
-					break;
-				case 'list':
-					if(!empty($v)){
+					else if(!empty($v)){
 						$where[] = '(field_id = '.(int)$k.' AND value = '.$db->quote($v).')';
 					}
 					break;

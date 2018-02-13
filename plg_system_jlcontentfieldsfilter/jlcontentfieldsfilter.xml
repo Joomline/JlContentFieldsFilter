@@ -12,7 +12,9 @@
 
 	<files>
 		<folder>classes</folder>
+		<folder>fields</folder>
 		<folder>language</folder>
+		<folder>params</folder>
         <filename>index.html</filename>
 		<filename plugin="jlcontentfieldsfilter">jlcontentfieldsfilter.php</filename>
 	</files>
@@ -23,6 +25,8 @@
         <language tag="ru-RU">ru-RU/ru-RU.plg_system_jlcontentfieldsfilter.ini</language>
         <language tag="ru-RU">ru-RU/ru-RU.plg_system_jlcontentfieldsfilter.sys.ini</language>
     </languages>
+
+	<scriptfile>script.php</scriptfile>
 
 	<config>
 		<fields name="params" addfieldpath="/plugins/system/minicck/elements">

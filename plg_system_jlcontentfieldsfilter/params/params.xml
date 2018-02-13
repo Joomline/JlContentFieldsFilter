@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fields name="params" addfieldpath="/plugins/system/jlcontentfieldsfilter/fields">
+		<fieldset
+			name="params"
+			label="PLG_JLCONTENTFIELDSFILTER_FILTER_PARAMS"
+		>
+			<field
+				name="content_filter"
+				type="jlcontentfieldsfilterfields"
+				label="PLG_JLCONTENTFIELDSFILTER_FILTER_TYPE"
+				description="PLG_JLCONTENTFIELDSFILTER_FILTER_TYPE_DESC"
+				default="0"
+				>
+				<option value="">JNO</option>
+			</field>
+		</fieldset>
+	</fields>
+</form>
