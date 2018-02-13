@@ -26,6 +26,8 @@
         <language tag="ru-RU">ru-RU/ru-RU.plg_system_jlcontentfieldsfilter.sys.ini</language>
     </languages>
 
+	<scriptfile>script.php</scriptfile>
+
 	<config>
 		<fields name="params" addfieldpath="/plugins/system/minicck/elements">
             <fieldset name="basic">
