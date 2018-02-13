@@ -12,7 +12,9 @@
 
 	<files>
 		<folder>classes</folder>
+		<folder>fields</folder>
 		<folder>language</folder>
+		<folder>params</folder>
         <filename>index.html</filename>
 		<filename plugin="jlcontentfieldsfilter">jlcontentfieldsfilter.php</filename>
 	</files>

@@ -30,13 +30,6 @@
 	<config>
 		<fields name="params" addfieldpath="/modules/mod_jlcontentfieldsfilter/elements">
 			<fieldset name="basic">
-				<field
-					name="searchfields"
-					type="searchfields"
-					default=""
-                    multiple="multiple"
-					label="MOD_JLCONTENTFIELDSFILTER_SEARCHFIELDS"
-					description="MOD_JLCONTENTFIELDSFILTER_SEARCHFIELDS_DESC" />
                 <field
                         name="categories"
                         type="category"

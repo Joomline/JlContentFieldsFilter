@@ -51,6 +51,9 @@ var JlContentFieldsFilter = {
         if (this.ajax === 1 && this.autho_send === 1) {
             this.loadData();
         }
+        else if(this.autho_send === 1){
+            jQuery($this.form_identifier).submit();
+        }
         return false;
     },
     clearRadio: function (element) {
