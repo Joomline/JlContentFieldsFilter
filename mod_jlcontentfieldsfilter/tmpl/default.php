@@ -17,7 +17,8 @@ $doc->addScriptDeclaration('
 		"autho_send" : '.$autho_send.',
 		"form_identifier" : "#mod-finder-searchform",
 		"ajax" : '.$ajax.',
-		"ajax_selector" : "'.$ajax_selector.'"
+		"ajax_selector" : "'.$ajax_selector.'",
+		"ajax_loader" : "'.$ajax_loader.'"
 	});
 ');
 ?>
