@@ -15,6 +15,8 @@ if (!key_exists('field', $displayData))
 	return;
 }
 
+$uid = '_' . uniqid();
+
 $field = $displayData['field'];
 $label = JText::_($field->label);
 $value = is_array($field->value) ? $field->value : array();
@@ -37,12 +39,12 @@ if(!is_array($options) || !count($options)){
 		<?php $i = 1; ?>
 		<?php foreach($options as $k => $v) : ?>
 		<?php $checked = in_array($v->value, $value) ? ' checked="checked"' : ''; ?>
-        <label class="span6" for="<?php echo $field->name.'_'. $i; ?>"
+        <label class="span6" for="<?php echo $field->name.'_'. $i . $uid; ?>"
                style="margin-left: 0px; margin-right: 0px; width: <?php echo $width; ?>%;">
             <input
                     type="radio"
                     value="<?php echo $v->value; ?>"
-                    id="<?php echo $field->name.'_'. $i; ?>"
+                    id="<?php echo $field->name.'_'. $i . $uid; ?>"
                     name="jlcontentfieldsfilter[<?php echo $field->id; ?>][]"<?php echo $checked; ?>
             />
 			<?php echo $v->name; ?>

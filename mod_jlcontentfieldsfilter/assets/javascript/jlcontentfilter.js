@@ -3,7 +3,7 @@ var JlContentFieldsFilter = {
     ajax: 0,
     ajax_selector: '#content',
     ajax_loader: '/modules/mod_jlcontentfieldsfilter/assets/images/ajax_loader.gif',
-    form_identifier: '#mod-finder-searchform',
+    form_identifier: '.mod-finder-searchform',
     init: function (data) {
         if (typeof data.autho_send !== 'undefined') {
             this.autho_send = data.autho_send;
@@ -26,21 +26,24 @@ var JlContentFieldsFilter = {
                 var sendTimeoutID = 0;
                 jQuery('input[type="radio"], input[type="checkbox"], select', $this.form_identifier)
                     .on('change', function () {
-                        $this.ajax === 1 ? $this.loadData() : jQuery(this).parents('form').submit();
+                        var formid = '#' + jQuery(this).parents('form').attr('id');
+                        $this.ajax === 1 ? $this.loadData(formid) : jQuery(this).parents('form').submit();
                     });
                 jQuery('input[type="text"]', $this.form_identifier)
                     .on('keyup', function () {
+                        var formid = '#' + jQuery(this).parents('form').attr('id');
                         var input = jQuery(this);
                         clearTimeout(sendTimeoutID);
                         sendTimeoutID = setTimeout(function () {
-                            $this.ajax === 1 ? $this.loadData() : input.parents('form').submit();
+                            $this.ajax === 1 ? $this.loadData(formid) : input.parents('form').submit();
                         }, 500);
                     });
             }
             else if($this.ajax === 1){
                 jQuery('input[type="submit"]', $this.form_identifier).on('click', function (event) {
+                        var formid = '#' + jQuery(this).parents('form').attr('id');
                         event.preventDefault();
-                        $this.loadData();
+                        $this.loadData(formid);
                     });
             }
         });
@@ -53,7 +56,7 @@ var JlContentFieldsFilter = {
             .removeAttr('selected');
         jQuery('input[type="text"]', form).val('');
         if (this.ajax === 1 && this.autho_send === 1) {
-            this.loadData();
+            this.loadData(null);
         }
         else if(this.autho_send === 1){
             jQuery($this.form_identifier).submit();
@@ -64,17 +67,21 @@ var JlContentFieldsFilter = {
         jQuery(element).parent().find('input[type="radio"]:checked').removeAttr('checked');
         if (this.autho_send === 1 ) {
             if (this.ajax === 1) {
-                this.loadData();
+                this.loadData(null);
             }
             else{
                 jQuery(element).parents('form').submit();
             }
         }
     },
-    loadData: function () {
+    loadData: function (formid) {
         var $this = this;
         $this.ShowLoadingScreen();
-        var form = jQuery($this.form_identifier);
+        if (formid !== null) {
+            var form = jQuery(formid);
+        } else {
+            var form = jQuery($this.form_identifier);
+        }
         jQuery.ajax({
             type: 'POST',
             url: form.attr('action'),
