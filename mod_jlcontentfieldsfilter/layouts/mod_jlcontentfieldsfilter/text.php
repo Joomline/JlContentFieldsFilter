@@ -15,6 +15,8 @@ if (!key_exists('field', $displayData))
 	return;
 }
 
+$uid = '_' . uniqid();
+
 $field = $displayData['field'];
 $label = JText::_($field->label);
 $value = $field->value;
@@ -28,7 +30,7 @@ $value = $field->value;
             <input
                     type="text"
                     value="<?php echo $value; ?>"
-                    id="<?php echo $field->name; ?>"
+                    id="<?php echo $field->name . $uid; ?>"
                     name="jlcontentfieldsfilter[<?php echo $field->id; ?>]"
             />
 
