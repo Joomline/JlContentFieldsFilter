@@ -48,11 +48,12 @@ var JlContentFieldsFilter = {
     },
     clearForm: function (element) {
         var form = jQuery(element).parents('form');
-        jQuery(':checked, :selected, select', form)
+        form.find(':checked, :selected, select')
             .not(':button, :submit, :reset, :hidden')
             .removeAttr('checked')
             .removeAttr('selected');
-        jQuery('input[type="text"]', form).val('');
+        form.find('input[type="text"]').val('');
+        form.find('select').prop('selectedIndex',0);
         if (this.ajax === 1 && this.autho_send === 1) {
             this.loadData();
         }
