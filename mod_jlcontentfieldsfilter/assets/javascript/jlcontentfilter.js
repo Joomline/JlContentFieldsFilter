@@ -3,6 +3,7 @@ var JlContentFieldsFilter = {
     ajax: 0,
     ajax_selector: '#content',
     ajax_loader: '/modules/mod_jlcontentfieldsfilter/assets/images/ajax_loader.gif',
+    ajax_loader_width: 32,
     form_identifier: '#mod-finder-searchform',
     init: function (data) {
         if (typeof data.autho_send !== 'undefined') {
@@ -104,7 +105,7 @@ var JlContentFieldsFilter = {
                 .css('left', "50%")
                 .css('top', "50%")
                 .append('<img src="'+this.ajax_loader+'" id="id_fade_div_img" />')
-                .css('width', "32");
+                .css('width', this.ajax_loader_width);
         }
 
         fade_div

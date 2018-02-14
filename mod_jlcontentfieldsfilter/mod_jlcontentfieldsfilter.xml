@@ -107,6 +107,14 @@
 						description="MOD_JLCONTENTFIELDSFILTER_AJAX_LOADER_DESC"
 						default=""
 				/>
+				<field
+						name="ajax_loader_width"
+						type="text"
+						label="MOD_JLCONTENTFIELDSFILTER_AJAX_LOADER_WIDTH"
+						description="MOD_JLCONTENTFIELDSFILTER_AJAX_LOADER_WIDTH_DESC"
+						default="32"
+						filter="integer"
+				/>
                 <field
                         name="layout"
                         type="modulelayout"

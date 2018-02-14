@@ -32,6 +32,7 @@ $ajax_selector = $params->get('ajax_selector', '#content');
 $enableOrdering = $params->get('enable_ordering', 0);
 $ajax_loader = $params->get('ajax_loader', '');
 $ajax_loader = !empty(($ajax_loader)) ? JUri::root().$ajax_loader : '';
+$ajax_loader_width = (int)$params->get('ajax_loader_width', 32);
 
 if($view == 'category')
 {
