@@ -15,6 +15,7 @@ if (!key_exists('field', $displayData))
 	return;
 }
 
+$moduleId = $displayData['moduleId'];
 $field = $displayData['field'];
 $label = JText::_($field->label);
 $value = $field->value;
@@ -28,7 +29,7 @@ $value = $field->value;
             <input
                     type="text"
                     value="<?php echo $value; ?>"
-                    id="<?php echo $field->name; ?>"
+                    id="<?php echo $field->name.'-'.$moduleId; ?>"
                     name="jlcontentfieldsfilter[<?php echo $field->id; ?>]"
             />
 

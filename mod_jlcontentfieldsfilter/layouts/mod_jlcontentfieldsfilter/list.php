@@ -15,6 +15,7 @@ if (!key_exists('field', $displayData))
 	return;
 }
 
+$moduleId = $displayData['moduleId'];
 $field = $displayData['field'];
 $label = JText::_($field->label);
 $value = $field->value;
@@ -36,7 +37,7 @@ if(!count($options)){
     <div class="controls">
         <select
                 name="jlcontentfieldsfilter[<?php echo $field->id; ?>]"
-                id="<?php echo $field->name; ?>"
+                id="<?php echo $field->name.'-'.$moduleId; ?>"
                 class="span12"
         >
             <option value=""><?php echo JText::_('JSELECT'); ?></option>

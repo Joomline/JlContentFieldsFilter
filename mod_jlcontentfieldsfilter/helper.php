@@ -14,7 +14,7 @@ require_once JPATH_ROOT. '/administrator/components/com_fields/helpers/fields.ph
 
 class ModJlContentFieldsFilterHelper
 {
-	public static function getFields($params, $category_id, $values)
+	public static function getFields($params, $category_id, $values, $moduleId)
 	{
 		$app = JFactory::getApplication();
 		$fields = array();
@@ -56,7 +56,7 @@ class ModJlContentFieldsFilterHelper
 
 				$new[$key] = JLayoutHelper::render(
 					'mod_jlcontentfieldsfilter.'.$content_filter,
-					array('field' => $field, 'params' => $params),
+					array('field' => $field, 'params' => $params, 'moduleId' => $moduleId),
 					$basePath,
 					array('component' => 'auto', 'client' => 0, 'suffixes' => array())
 				);
@@ -66,7 +66,7 @@ class ModJlContentFieldsFilterHelper
 		return $fields;
 	}
 
-	public static function getOrderingSelect($selectedOrdering){
+	public static function getOrderingSelect($selectedOrdering, $moduleId){
 		$app = JFactory::getApplication();
 		$template = $app->getTemplate();
 
@@ -89,7 +89,7 @@ class ModJlContentFieldsFilterHelper
 
 		$html = JLayoutHelper::render(
 			'mod_jlcontentfieldsfilter.ordering',
-			array('options' => $options, 'selected' => $selectedOrdering),
+			array('options' => $options, 'selected' => $selectedOrdering, 'moduleId' => $moduleId),
 			$basePath,
 			array('component' => 'auto', 'client' => 0)
 		);

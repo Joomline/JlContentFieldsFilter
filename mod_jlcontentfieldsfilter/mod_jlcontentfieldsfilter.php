@@ -54,12 +54,12 @@ else{
 	$jlContentFieldsFilter = $app->getUserState('cat_'.$catid.'.jlcontentfieldsfilter', array());
 }
 
-$fields = ModJlContentFieldsFilterHelper::getFields($params, $catid, $jlContentFieldsFilter);
+$fields = ModJlContentFieldsFilterHelper::getFields($params, $catid, $jlContentFieldsFilter, $module->id);
 
 if(count($fields)){
 	if($enableOrdering){
 		$selectedOrdering = !empty($jlContentFieldsFilter['ordering']) ? $jlContentFieldsFilter['ordering'] : '';
-		$orderingSelect = ModJlContentFieldsFilterHelper::getOrderingSelect($selectedOrdering);
+		$orderingSelect = ModJlContentFieldsFilterHelper::getOrderingSelect($selectedOrdering, $module->id);
 	}
 	require JModuleHelper::getLayoutPath('mod_jlcontentfieldsfilter', $params->get('layout', 'default'));
 }

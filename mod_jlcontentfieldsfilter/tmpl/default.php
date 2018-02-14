@@ -15,7 +15,7 @@ $doc->addScript(JUri::root().'modules/mod_jlcontentfieldsfilter/assets/javascrip
 $doc->addScriptDeclaration('
 	JlContentFieldsFilter.init({
 		"autho_send" : '.$autho_send.',
-		"form_identifier" : "#mod-finder-searchform",
+		"form_identifier" : "mod-finder-searchform-'.$module->id.'",
 		"ajax" : '.$ajax.',
 		"ajax_selector" : "'.$ajax_selector.'",
 		"ajax_loader" : "'.$ajax_loader.'",
@@ -24,7 +24,7 @@ $doc->addScriptDeclaration('
 ');
 ?>
 
-<form id="mod-finder-searchform" action="<?php echo $action; ?>" method="<?php echo $form_method; ?>" class="form-search">
+<form id="mod-finder-searchform-<?php echo $module->id; ?>" action="<?php echo $action; ?>" method="<?php echo $form_method; ?>" class="form-search">
 	<div class="jlcontentfieldsfilter<?php echo $moduleclass_sfx; ?> row-fluid">
         <?php foreach($fields as $v) : ?>
             <?php echo $v; ?>

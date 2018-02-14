@@ -15,6 +15,7 @@ if (!key_exists('options', $displayData))
 	return;
 }
 
+$moduleId = $displayData['moduleId'];
 $options = $displayData['options'];
 $selected = $displayData['selected'];
 
@@ -30,7 +31,7 @@ if(!is_array($options) || !count($options)){
     <div class="controls">
 		<?php
         echo JHtml::_('select.genericlist', $options, 'jlcontentfieldsfilter[ordering]',
-			'class="span12" ', 'value', 'text', $selected);
+			'class="span12" ', 'value', 'text', $selected, 'jlcontentfieldsfilter-ordering-'.$moduleId);
 		?>
     </div>
 </div>
