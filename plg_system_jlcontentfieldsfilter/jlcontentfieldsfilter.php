@@ -12,6 +12,14 @@ defined('_JEXEC') or die;
 
 class plgSystemJlContentFieldsFilter extends JPlugin
 {
+	/**
+	 * Affects constructor behavior. If true, language files will be loaded automatically.
+	 *
+	 * @var    boolean
+	 * @since  1.0.0
+	 */
+	protected $autoloadLanguage = true;
+
 	public function onContentPrepareForm($form, $data)
 	{
 		if(!($form instanceof JForm))
@@ -28,8 +36,6 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 			return TRUE;
 		}
 
-
-		JFactory::getLanguage()->load('plg_system_jlcontentfieldsfilter', JPATH_ROOT . '/plugins/system/jlcontentfieldsfilter');
 
 		JForm::addFormPath(__DIR__ . '/params');
 		$form->loadFile('params', FALSE);
