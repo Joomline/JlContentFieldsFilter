@@ -71,13 +71,6 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 			return;
 		}
 
-		if(class_exists('ContentModelCategory'))
-		{
-			return;
-		}
-
-		require_once __DIR__.'/classes/category.php';
-
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
