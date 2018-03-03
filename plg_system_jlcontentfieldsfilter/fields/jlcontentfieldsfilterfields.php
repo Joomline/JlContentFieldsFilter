@@ -1,53 +1,89 @@
 <?php
 /**
- * @package     Joomla.Plugin
- * @subpackage  User.profile
+ * JL Content Fields Filter
  *
- * @copyright   Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
- * @license     GNU General Public License version 2 or later; see LICENSE
+ * @version 	1.0.4
+ * @author		Joomline
+ * @copyright	(C) 2017 Arkadiy Sedelnikov. All rights reserved.
+ * @license 	GNU General Public License version 2 or later; see	LICENSE.txt
  */
 
-defined('JPATH_PLATFORM') or die;
+defined('_JEXEC') or die;
 
+use Joomla\CMS\Form\FormHelper;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 
+FormHelper::loadFieldClass('list');
 
-/**
- * Provides input for TOS
- *
- * @package     Joomla.Plugin
- * @subpackage  User.profile
- * @since       2.5.5
- */
-class JFormFieldJlContentFieldsFilterFields extends \Joomla\CMS\Form\FormField
+class JFormFieldJlContentFieldsFilterFields extends JFormFieldList
 {
+	/**
+	 * The form field type.
+	 *
+	 * @var    string
+	 */
 	protected $type = 'jlcontentfieldsfilterfields';
 
-	public function getInput()
+	/**
+	 * The current extra field type
+	 *
+	 * @var    string
+	 */
+	protected $dataType = null;
+
+
+	/**
+	 * Method to attach a JForm object to the field.
+	 *
+	 * @param   SimpleXMLElement $element   The SimpleXMLElement object representing the `<field>` tag for the form field object.
+	 * @param   mixed            $value     The form field value to validate.
+	 * @param   string           $group     The field name group control value. This acts as an array container for the field.
+	 *                                      For example if the field has name="foo" and the group value is set to "bar" then the
+	 *                                      full field name would end up being "bar[foo]".
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @see     JFormField::setup()
+	 */
+	public function setup(SimpleXMLElement $element, $value, $group = null)
 	{
-		$dataType = (string)@$this->element['dataType'];
-		$fieldId = (string)@$this->element['fieldId'];
-
-		$options = array();
-		$options[] = JHtml::_('select.option', '', JText::_('JNO'));
-
-		if(!empty($fieldId)){
-			switch ($dataType){
-				case 'list':
-				case 'radio':
-				case 'checkboxes':
-				case 'multiselect':
-					$options[] = JHtml::_('select.option', 'radio', JText::_('PLG_JLCONTENTFIELDSFILTER_FILTER_RADIO'));
-					$options[] = JHtml::_('select.option', 'list', JText::_('PLG_JLCONTENTFIELDSFILTER_FILTER_LIST'));
-					$options[] = JHtml::_('select.option', 'checkboxes', JText::_('PLG_JLCONTENTFIELDSFILTER_FILTER_CHECKBOXES'));
-					break;
-				case 'text':
-					$options[] = JHtml::_('select.option', 'text', JText::_('PLG_JLCONTENTFIELDSFILTER_FILTER_TEXT'));
-					break;
-				default:
-					break;
-			}
+		if ($return = parent::setup($element, $value, $group))
+		{
+			$this->dataType = (!empty($this->element['dataType'])) ? (string) $this->element['dataType'] : '';
 		}
 
-		return JHtml::_('select.genericlist', $options, $this->name, '', 'value', 'text', $this->value, $this->id);
+		return $return;
+	}
+
+
+	/**
+	 * Method to get the field options.
+	 *
+	 * @return  array  The field option objects.
+	 *
+	 */
+	protected function getOptions()
+	{
+		$options   = array();
+		$options[] = HTMLHelper::_('select.option', '', Text::_('JNO'));
+
+		switch ($this->dataType)
+		{
+			case 'list':
+			case 'radio':
+			case 'checkboxes':
+				$options[] = HTMLHelper::_('select.option', 'radio', Text::_('PLG_JLCONTENTFIELDSFILTER_FILTER_RADIO'));
+				$options[] = HTMLHelper::_('select.option', 'list', Text::_('PLG_JLCONTENTFIELDSFILTER_FILTER_LIST'));
+				$options[] = HTMLHelper::_('select.option', 'checkboxes', Text::_('PLG_JLCONTENTFIELDSFILTER_FILTER_CHECKBOXES'));
+				break;
+			case 'text':
+				$options[] = HTMLHelper::_('select.option', 'text', Text::_('PLG_JLCONTENTFIELDSFILTER_FILTER_TEXT'));
+				break;
+			default:
+				break;
+		}
+
+		return $options;
 	}
 }
