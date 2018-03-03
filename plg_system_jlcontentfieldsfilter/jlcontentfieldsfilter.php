@@ -12,6 +12,14 @@ defined('_JEXEC') or die;
 
 class plgSystemJlContentFieldsFilter extends JPlugin
 {
+	/**
+	 * Affects constructor behavior. If true, language files will be loaded automatically.
+	 *
+	 * @var    boolean
+	 * @since  1.0.0
+	 */
+	protected $autoloadLanguage = true;
+
 	public function onContentPrepareForm($form, $data)
 	{
 		if(!($form instanceof JForm))
@@ -29,18 +37,12 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 		}
 
 
-		JFactory::getLanguage()->load('plg_system_jlcontentfieldsfilter', JPATH_ROOT . '/plugins/system/jlcontentfieldsfilter');
-
 		JForm::addFormPath(__DIR__ . '/params');
 		$form->loadFile('params', FALSE);
 
-		$dataType = $data->type;
-		if($dataType == 'list' && !empty($data->fieldparams["multiple"])){
-			$dataType = 'multiselect';
-		}
-
+		$dataType = (is_object($data))? $data->type : $data['type'];
+		if (empty($dataType)) $dataType = $form->getFieldAttribute('type', 'default');
 		$form->setFieldAttribute('content_filter', 'dataType', $dataType, 'params');
-		$form->setFieldAttribute('content_filter', 'fieldId', $data->id, 'params');
 
 		return TRUE;
 	}
@@ -114,7 +116,7 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 
 		$query->clear()->select('item_id');
 		$query->from('#__fields_values');
-		
+
 		$where = array();
 		foreach($filterData as $k=>$v)
 		{
