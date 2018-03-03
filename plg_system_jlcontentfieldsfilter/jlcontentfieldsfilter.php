@@ -57,54 +57,26 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 			return;
 		}
 
-		$input = JFactory::getApplication()->input;
+		$app = JFactory::getApplication();
+		$input = $app->input;
 		$option = $input->getString('option', '');
 		$view = $input->getString('view', '');
-		$catid = $input->getInt('catid', 0);
-		$id = $input->getInt('id', 0);
+		$catid = $input->getInt('id', 0);
 
-		if($view == 'category')
+		$filterData = $app->getUserStateFromRequest('cat_'.$catid.'.jlcontentfieldsfilter', 'jlcontentfieldsfilter', array(), 'array');
+		$itemid = $app->input->get('id', 0, 'int') . ':' . $app->input->get('Itemid', 0, 'int');
+
+		if($option != 'com_content' || $view != 'category' || $catid == 0 || !count($filterData))
 		{
-			$catid = $id;
+			return;
 		}
 
-		if($option != 'com_content' || $catid == 0 || class_exists('ContentModelCategory'))
+		if(class_exists('ContentModelCategory'))
 		{
 			return;
 		}
 
 		require_once __DIR__.'/classes/category.php';
-	}
-
-	/**
-	 * @param $itemsModel
-	 * @throws Exception
-	 */
-	public function onGetContentItems(&$itemsModel)
-	{
-		$app = JFactory::getApplication();
-		$input = $app->input;
-		$option = $input->getString('option', '');
-		$view = $input->getString('view', '');
-		$catid = $input->getInt('catid', 0);
-		$id = $input->getInt('id', 0);
-
-		if($view == 'category')
-		{
-			$catid = $id;
-		}
-
-		if($catid == 0)
-		{
-			return;
-		}
-
-		$filterData = $app->getUserStateFromRequest('cat_'.$catid.'.jlcontentfieldsfilter', 'jlcontentfieldsfilter', array(), 'array');
-
-		if(!count($filterData))
-		{
-			return;
-		}
 
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
@@ -162,8 +134,12 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 				$result = array(0);
 			}
 
-			$itemsModel->setState('filter.article_id.include', true);
-			$itemsModel->setState('filter.article_id', $result);
+			$app->setUserState('com_content.category.list.' . $itemid . 'filter.article_id_include', true);
+			$app->setUserState('com_content.category.list.' . $itemid . 'filter.article_id', $result);
+		}
+		else{
+			$app->setUserState('com_content.category.list.' . $itemid . 'filter.article_id_include', null);
+			$app->setUserState('com_content.category.list.' . $itemid . 'filter.article_id', null);
 		}
 
 		if(!empty($filterData['ordering']))
@@ -193,8 +169,8 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 			}
 
 			if(!empty($ordering)){
-				$itemsModel->setState('list.ordering', $ordering);
-				$itemsModel->setState('list.direction', $dirn);
+				$app->setUserState('com_content.category.list.' . $itemid . '.filter_order', $ordering);
+				$app->setUserState('com_content.category.list.' . $itemid . '.filter_order_Dir', $dirn);
 			}
 		}
 	}
