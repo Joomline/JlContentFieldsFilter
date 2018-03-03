@@ -40,12 +40,7 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 		JForm::addFormPath(__DIR__ . '/params');
 		$form->loadFile('params', FALSE);
 
-		$dataType = (is_object($data))?$data->type : $data['type'] ;
-		$dataFieldparams = (is_object($data))?$data->fieldparams : $data['fieldparams'] ;
-
-		if($dataType == 'list' && !empty($dataFieldparams["multiple"])){
-			$dataType = 'multiselect';
-		}
+		$dataType = (is_object($data))?$data->type : $data['type'];
 		$form->setFieldAttribute('content_filter', 'dataType', $dataType, 'params');
 
 		return TRUE;
