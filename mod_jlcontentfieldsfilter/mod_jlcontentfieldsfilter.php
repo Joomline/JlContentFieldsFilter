@@ -24,6 +24,7 @@ $id = $input->getInt('id', 0);
 $jlContentFieldsFilter = $input->get('jlcontentfieldsfilter', array(), 'array');
 
 $allowedCats = $params->get('categories', array());
+$allowedContactCats = $params->get('contact_categories', array());
 $moduleclass_sfx = $params->get('moduleclass_sfx', '');
 $form_method = $params->get('form_method', 'post');
 $autho_send = (int)$params->get('autho_send', 0);
@@ -39,27 +40,37 @@ if($view == 'category')
     $catid = $id;
 }
 
-if($option != 'com_content' || (!in_array($catid, $allowedCats) && $allowedCats[0] != -1) || $catid == 0)
+if(
+	!in_array($option, array('com_content', 'com_contact'))
+    || ($option == 'com_content' && !(in_array($catid, $allowedCats) || $allowedCats[0] == -1))
+    || ($option == 'com_contact' && !(in_array($catid, $allowedContactCats) || $allowedContactCats[0] == -1))
+	|| $catid == 0
+)
 {
     return;
 }
+if($option == 'com_content'){
+	$action = JRoute::_(ContentHelperRoute::getCategoryRoute($catid));
+}
+else{
+	$action = JRoute::_(ContactHelperRoute::getCategoryRoute($catid));
+}
 
-$action = JRoute::_(ContentHelperRoute::getCategoryRoute($catid));
 
 if(count($jlContentFieldsFilter))
 {
-    $app->setUserState('cat_'.$catid.'.jlcontentfieldsfilter', $jlContentFieldsFilter);
+    $app->setUserState($option.'cat_'.$catid.'.jlcontentfieldsfilter', $jlContentFieldsFilter);
 }
 else{
-	$jlContentFieldsFilter = $app->getUserState('cat_'.$catid.'.jlcontentfieldsfilter', array());
+	$jlContentFieldsFilter = $app->getUserState($option.'cat_'.$catid.'.jlcontentfieldsfilter', array());
 }
 
-$fields = ModJlContentFieldsFilterHelper::getFields($params, $catid, $jlContentFieldsFilter, $module->id);
+$fields = ModJlContentFieldsFilterHelper::getFields($params, $catid, $jlContentFieldsFilter, $module->id, $option);
 
 if(count($fields)){
 	if($enableOrdering){
 		$selectedOrdering = !empty($jlContentFieldsFilter['ordering']) ? $jlContentFieldsFilter['ordering'] : '';
-		$orderingSelect = ModJlContentFieldsFilterHelper::getOrderingSelect($selectedOrdering, $module->id);
+		$orderingSelect = ModJlContentFieldsFilterHelper::getOrderingSelect($selectedOrdering, $module->id, $option);
 	}
 	require JModuleHelper::getLayoutPath('mod_jlcontentfieldsfilter', $params->get('layout', 'default'));
 }

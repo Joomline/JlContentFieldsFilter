@@ -30,6 +30,16 @@
 	<config>
 		<fields name="params" addfieldpath="/modules/mod_jlcontentfieldsfilter/elements">
 			<fieldset name="basic">
+
+                <field
+                        name="enabled_components"
+                        type="checkboxes"
+                        label="MOD_JLCONTENTFIELDSFILTER_ENABLED_COMPONENTS"
+                        description="MOD_JLCONTENTFIELDSFILTER_ENABLED_COMPONENTS_DESC"
+                        >
+                    <option value="com_content">MOD_JLCONTENTFIELDSFILTER_ENABLE_COM_CONTENT</option>
+                    <option value="com_contact">MOD_JLCONTENTFIELDSFILTER_ENABLE_COM_CONTACT</option>
+				</field>
                 <field
                         name="categories"
                         type="category"
@@ -38,6 +48,17 @@
                         multiple="multiple"
                         label="MOD_JLCONTENTFIELDSFILTER_ALLOWED_CATEGORY"
                         description="MOD_JLCONTENTFIELDSFILTER_ALLOWED_CATEGORY_DESC"
+                        >
+                    <option value="-1">JALL</option>
+				</field>
+                <field
+                        name="contact_categories"
+                        type="category"
+                        extension='com_contact'
+                        default="0"
+                        multiple="multiple"
+                        label="MOD_JLCONTENTFIELDSFILTER_ALLOWED_CONTACT_CATEGORY"
+                        description="MOD_JLCONTENTFIELDSFILTER_ALLOWED_CONTACT_CATEGORY_DESC"
                         >
                     <option value="-1">JALL</option>
 				</field>

@@ -24,27 +24,27 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 	{
 		if(!($form instanceof JForm))
 		{
-			return FALSE;
+			return false;
 		}
 
 		$name = $form->getName();
 
 		$app = JFactory::getApplication();
 
-		if(!in_array($name, array( 'com_fields.fieldcom_content.article' )) || !$app->isAdmin())
+		if(!in_array($name, array( 'com_fields.fieldcom_content.article', 'com_fields.fieldcom_contact.contact' )) || !$app->isAdmin())
 		{
-			return TRUE;
+			return true;
 		}
 
 
 		JForm::addFormPath(__DIR__ . '/params');
-		$form->loadFile('params', FALSE);
+		$form->loadFile('params', false);
 
 		$dataType = (is_object($data))? $data->type : $data['type'];
 		if (empty($dataType)) $dataType = $form->getFieldAttribute('type', 'default');
 		$form->setFieldAttribute('content_filter', 'dataType', $dataType, 'params');
 
-		return TRUE;
+		return true;
 	}
 
 	/** Подмена модели категории контента.
@@ -63,27 +63,37 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 		$view = $input->getString('view', '');
 		$catid = $input->getInt('id', 0);
 
-		$filterData = $app->getUserStateFromRequest('cat_'.$catid.'.jlcontentfieldsfilter', 'jlcontentfieldsfilter', array(), 'array');
+		if(!in_array($option, array('com_content', 'com_contact')) || $view != 'category' || $catid == 0)
+		{
+			return;
+		}
+
+		$filterData = $app->getUserStateFromRequest($option.'.cat_'.$catid.'.jlcontentfieldsfilter', 'jlcontentfieldsfilter', array(), 'array');
 		$itemid = $app->input->get('id', 0, 'int') . ':' . $app->input->get('Itemid', 0, 'int');
 
-		if($option != 'com_content' || $view != 'category' || $catid == 0 || !count($filterData))
+		if(!count($filterData))
 		{
 			return;
 		}
 
-		if(class_exists('ContentModelCategory'))
+		if($option == 'com_content' && !class_exists('ContentModelCategory'))
 		{
-			return;
+			require_once __DIR__.'/models/com_content/category.php';
+			$context = 'com_content.article';
+		}
+		else if($option == 'com_contact' && !class_exists('ContactModelCategory'))
+		{
+			require_once __DIR__.'/models/com_contact/category.php';
+			$context = 'com_contact.contact';
 		}
 
-		require_once __DIR__.'/classes/category.php';
 
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 
 		$query->select('id, type');
 		$query->from('#__fields');
-		$query->where('context = '.$db->quote('com_content.article'));
+		$query->where('context = '.$db->quote($context));
 		$fieldsTypes = $db->setQuery($query)->loadObjectList('id');
 
 		$query->clear()->select('item_id');
@@ -119,6 +129,7 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 		}
 
 		$count = count($where);
+		$context = $option.'.category.list.' . $itemid;
 
 		if($count > 0){
 			$query->where(implode(' OR ', $where));
@@ -134,12 +145,12 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 				$result = array(0);
 			}
 
-			$app->setUserState('com_content.category.list.' . $itemid . 'filter.article_id_include', true);
-			$app->setUserState('com_content.category.list.' . $itemid . 'filter.article_id', $result);
+			$app->setUserState($context . 'filter.article_id_include', true);
+			$app->setUserState($context . 'filter.article_id', $result);
 		}
 		else{
-			$app->setUserState('com_content.category.list.' . $itemid . 'filter.article_id_include', null);
-			$app->setUserState('com_content.category.list.' . $itemid . 'filter.article_id', null);
+			$app->setUserState($context . 'filter.article_id_include', null);
+			$app->setUserState($context . 'filter.article_id', null);
 		}
 
 		if(!empty($filterData['ordering']))
@@ -147,30 +158,48 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 			list($ordering, $dirn) = explode('.', $filterData['ordering']);
 			$dirn = !empty($dirn) ? strtoupper($dirn) : 'ASC';
 
-			switch ($ordering){
-				case 'ordering':
-					$ordering = 'a.ordering';
+			$ordering = '';
+
+			switch ($option){
+				case 'com_content':
+					switch ($ordering){
+						case 'ordering':
+							$ordering = 'a.ordering';
+							break;
+						case 'title':
+							$ordering = 'a.title';
+							break;
+						case 'created':
+							$ordering = 'a.created';
+							break;
+						case 'created_by':
+							$ordering = 'a.created_by';
+							break;
+						case 'hits':
+							$ordering = 'a.hits';
+							break;
+					}
 					break;
-				case 'title':
-					$ordering = 'a.title';
-					break;
-				case 'created':
-					$ordering = 'a.created';
-					break;
-				case 'created_by':
-					$ordering = 'a.created_by';
-					break;
-				case 'hits':
-					$ordering = 'a.hits';
-					break;
-				default:
-					$ordering = '';
+				case 'com_contact':
+					switch ($ordering){
+						case 'ordering':
+							$ordering = 'a.ordering';
+							break;
+						case 'name':
+							$ordering = 'a.name';
+						case 'position':
+							$ordering = 'a.con_position';
+							break;
+						case 'hits':
+							$ordering = 'a.hits';
+							break;
+					}
 					break;
 			}
 
 			if(!empty($ordering)){
-				$app->setUserState('com_content.category.list.' . $itemid . '.filter_order', $ordering);
-				$app->setUserState('com_content.category.list.' . $itemid . '.filter_order_Dir', $dirn);
+				$app->setUserState($option.'.category.list.' . $itemid . '.filter_order', $ordering);
+				$app->setUserState($option.'.category.list.' . $itemid . '.filter_order_Dir', $dirn);
 			}
 		}
 	}

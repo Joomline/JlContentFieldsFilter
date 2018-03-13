@@ -11,9 +11,9 @@
 	<description>PLG_JLCONTENTFIELDSFILTER_XML_DESCRIPTION</description>
 
 	<files>
-		<folder>classes</folder>
 		<folder>fields</folder>
 		<folder>language</folder>
+		<folder>models</folder>
 		<folder>params</folder>
         <filename>index.html</filename>
 		<filename plugin="jlcontentfieldsfilter">jlcontentfieldsfilter.php</filename>
