@@ -42,8 +42,8 @@ if($view == 'category')
 
 if(
 	!in_array($option, array('com_content', 'com_contact'))
-    || ($option == 'com_content' && !(in_array($catid, $allowedCats) || $allowedCats[0] == -1))
-    || ($option == 'com_contact' && !(in_array($catid, $allowedContactCats) || $allowedContactCats[0] == -1))
+    || ($option == 'com_content' && !(!count($allowedCats) || in_array($catid, $allowedCats) || $allowedCats[0] == -1))
+    || ($option == 'com_contact' && !(!count($allowedContactCats) || in_array($catid, $allowedContactCats) || $allowedContactCats[0] == -1))
 	|| $catid == 0
 )
 {
