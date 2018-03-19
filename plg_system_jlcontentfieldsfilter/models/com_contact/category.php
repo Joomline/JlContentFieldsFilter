@@ -1,10 +1,11 @@
 <?php
 /**
- * @package     Joomla.Site
- * @subpackage  com_contact
+ * JL Content Fields Filter
  *
- * @copyright   Copyright (C) 2005 - 2018 Open Source Matters, Inc. All rights reserved.
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ * @version 	@version@
+ * @author		Joomline
+ * @copyright	(C) 2017 Arkadiy Sedelnikov, Joomline. All rights reserved.
+ * @license 	GNU General Public License version 2 or later; see	LICENSE.txt
  */
 
 defined('_JEXEC') or die;

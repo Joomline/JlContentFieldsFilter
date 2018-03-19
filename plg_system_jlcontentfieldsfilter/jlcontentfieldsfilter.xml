@@ -2,12 +2,12 @@
 <extension version="3.8" type="plugin" group="system" method="upgrade">
 	<name>PLG_JLCONTENTFIELDSFILTER</name>
 	<author>Joomline</author>
-	<creationDate>26.11.2017</creationDate>
-	<copyright>(C) 2017 Arkadiy Sedelnikov. All rights reserved.</copyright>
+	<creationDate>@date@</creationDate>
+	<copyright>(C) 2017-2018 Arkadiy Sedelnikov. All rights reserved.</copyright>
 	<license>GNU General Public License version 2 or later; see	LICENSE.txt</license>
 	<authorEmail>sales@joomline.ru</authorEmail>
 	<authorUrl>https://joomline.ru</authorUrl>
-	<version>1.2.0</version>
+	<version>@version@</version>
 	<description>PLG_JLCONTENTFIELDSFILTER_XML_DESCRIPTION</description>
 
 	<files>

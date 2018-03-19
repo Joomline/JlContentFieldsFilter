@@ -3,13 +3,13 @@
     <name>jlcontentfieldsfilter</name>
     <author>Joomline</author>
 	<packagename>jlcontentfieldsfilter</packagename>
-    <creationDate>26.11.2017</creationDate>
-	<copyright>(C) 2017 Joomline. All rights reserved.</copyright>
+    <creationDate>@date@</creationDate>
+	<copyright>(C) 2017-2018 Joomline. All rights reserved.</copyright>
 	<license>GNU General Public License version 2 or later; see	LICENSE.txt</license>
 	<authorEmail>sales@joomline.ru</authorEmail>
 	<packager>JoomLine</packager>
 	<packagerurl>http://joomline.ru</packagerurl>
-    <version>1.2.0</version>
+    <version>@version@</version>
     <description><![CDATA[Content field filter. In the package, the plugin and the module. After installation, activate the plugin plg_system_jlcontentfieldsfilter. Set up and publish the module. <iframe frameborder='0' allowtransparency='true' scrolling='no' src='https://joomline.ru/donateen.html' width='100%' height='700'>]]></description>
     <files>
             <folder type="module" id="mod_jlcontentfieldsfilter" method="upgrade" client="site">mod_jlcontentfieldsfilter</folder>

@@ -2,12 +2,12 @@
 <extension type="module" version="3.8" client="site" method="upgrade">
 	<name>MOD_JLCONTENTFIELDSFILTER</name>
 	<author>Joomline</author>
-	<creationDate>25.11.2017</creationDate>
-	<copyright>(C) 2017 Joomline. All rights reserved.</copyright>
+	<creationDate>@date@</creationDate>
+	<copyright>(C) 2017-2018 Joomline. All rights reserved.</copyright>
 	<license>GNU General Public License version 2 or later</license>
 	<authorEmail>sales@joomline.ru</authorEmail>
 	<authorUrl>joomline.ru</authorUrl>
-	<version>1.2.0</version>
+	<version>@version@</version>
 	<description>MOD_JLCONTENTFIELDSFILTER_XML_DESCRIPTION</description>
 	<files>
 		<folder>assets</folder>

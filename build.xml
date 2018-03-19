@@ -1,28 +1,57 @@
 <project name="jlcontentfieldsfilter" default="dist" basedir=".">
+
+	<property name="VERSION" value="1.3.0"/>
+	
+	<tstamp>
+        <format property="DATE" pattern="%d.%m.%Y" />
+    </tstamp>
+	
 	<property name="build" value="_build" />
 	<property name="dist" value="_dist" />
-	<property name="filename" value="pkg_jlcontentfieldsfilter_v1.2.0_j3.zip" />
+	<property name="filename" value="pkg_jlcontentfieldsfilter_v${VERSION}_j3.zip" />
 
 
 	<target name="init" depends="clean">
 		<mkdir dir="${build}" />
 		<mkdir dir="${dist}" />
 	</target>
+	
+	
+	<target name="replacemodule">
+
+        <copy todir="${build}/mod_jlcontentfieldsfilter">
+			<fileset dir="mod_jlcontentfieldsfilter" />
+            <filterchain>
+                <replacetokens>
+                    <token key="version" value="${VERSION}" />
+                    <token key="date" value="${DATE}" />
+                </replacetokens>
+            </filterchain>
+        </copy>	
+
+		<copy todir="${build}/plg_system_jlcontentfieldsfilter">
+			<fileset dir="plg_system_jlcontentfieldsfilter" />
+            <filterchain>
+                <replacetokens>
+                    <token key="version" value="${VERSION}" />
+                    <token key="date" value="${DATE}" />
+                </replacetokens>
+            </filterchain>
+        </copy>		
+    </target>
 
 	<target name="pack-plugins">
-		<zip destfile="${build}/mod_jlcontentfieldsfilter.zip" description="mod_jlcontentfieldsfilter">
-			<fileset dir="mod_jlcontentfieldsfilter" />
-		</zip>
-
-		<!-- Plugins -->
-		<zip destfile="${build}/plg_system_jlcontentfieldsfilter.zip" description="plg_system_jlcontentfieldsfilter">
-			<fileset dir="plg_system_jlcontentfieldsfilter" />
-		</zip>
-
-		<copy file="pkg_jlcontentfieldsfilter.xml" todir="${build}" />
+        <copy file="pkg_jlcontentfieldsfilter.xml" todir="${build}">
+            <filterchain>
+                <replacetokens>
+                    <token key="version" value="${VERSION}" />
+                    <token key="date" value="${DATE}" />
+                </replacetokens>
+            </filterchain>
+        </copy>
 	</target>
 	
-	<target name="dist" depends="init, pack-plugins">
+	<target name="dist" depends="init, replacemodule, pack-plugins">
 		<zip destfile="${dist}/${filename}">
 			<fileset dir="${build}/" >
 				<include name="**/**" />
