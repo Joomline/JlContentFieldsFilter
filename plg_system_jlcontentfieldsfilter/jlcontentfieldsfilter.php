@@ -96,57 +96,72 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 		$query->where('context = '.$db->quote($context));
 		$fieldsTypes = $db->setQuery($query)->loadObjectList('id');
 
-		$query->clear()->select('item_id');
-		$query->from('#__fields_values');
+		$count = 0;
+		$filterArticles = array();
 
-		$where = array();
 		foreach($filterData as $k=>$v)
 		{
 			if(!isset($fieldsTypes[$k])){
 				continue;
 			}
 
+			$where = '';
+
 			switch ($fieldsTypes[$k]->type){
 				case 'radio':
 				case 'checkboxes':
 				case 'list':
 					if(is_array($v) && count($v)){
-						$where[] = '(field_id = '.(int)$k.' AND value IN(\''.implode("', '", $v).'\'))';
+						$where = '(field_id = '.(int)$k.' AND value IN(\''.implode("', '", $v).'\'))';
 					}
 					else if(!empty($v)){
-						$where[] = '(field_id = '.(int)$k.' AND value = '.$db->quote($v).')';
+						$where = '(field_id = '.(int)$k.' AND value = '.$db->quote($v).')';
 					}
 					break;
 				case 'text':
 					if(!empty($v)){
-						$where[] = '(field_id = '.(int)$k.' AND value LIKE '.$db->quote('%'.$v.'%').')';
+						$where = '(field_id = '.(int)$k.' AND value LIKE '.$db->quote('%'.$v.'%').')';
 					}
 					break;
 				default:
 
 					break;
 			}
+
+			if(!empty($where)){
+				$query->clear()->select(' DISTINCT item_id');
+				$query->from('#__fields_values');
+				$query->where($where);
+				$query->group('item_id');
+				$aIds = $db->setQuery($query)->loadColumn();
+				$aIds = !is_array($aIds) ? array() : $aIds;
+
+				if($count == 0){
+					$filterArticles = $aIds;
+				}
+				else{
+					$filterArticles = array_intersect($filterArticles, $aIds);
+				}
+
+				$count++;
+
+				if(!count($filterArticles)){
+					break;
+				}
+			}
 		}
 
-		$count = count($where);
 		$context = $option.'.category.list.' . $itemid;
 
-		if($count > 0){
-			$query->where(implode(' OR ', $where));
-			$query->having("COUNT(item_id) = " . (int) $count);
-			$query->group('item_id');
-
-			$filterArticles = $db->setQuery($query)->loadColumn();
-			$filterArticles = (empty($filterArticles)) ? array() : $filterArticles;
-			$result = $filterArticles;
-
-			if(!count($result))
+		if($count > 0)
+		{
+			if(!count($filterArticles))
 			{
-				$result = array(0);
+				$filterArticles = array(0);
 			}
 
 			$app->setUserState($context . 'filter.article_id_include', true);
-			$app->setUserState($context . 'filter.article_id', $result);
+			$app->setUserState($context . 'filter.article_id', $filterArticles);
 		}
 		else{
 			$app->setUserState($context . 'filter.article_id_include', null);
