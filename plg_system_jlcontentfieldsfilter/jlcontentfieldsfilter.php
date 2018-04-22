@@ -40,8 +40,16 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 		JForm::addFormPath(__DIR__ . '/params');
 		$form->loadFile('params', false);
 
-		$dataType = (is_object($data))? $data->type : $data['type'];
-		if (empty($dataType)) $dataType = $form->getFieldAttribute('type', 'default');
+		if(is_object($data) && !empty($data->type)){
+			$dataType = $data->type;
+		}
+		else if(is_array($data) && !empty($data['type'])){
+			$dataType = $data['type'];
+		}
+		else{
+			$dataType = $form->getFieldAttribute('type', 'default');
+		}
+
 		$form->setFieldAttribute('content_filter', 'dataType', $dataType, 'params');
 
 		return true;

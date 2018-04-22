@@ -14,6 +14,18 @@
 				>
 				<option value="">JNO</option>
 			</field>
+			<field
+				name="filter_layout"
+				type="filelist"
+				label="PLG_JLCONTENTFIELDSFILTER_FILTER_LAYOUT"
+				description="PLG_JLCONTENTFIELDSFILTER_FILTER_LAYOUT_DESC"
+				directory="modules/mod_jlcontentfieldsfilter/layouts/mod_jlcontentfieldsfilter"
+				filter="\.php"
+				exclude=""
+				stripext="1"
+				hide_none="1"
+				hide_default="0"
+				/>
 		</fieldset>
 	</fields>
 </form>

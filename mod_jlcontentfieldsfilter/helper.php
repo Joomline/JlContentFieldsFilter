@@ -48,22 +48,31 @@ class ModJlContentFieldsFilterHelper
 
 			foreach ($fields as $key => $original)
 			{
+				$field = clone $original;
+				$field->value = isset($values[$field->id]) ? $values[$field->id] : '';
+				$field->rawvalue = $field->value;
+
 				$content_filter = $original->params->get('content_filter', '');
+
 				if(empty($content_filter)){
 					unset($fieldIds[$key]);
 					continue;
 				}
 
-				$field = clone $original;
-				$field->value = isset($values[$field->id]) ? $values[$field->id] : '';
-				$field->rawvalue = $field->value;
+				$filter_layout = $original->params->get('filter_layout', '');
+				if(!empty($filter_layout)) {
+					$layout = $filter_layout;
+				}
+				else {
+					$layout = $content_filter;
+				}
 
-				$basePath = is_file(JPATH_ROOT.'/templates/'.$template.'/html/layouts/mod_jlcontentfieldsfilter/'.$field->type.'.php')
+				$basePath = is_file(JPATH_ROOT.'/templates/'.$template.'/html/layouts/mod_jlcontentfieldsfilter/'.$layout.'.php')
 					? JPATH_ROOT.'/templates/'.$template.'/html/layouts'
 					: JPATH_ROOT.'/modules/mod_jlcontentfieldsfilter/layouts';
 
 				$new[$key] = JLayoutHelper::render(
-					'mod_jlcontentfieldsfilter.'.$content_filter,
+					'mod_jlcontentfieldsfilter.'.$layout,
 					array('field' => $field, 'params' => $params, 'moduleId' => $moduleId),
 					$basePath,
 					array('component' => 'auto', 'client' => 0, 'suffixes' => array())
