@@ -46,4 +46,5 @@ $doc->addScriptDeclaration('
 			</button>
 		</div>	
 	</div>
+    <input type="hidden" name="jlcontentfieldsfilter[is_filter]" value="1">
 </form>
