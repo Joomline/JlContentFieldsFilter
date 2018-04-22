@@ -112,7 +112,14 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 				case 'checkboxes':
 				case 'list':
 					if(is_array($v) && count($v)){
-						$where = '(field_id = '.(int)$k.' AND value IN(\''.implode("', '", $v).'\'))';
+						$newVal = array();
+						foreach ( $v as $val ) {
+							if($val !== '')
+								$newVal[] = $val;
+						}
+						if(count($newVal)){
+							$where = '(field_id = '.(int)$k.' AND value IN(\''.implode("', '", $newVal).'\'))';
+						}
 					}
 					else if(!empty($v)){
 						$where = '(field_id = '.(int)$k.' AND value = '.$db->quote($v).')';
