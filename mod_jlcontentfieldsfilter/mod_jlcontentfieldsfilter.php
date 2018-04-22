@@ -21,7 +21,13 @@ $option = $input->getString('option', '');
 $view = $input->getString('view', '');
 $catid = $input->getInt('catid', 0);
 $id = $input->getInt('id', 0);
-$jlContentFieldsFilter = $input->get('jlcontentfieldsfilter', array(), 'array');
+
+if($view == 'category')
+{
+	$catid = $id;
+}
+
+$jlContentFieldsFilter = $app->getUserStateFromRequest($option.'.cat_'.$catid.'.jlcontentfieldsfilter', 'jlcontentfieldsfilter', array(), 'array');
 
 $allowedCats = $params->get('categories', array());
 $allowedContactCats = $params->get('contact_categories', array());
@@ -34,11 +40,6 @@ $enableOrdering = $params->get('enable_ordering', 0);
 $ajax_loader = $params->get('ajax_loader', '');
 $ajax_loader = !empty(($ajax_loader)) ? JUri::root().$ajax_loader : '';
 $ajax_loader_width = (int)$params->get('ajax_loader_width', 32);
-
-if($view == 'category')
-{
-    $catid = $id;
-}
 
 if(
 	!in_array($option, array('com_content', 'com_contact'))
@@ -54,15 +55,6 @@ if($option == 'com_content'){
 }
 else{
 	$action = JRoute::_(ContactHelperRoute::getCategoryRoute($catid));
-}
-
-
-if(count($jlContentFieldsFilter))
-{
-    $app->setUserState($option.'cat_'.$catid.'.jlcontentfieldsfilter', $jlContentFieldsFilter);
-}
-else{
-	$jlContentFieldsFilter = $app->getUserState($option.'cat_'.$catid.'.jlcontentfieldsfilter', array());
 }
 
 $fields = ModJlContentFieldsFilterHelper::getFields($params, $catid, $jlContentFieldsFilter, $module->id, $option);
