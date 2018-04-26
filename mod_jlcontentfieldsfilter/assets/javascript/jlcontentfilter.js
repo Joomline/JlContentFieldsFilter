@@ -40,7 +40,7 @@ var JlContentFieldsFilter = {
         var id = form.attr('id');
         var params = this.params[id];
         form.find(':checked, :selected, select')
-            .not(':button, :submit, :reset, :hidden')
+            .not('[type="button"], [type="submit"], [type="reset"], [type="hidden"]')
             .removeAttr('checked')
             .removeAttr('selected');
         form.find('input[type="text"]').val('');
