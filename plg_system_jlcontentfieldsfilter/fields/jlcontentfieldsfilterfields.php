@@ -79,6 +79,7 @@ class JFormFieldJlContentFieldsFilterFields extends JFormFieldList
 				break;
 			case 'text':
 				$options[] = HTMLHelper::_('select.option', 'text', Text::_('PLG_JLCONTENTFIELDSFILTER_FILTER_TEXT'));
+				$options[] = HTMLHelper::_('select.option', 'range', Text::_('PLG_JLCONTENTFIELDSFILTER_FILTER_RANGE'));
 				break;
 			default:
 				break;

@@ -20,6 +20,16 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 	 */
 	protected $autoloadLanguage = true;
 
+	/**
+	 *
+	 * @param $form
+	 * @param $data
+	 *
+	 * @return bool
+	 *
+	 * @since version
+	 * @throws Exception
+	 */
 	public function onContentPrepareForm($form, $data)
 	{
 		if(!($form instanceof JForm))
@@ -135,7 +145,20 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 					break;
 				case 'text':
 					if(!empty($v)){
-						$where = '(field_id = '.(int)$k.' AND value LIKE '.$db->quote('%'.$v.'%').')';
+						if(is_array($v)){
+							if(!empty($v['from']) && !empty($v['to'])){
+								$where = '(field_id = '.(int)$k.' AND CAST(`value` AS SIGNED) BETWEEN '.(int)$v['from'].' AND '.$v['to'].')';
+							}
+							else if(!empty($v['from'])){
+								$where = '(field_id = '.(int)$k.' AND CAST(`value` AS SIGNED) >= '.(int)$v['from'].')';
+							}
+							else if(!empty($v['to'])){
+								$where = '(field_id = '.(int)$k.' AND CAST(`value` AS SIGNED) <= '.(int)$v['to'].')';
+							}
+						}
+						else{
+							$where = '(field_id = '.(int)$k.' AND value LIKE '.$db->quote('%'.$v.'%').')';
+						}
 					}
 					break;
 				default:

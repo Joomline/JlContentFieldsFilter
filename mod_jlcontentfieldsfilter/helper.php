@@ -71,9 +71,15 @@ class ModJlContentFieldsFilterHelper
 					? JPATH_ROOT.'/templates/'.$template.'/html/layouts'
 					: JPATH_ROOT.'/modules/mod_jlcontentfieldsfilter/layouts';
 
+				$displayData = array('field' => $field, 'params' => $params, 'moduleId' => $moduleId, 'rangedata' => array());
+
+				if($layout == 'range'){
+					$displayData = self::addRangeData($displayData, $category_id, $option);
+				}
+
 				$new[$key] = JLayoutHelper::render(
 					'mod_jlcontentfieldsfilter.'.$layout,
-					array('field' => $field, 'params' => $params, 'moduleId' => $moduleId),
+					$displayData,
 					$basePath,
 					array('component' => 'auto', 'client' => 0, 'suffixes' => array())
 				);
@@ -81,6 +87,31 @@ class ModJlContentFieldsFilterHelper
 			$fields = $new;
 		}
 		return $fields;
+	}
+
+	private static function addRangeData($displayData, $category_id, $option){
+		$field = $displayData['field'];
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select('MIN(CAST(`value` AS SIGNED)) AS `min`, MAX(CAST(`value` AS SIGNED)) AS `max`')
+		      ->from('`#__fields_values`')
+		      ->where('`field_id` ='.(int)$field->id)
+		      ->where('`field_id` ='.(int)$field->id)
+		;
+		$subquery = '';
+		if($option == 'com_content'){
+			$subquery = 'SELECT `id` FROM `#__content` WHERE `catid` = '.(int)$category_id;
+		}
+		else if($option == 'com_contact'){
+			$subquery = 'SELECT `id` FROM `#__contact_details` WHERE `catid` = '.(int)$category_id;
+		}
+		if(!empty($subquery)){
+			$query->where('`item_id` IN ('.$subquery.')');
+		}
+		$result = $db->setQuery($query)->loadObject();
+		$displayData['min'] = !empty($result->min) ? (int)$result->min : '';
+		$displayData['max'] = !empty($result->max) ? (int)$result->max : '';
+		return $displayData;
 	}
 
 	public static function getOrderingSelect($selectedOrdering, $moduleId, $option){
