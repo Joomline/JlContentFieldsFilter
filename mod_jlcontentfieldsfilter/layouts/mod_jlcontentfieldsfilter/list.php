@@ -30,23 +30,16 @@ if(!count($options)){
 	return;
 }
 ?>
-<div class="control-group">
-    <h4>
-		<?php echo $label; ?>
-    </h4>
-    <div class="controls">
-        <select
-                name="jlcontentfieldsfilter[<?php echo $field->id; ?>]"
-                id="<?php echo $field->name.'-'.$moduleId; ?>"
-                class="span12"
-        >
-            <option value=""><?php echo JText::_('JSELECT'); ?></option>
+<label class="jlmf-label" for="<?php echo $field->name.'-'.$moduleId; ?>"><?php echo $label; ?></label>
+<select
+    name="jlcontentfieldsfilter[<?php echo $field->id; ?>]"
+    id="<?php echo $field->name.'-'.$moduleId; ?>"
+    class="jlmf-select"
+>
+    <option value=""><?php echo JText::_('JSELECT'); ?></option>
 
-		    <?php foreach($options as $k => $v) : ?>
-			    <?php $checked = ($v->value == $value) ? ' selected="selected"' : ''; ?>
-                <option value="<?php echo $v->value; ?>" <?php echo $checked; ?>><?php echo $v->text; ?></option>
-		    <?php endforeach; ?>
-        </select>
-
-    </div>
-</div>
+	<?php foreach($options as $k => $v) : ?>
+	    <?php $checked = ($v->value == $value) ? ' selected="selected"' : ''; ?>
+        <option value="<?php echo $v->value; ?>" <?php echo $checked; ?>><?php echo $v->text; ?></option>
+	<?php endforeach; ?>
+</select>

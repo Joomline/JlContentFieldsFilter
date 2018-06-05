@@ -25,34 +25,28 @@ $value = $field->value;
 $fromPlaceholder = $min !== '' ? JText::sprintf('MOD_JLCONTENTFIELDSFILTER_MIN', $min) : '';
 $toPlaceholder = $max !== '' ? JText::sprintf('MOD_JLCONTENTFIELDSFILTER_MAX', $max) : '';
 ?>
-<div class="control-group">
-    <h4>
-		<?php echo $label; ?>
-    </h4>
-    <div class="controls">
-    <div class="row-fluid">
-        <div class="span1"><?php echo JText::_('MOD_JLCONTENTFIELDSFILTER_FROM');?></div>
-        <div class="span4">
-            <input
-                    type="text"
-                    placeholder="<?php echo $fromPlaceholder; ?>"
-                    value="<?php echo !empty($value['from']) ? $value['from'] : ''; ?>"
-                    id="<?php echo $field->name.'-'.$moduleId; ?>"
-                    name="jlcontentfieldsfilter[<?php echo $field->id; ?>][from]"
-                    style="width: 100%"
-            />
-        </div>
-        <div class="span1 offset1"><?php echo JText::_('MOD_JLCONTENTFIELDSFILTER_TO');?></div>
-        <div class="span4">
-            <input
-                    type="text"
-                    placeholder="<?php echo $toPlaceholder; ?>"
-                    value="<?php echo !empty($value['to']) ? $value['to'] : ''; ?>"
-                    id="<?php echo $field->name.'-'.$moduleId; ?>"
-                    name="jlcontentfieldsfilter[<?php echo $field->id; ?>][to]"
-                    style="width: 100%"
-            />
-        </div>
+<div class="jlmf-label"><?php echo $label; ?></div>
+<div class="jlmf-list-2">
+    <div>
+        <label class="jlmf-label" for="<?php echo $field->name.'-from-'.$moduleId; ?>"><?php echo JText::_('MOD_JLCONTENTFIELDSFILTER_FROM');?></label>
+        <input
+            type="text"
+            placeholder="<?php echo $fromPlaceholder; ?>"
+            value="<?php echo !empty($value['from']) ? $value['from'] : ''; ?>"
+            id="<?php echo $field->name.'-from-'.$moduleId; ?>"
+            name="jlcontentfieldsfilter[<?php echo $field->id; ?>][from]"
+            class="jlmf-input"
+        />
     </div>
+    <div>
+        <label class="jlmf-label" for="<?php echo $field->name.'-to-'.$moduleId; ?>"><?php echo JText::_('MOD_JLCONTENTFIELDSFILTER_TO');?></label>
+        <input
+            type="text"
+            placeholder="<?php echo $toPlaceholder; ?>"
+            value="<?php echo !empty($value['to']) ? $value['to'] : ''; ?>"
+            id="<?php echo $field->name.'-to-'.$moduleId; ?>"
+            name="jlcontentfieldsfilter[<?php echo $field->id; ?>][to]"
+            class="jlmf-input"
+        />
     </div>
 </div>

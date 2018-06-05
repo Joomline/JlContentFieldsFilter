@@ -20,19 +20,12 @@ $field = $displayData['field'];
 $label = JText::_($field->label);
 $value = $field->value;
 ?>
-<div class="control-group">
-    <h4>
-		<?php echo $label; ?>
-    </h4>
-    <div class="controls">
 
-            <input
-                    type="text"
-                    value="<?php echo $value; ?>"
-                    id="<?php echo $field->name.'-'.$moduleId; ?>"
-                    name="jlcontentfieldsfilter[<?php echo $field->id; ?>]"
-            />
-
-
-    </div>
-</div>
+<label class="jlmf-label" for="<?php echo $field->name.'-'.$moduleId; ?>"><?php echo $label; ?></label>
+<input
+    type="text"
+    value="<?php echo $value; ?>"
+    id="<?php echo $field->name.'-'.$moduleId; ?>"
+    name="jlcontentfieldsfilter[<?php echo $field->id; ?>]"
+    class="jlmf-input"
+/>
