@@ -3,7 +3,7 @@
  *
  * @version 	@version@
  * @author		Joomline
- * @copyright	(C) 2017 Aleksey Morozov, Joomline. All rights reserved.
+ * @copyright	(C) @date@ Aleksey Morozov, Joomline. All rights reserved.
  * @license 	GNU General Public License version 2 or later; see	LICENSE.txt
  */
 
@@ -11,17 +11,19 @@
     margin-top: 30px;
 }
 
-.jlmf-label {
+label.jlmf-label {
     display: inline-block;
     padding-bottom: 5px;
     font-family: inherit;
     font-size: .9rem;
     text-transform: uppercase;
+	margin: 0;
 }
 
-.jlmf-sublabel {
+label.jlmf-sublabel {
     display: inline-block;
     font-family: inherit;
+	margin: 0;
 }
 
 .jlmf-label[for], .jlmf-sublabel[for] {
@@ -108,4 +110,10 @@
 }
 .jlmf-button:hover {
     background-color: #0070a5;
+}
+
+.jlcontentfieldsfilter input {
+    height: 32px;
+    line-height: 32px;
+	margin: 0;
 }
