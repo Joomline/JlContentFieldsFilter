@@ -1,179 +1,186 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="module" version="3.8" client="site" method="upgrade">
-	<name>MOD_JLCONTENTFIELDSFILTER</name>
-	<author>Joomline</author>
-	<creationDate>@date@</creationDate>
-	<copyright>(C) 2017-2018 Joomline. All rights reserved.</copyright>
-	<license>GNU General Public License version 2 or later</license>
-	<authorEmail>sales@joomline.ru</authorEmail>
-	<authorUrl>joomline.ru</authorUrl>
-	<version>@version@</version>
-	<description>MOD_JLCONTENTFIELDSFILTER_XML_DESCRIPTION</description>
-	<files>
-		<folder>assets</folder>
-		<folder>elements</folder>
-		<folder>language</folder>
-		<folder>layouts</folder>
-		<folder>tmpl</folder>
-		<filename module="mod_jlcontentfieldsfilter">mod_jlcontentfieldsfilter.php</filename>
-		<filename>helper.php</filename>
-		<filename>index.html</filename>
-		<filename>mod_jlcontentfieldsfilter.xml</filename>
-	</files>
-	<languages>
-		<language tag="en-GB">language/en-GB/en-GB.mod_jlcontentfieldsfilter.ini</language>
-		<language tag="en-GB">language/en-GB/en-GB.mod_jlcontentfieldsfilter.sys.ini</language>
-		<language tag="ru-RU">language/ru-RU/ru-RU.mod_jlcontentfieldsfilter.ini</language>
-		<language tag="ru-RU">language/ru-RU/ru-RU.mod_jlcontentfieldsfilter.sys.ini</language>
-	</languages>
+    <name>MOD_JLCONTENTFIELDSFILTER</name>
+    <author>Joomline</author>
+    <creationDate>@date@</creationDate>
+    <copyright>(C) 2017-2018 Joomline. All rights reserved.</copyright>
+    <license>GNU General Public License version 2 or later</license>
+    <authorEmail>sales@joomline.ru</authorEmail>
+    <authorUrl>joomline.ru</authorUrl>
+    <version>@version@</version>
+    <description>MOD_JLCONTENTFIELDSFILTER_XML_DESCRIPTION</description>
+    <files>
+        <folder>assets</folder>
+        <folder>elements</folder>
+        <folder>language</folder>
+        <folder>layouts</folder>
+        <folder>tmpl</folder>
+        <filename module="mod_jlcontentfieldsfilter">mod_jlcontentfieldsfilter.php</filename>
+        <filename>helper.php</filename>
+        <filename>index.html</filename>
+        <filename>mod_jlcontentfieldsfilter.xml</filename>
+    </files>
+    <languages>
+        <language tag="en-GB">language/en-GB/en-GB.mod_jlcontentfieldsfilter.ini</language>
+        <language tag="en-GB">language/en-GB/en-GB.mod_jlcontentfieldsfilter.sys.ini</language>
+        <language tag="ru-RU">language/ru-RU/ru-RU.mod_jlcontentfieldsfilter.ini</language>
+        <language tag="ru-RU">language/ru-RU/ru-RU.mod_jlcontentfieldsfilter.sys.ini</language>
+    </languages>
 
-	<config>
-		<fields name="params" addfieldpath="/modules/mod_jlcontentfieldsfilter/elements">
-			<fieldset name="basic">
-
+    <config>
+        <fields name="params" addfieldpath="/modules/mod_jlcontentfieldsfilter/elements">
+            <fieldset name="basic">
                 <field
-                        name="enabled_components"
-                        type="checkboxes"
-                        label="MOD_JLCONTENTFIELDSFILTER_ENABLED_COMPONENTS"
-                        description="MOD_JLCONTENTFIELDSFILTER_ENABLED_COMPONENTS_DESC"
-                        >
+                    name="enabled_components"
+                    type="checkboxes"
+                    label="MOD_JLCONTENTFIELDSFILTER_ENABLED_COMPONENTS"
+                    description="MOD_JLCONTENTFIELDSFILTER_ENABLED_COMPONENTS_DESC"
+                >
                     <option value="com_content">MOD_JLCONTENTFIELDSFILTER_ENABLE_COM_CONTENT</option>
                     <option value="com_contact">MOD_JLCONTENTFIELDSFILTER_ENABLE_COM_CONTACT</option>
-				</field>
-                <field
-                        name="categories"
-                        type="category"
-                        extension='com_content'
-                        default="0"
-                        multiple="multiple"
-                        label="MOD_JLCONTENTFIELDSFILTER_ALLOWED_CATEGORY"
-                        description="MOD_JLCONTENTFIELDSFILTER_ALLOWED_CATEGORY_DESC"
-                        >
-                    <option value="-1">JALL</option>
-				</field>
-                <field
-                        name="contact_categories"
-                        type="category"
-                        extension='com_contact'
-                        default="0"
-                        multiple="multiple"
-                        label="MOD_JLCONTENTFIELDSFILTER_ALLOWED_CONTACT_CATEGORY"
-                        description="MOD_JLCONTENTFIELDSFILTER_ALLOWED_CONTACT_CATEGORY_DESC"
-                        >
-                    <option value="-1">JALL</option>
-				</field>
-                <field
-                        name="form_method"
-                        type="list"
-                        default="post"
-                        label="MOD_JLCONTENTFIELDSFILTER_FORM_METHOD"
-                        description="MOD_JLCONTENTFIELDSFILTER_FORM_METHOD_DESC"
-                        >
-                    <option value="post">POST</option>
-                    <option value="get">GET</option>
-				</field>
-                <field
-                        name="autho_send"
-                        type="list"
-                        default="0"
-                        label="MOD_JLCONTENTFIELDSFILTER_AUTHO_SEND"
-                        description="MOD_JLCONTENTFIELDSFILTER_AUTHO_SEND_DESC"
-                        >
-                    <option value="1">JYES</option>
-                    <option value="0">JNO</option>
-				</field>
-                <field
-                        name="ajax"
-                        type="list"
-                        default="0"
-                        label="MOD_JLCONTENTFIELDSFILTER_AJAX"
-                        description="MOD_JLCONTENTFIELDSFILTER_AJAX_DESC"
-                        >
-                    <option value="1">JYES</option>
-                    <option value="0">JNO</option>
-				</field>
-                <field
-                        name="ajax_selector"
-                        type="text"
-                        default="#content"
-                        label="MOD_JLCONTENTFIELDSFILTER_AJAX_SELECTOR"
-                        description="MOD_JLCONTENTFIELDSFILTER_AJAX_SELECTOR_DESC"
-                        />
-                <field
-                        name="enable_ordering"
-                        type="list"
-                        default="0"
-                        label="MOD_JLCONTENTFIELDSFILTER_ENABLE_ORDERING"
-                        description="MOD_JLCONTENTFIELDSFILTER_ENABLE_ORDERING_DESC"
-                        >
-                    <option value="1">JYES</option>
-                    <option value="0">JNO</option>
-				</field>
-
-			</fieldset>
-
-            <fieldset name="advanced">
-				<field
-						name="count_cols"
-						type="text"
-						label="MOD_JLCONTENTFIELDSFILTER_COUNT_COLS"
-						description="MOD_JLCONTENTFIELDSFILTER_COUNT_COLS_DESC"
-						default="2"
-						filter="integer"
-				/>
-				<field
-						name="ajax_loader"
-						type="media"
-						label="MOD_JLCONTENTFIELDSFILTER_AJAX_LOADER"
-						description="MOD_JLCONTENTFIELDSFILTER_AJAX_LOADER_DESC"
-						default=""
-				/>
-				<field
-						name="ajax_loader_width"
-						type="text"
-						label="MOD_JLCONTENTFIELDSFILTER_AJAX_LOADER_WIDTH"
-						description="MOD_JLCONTENTFIELDSFILTER_AJAX_LOADER_WIDTH_DESC"
-						default="32"
-						filter="integer"
-				/>
-                <field
-                        name="layout"
-                        type="modulelayout"
-                        label="JFIELD_ALT_LAYOUT_LABEL"
-                        description="JFIELD_ALT_MODULE_LAYOUT_DESC"/>
-
-                <field
-                        name="moduleclass_sfx"
-                        type="textarea" rows="3"
-                        label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL"
-                        description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC"/>
-
-                <field
-                        name="cache"
-                        type="list"
-                        default="1"
-                        label="COM_MODULES_FIELD_CACHING_LABEL"
-                        description="COM_MODULES_FIELD_CACHING_DESC">
-                    <option
-                            value="1">JGLOBAL_USE_GLOBAL
-                    </option>
-                    <option
-                            value="0">COM_MODULES_FIELD_VALUE_NOCACHING
-                    </option>
                 </field>
                 <field
-                        name="cache_time"
-                        type="text"
-                        default="900"
-                        label="COM_MODULES_FIELD_CACHE_TIME_LABEL"
-                        description="COM_MODULES_FIELD_CACHE_TIME_DESC"/>
+                    name="categories"
+                    type="category"
+                    extension='com_content'
+                    default="0"
+                    multiple="multiple"
+                    label="MOD_JLCONTENTFIELDSFILTER_ALLOWED_CATEGORY"
+                    description="MOD_JLCONTENTFIELDSFILTER_ALLOWED_CATEGORY_DESC"
+                >
+                    <option value="-1">JALL</option>
+                </field>
                 <field
-                        name="cachemode"
-                        type="hidden"
-                        default="itemid">
+                    name="contact_categories"
+                    type="category"
+                    extension='com_contact'
+                    default="0"
+                    multiple="multiple"
+                    label="MOD_JLCONTENTFIELDSFILTER_ALLOWED_CONTACT_CATEGORY"
+                    description="MOD_JLCONTENTFIELDSFILTER_ALLOWED_CONTACT_CATEGORY_DESC"
+                >
+                    <option value="-1">JALL</option>
+                </field>
+                <field
+                    name="form_method"
+                    type="list"
+                    default="post"
+                    label="MOD_JLCONTENTFIELDSFILTER_FORM_METHOD"
+                    description="MOD_JLCONTENTFIELDSFILTER_FORM_METHOD_DESC"
+                >
+                    <option value="post">POST</option>
+                    <option value="get">GET</option>
+                </field>
+                <field
+                    name="autho_send"
+                    type="list"
+                    default="0"
+                    label="MOD_JLCONTENTFIELDSFILTER_AUTHO_SEND"
+                    description="MOD_JLCONTENTFIELDSFILTER_AUTHO_SEND_DESC"
+                >
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+                <field
+                    name="ajax"
+                    type="list"
+                    default="0"
+                    label="MOD_JLCONTENTFIELDSFILTER_AJAX"
+                    description="MOD_JLCONTENTFIELDSFILTER_AJAX_DESC"
+                >
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+                <field
+                    name="ajax_selector"
+                    type="text"
+                    default="#content"
+                    label="MOD_JLCONTENTFIELDSFILTER_AJAX_SELECTOR"
+                    description="MOD_JLCONTENTFIELDSFILTER_AJAX_SELECTOR_DESC"
+                />
+                <field
+                    name="enable_ordering"
+                    type="list"
+                    default="0"
+                    label="MOD_JLCONTENTFIELDSFILTER_ENABLE_ORDERING"
+                    description="MOD_JLCONTENTFIELDSFILTER_ENABLE_ORDERING_DESC"
+                >
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+            </fieldset>
+
+            <fieldset name="advanced">
+                <field
+                    name="count_cols"
+                    type="text"
+                    label="MOD_JLCONTENTFIELDSFILTER_COUNT_COLS"
+                    description="MOD_JLCONTENTFIELDSFILTER_COUNT_COLS_DESC"
+                    default="2"
+                    filter="integer"
+                />
+                <field
+                    name="ajax_loader"
+                    type="media"
+                    label="MOD_JLCONTENTFIELDSFILTER_AJAX_LOADER"
+                    description="MOD_JLCONTENTFIELDSFILTER_AJAX_LOADER_DESC"
+                    default=""
+                />
+                <field
+                    name="ajax_loader_width"
+                    type="text"
+                    label="MOD_JLCONTENTFIELDSFILTER_AJAX_LOADER_WIDTH"
+                    description="MOD_JLCONTENTFIELDSFILTER_AJAX_LOADER_WIDTH_DESC"
+                    default="32"
+                    filter="integer"
+                />
+                <field
+                    name="enable_css"
+                    type="list"
+                    default="1"
+                    label="MOD_JLCONTENTFIELDSFILTER_ENABLE_CSS"
+                    description="MOD_JLCONTENTFIELDSFILTER_ENABLE_CSS_DESC"
+                >
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+                <field
+                    name="layout"
+                    type="modulelayout"
+                    label="JFIELD_ALT_LAYOUT_LABEL"
+                    description="JFIELD_ALT_MODULE_LAYOUT_DESC"
+                />
+                <field
+                    name="moduleclass_sfx"
+                    type="textarea" rows="3"
+                    label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL"
+                    description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC"
+                />
+                <field
+                    name="cache"
+                    type="list"
+                    default="1"
+                    label="COM_MODULES_FIELD_CACHING_LABEL"
+                    description="COM_MODULES_FIELD_CACHING_DESC"
+                >
+                    <option value="1">JGLOBAL_USE_GLOBAL</option>
+                    <option value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
+                </field>
+                <field
+                    name="cache_time"
+                    type="text"
+                    default="900"
+                    label="COM_MODULES_FIELD_CACHE_TIME_LABEL"
+                    description="COM_MODULES_FIELD_CACHE_TIME_DESC"
+                />
+                <field
+                    name="cachemode"
+                    type="hidden"
+                    default="itemid"
+                >
                     <option value="itemid"></option>
                 </field>
             </fieldset>
-		</fields>
-	</config>	
+        </fields>
+    </config>	
 </extension>

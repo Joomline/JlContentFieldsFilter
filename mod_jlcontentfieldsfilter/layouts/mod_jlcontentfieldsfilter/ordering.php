@@ -24,14 +24,10 @@ if(!is_array($options) || !count($options)){
 }
 
 ?>
-<div class="control-group">
-    <h4>
-		<?php echo JText::_('MOD_JLCONTENTFIELDSFILTER_ORDERING'); ?>
-    </h4>
-    <div class="controls">
-		<?php
-        echo JHtml::_('select.genericlist', $options, 'jlcontentfieldsfilter[ordering]',
-			'class="span12" ', 'value', 'text', $selected, 'jlcontentfieldsfilter-ordering-'.$moduleId);
-		?>
-    </div>
-</div>
+<label class="jlmf-label" for="jlcontentfieldsfilter-ordering-<?php echo $moduleId; ?>"><?php echo JText::_('MOD_JLCONTENTFIELDSFILTER_ORDERING'); ?></label>
+<?php
+echo JHtml::_('select.genericlist', $options, 'jlcontentfieldsfilter[ordering]',
+    'class="jlmf-select" ', 'value', 'text', $selected, 'jlcontentfieldsfilter-ordering-'.$moduleId);
+?>
+
+

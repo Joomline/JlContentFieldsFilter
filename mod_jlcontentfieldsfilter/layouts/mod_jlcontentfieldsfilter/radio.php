@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 
 if (!key_exists('field', $displayData))
 {
-	return;
+    return;
 }
 
 $moduleId = $displayData['moduleId'];
@@ -25,41 +25,38 @@ $count_cols = (int)$moduleParams->get('count_cols', 2);
 $width = (int)(100/$count_cols);
 
 if(!is_array($options) || !count($options)){
-	return;
+    return;
 }
 
 ?>
-<div class="control-group">
-    <h4>
-		<?php echo $label; ?>
-    </h4>
-    <div class="controls">
 
-		<?php $i = 1; ?>
-		<?php foreach($options as $k => $v) : ?>
-		<?php $checked = in_array($v->value, $value) ? ' checked="checked"' : ''; ?>
-        <label class="span6" for="<?php echo $field->name.'-'. $i.'-'. $moduleId; ?>"
-               style="margin-left: 0px; margin-right: 0px; width: <?php echo $width; ?>%;">
-            <input
-                    type="radio"
-                    value="<?php echo $v->value; ?>"
-                    id="<?php echo $field->name.'-'. $i.'-'. $moduleId; ?>"
-                    name="jlcontentfieldsfilter[<?php echo $field->id; ?>][]"<?php echo $checked; ?>
-            />
-			<?php echo $v->name; ?>
-        </label>
-		<?php if($i % $count_cols == 0) : ?>
-    </div>
-    <div style="clear: both"></div>
-    <div class="controls">
-		<?php endif; ?>
+<div class="jlmf-label"><?php echo $label; ?></div>
+<div class="jlmf-list-<?php echo $count_cols; ?>">
 
-		<?php $i++; ?>
-		<?php endforeach; ?>
+    <?php
+    $i = 1;
+    $groups = array_chunk($options, ceil(count($options) / $count_cols));
+    foreach($groups as $options) {
+        echo '<div>';
+        foreach($options as $k => $v) {
+            $checked = in_array($v->value, $value) ? ' checked="checked"' : '';
+    ?>
+    <div>
+        <input
+            type="radio"
+            value="<?php echo $v->value; ?>"
+            id="<?php echo $field->name.'-'. $i.'-'.$moduleId; ?>"
+            name="jlcontentfieldsfilter[<?php echo $field->id; ?>][]"<?php echo $checked; ?>
+            class="jlmf-radio"
+        />
+        <label class="jlmf-sublabel" for="<?php echo $field->name.'-'. $i.'-'.$moduleId; ?>"><?php echo $v->name; ?></label>
     </div>
-    <input type="button"
-           class="btn btn-small"
-           value="<?php echo JText::_('MOD_JLCONTENTFIELDSFILTER_RADIO_RESET')?>"
-           onclick="JlContentFieldsFilter.clearRadio(this);"
-    >
+    <?php
+            $i++;
+        }
+        echo '</div>';
+    }
+    ?>
 </div>
+
+<button type="button" class="jlmf-link" onclick="JlContentFieldsFilter.clearRadio(this);"><?php echo JText::_('MOD_JLCONTENTFIELDSFILTER_RADIO_RESET')?></button>
