@@ -2,7 +2,7 @@
 /**
  * JL Content Fields Filter
  *
- * @version 	@version@
+ * @version 	1.5.0
  * @author		Joomline
  * @copyright	(C) 2017 Arkadiy Sedelnikov, Joomline. All rights reserved.
  * @license 	GNU General Public License version 2 or later; see	LICENSE.txt
@@ -61,15 +61,21 @@ class ModJlContentFieldsFilterHelper
 
 				$filter_layout = $original->params->get('filter_layout', '');
 				if(!empty($filter_layout)) {
-					$layout = $filter_layout;
+					$filter_layout = explode(':', $filter_layout);
+					$src = $filter_layout[0];
+					$layout = $filter_layout[1];
 				}
 				else {
 					$layout = $content_filter;
 				}
 
-				$basePath = is_file(JPATH_ROOT.'/templates/'.$template.'/html/layouts/mod_jlcontentfieldsfilter/'.$layout.'.php')
-					? JPATH_ROOT.'/templates/'.$template.'/html/layouts'
-					: JPATH_ROOT.'/modules/mod_jlcontentfieldsfilter/layouts';
+				$basePath = $src === '_'
+					? JPATH_ROOT.'/modules/mod_jlcontentfieldsfilter/layouts'
+					: (
+						is_file(JPATH_ROOT.'/templates/'.$src.'/html/layouts/mod_jlcontentfieldsfilter/'.$layout.'.php')
+							? JPATH_ROOT.'/templates/'.$src.'/html/layouts'
+							: JPATH_ROOT.'/modules/mod_jlcontentfieldsfilter/layouts'
+					);
 
 				$displayData = array('field' => $field, 'params' => $params, 'moduleId' => $moduleId, 'rangedata' => array());
 
