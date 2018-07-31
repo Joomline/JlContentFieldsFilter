@@ -1,6 +1,6 @@
 <project name="jlcontentfieldsfilter" default="dist" basedir=".">
 
-	<property name="VERSION" value="1.5.0"/>
+	<property name="VERSION" value="1.6.0"/>
 	
 	<tstamp>
         <format property="DATE" pattern="%d.%m.%Y" />
