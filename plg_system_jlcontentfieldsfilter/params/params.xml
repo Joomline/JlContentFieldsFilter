@@ -20,6 +20,15 @@
 				label="PLG_JLCONTENTFIELDSFILTER_FILTER_LAYOUT"
 				description="PLG_JLCONTENTFIELDSFILTER_FILTER_LAYOUT_DESC"
 			/>
+			<field
+				name="disabled_categories"
+				type="category"
+				extension=""
+				default="0"
+				multiple="multiple"
+				label="PLG_JLCONTENTFIELDSFILTER_FILTER_DISABLEDCATS"
+				description="PLG_JLCONTENTFIELDSFILTER_FILTER_DISABLEDCATS_DESC"
+			/>
 		</fieldset>
 	</fields>
 </form>
