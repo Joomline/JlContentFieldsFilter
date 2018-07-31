@@ -54,6 +54,12 @@ class ModJlContentFieldsFilterHelper
 
 				$content_filter = $original->params->get('content_filter', '');
 
+				$disabled_categories = $original->params->get('disabled_categories', array());
+				if (in_array($category_id, $disabled_categories))
+				{
+					continue;
+				}
+
 				if(empty($content_filter)){
 					unset($fieldIds[$key]);
 					continue;
