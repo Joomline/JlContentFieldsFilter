@@ -76,7 +76,11 @@ class ModJlContentFieldsFilterHelper
 				}
 
 				$basePath = $src === '_'
-					? JPATH_ROOT.'/modules/mod_jlcontentfieldsfilter/layouts'
+					? (
+						is_file(JPATH_ROOT.'/templates/'.$template.'/html/layouts/mod_jlcontentfieldsfilter/'.$layout.'.php')
+							? JPATH_ROOT.'/templates/'.$template.'/html/layouts'
+							: JPATH_ROOT.'/modules/mod_jlcontentfieldsfilter/layouts'
+					)
 					: (
 						is_file(JPATH_ROOT.'/templates/'.$src.'/html/layouts/mod_jlcontentfieldsfilter/'.$layout.'.php')
 							? JPATH_ROOT.'/templates/'.$src.'/html/layouts'
