@@ -45,7 +45,10 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 		{
 			return true;
 		}
-
+		else
+		{
+			$category_extension = explode('.', str_replace('com_fields.field', '', $name))[0];
+		}
 
 		JForm::addFormPath(__DIR__ . '/params');
 		$form->loadFile('params', false);
@@ -61,6 +64,7 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 		}
 
 		$form->setFieldAttribute('content_filter', 'dataType', $dataType, 'params');
+		$form->setFieldAttribute('disabled_categories', 'extension', $category_extension, 'params');
 
 		return true;
 	}
