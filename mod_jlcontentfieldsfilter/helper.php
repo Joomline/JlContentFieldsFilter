@@ -73,6 +73,7 @@ class ModJlContentFieldsFilterHelper
 				}
 				else {
 					$layout = $content_filter;
+					$src = '_';
 				}
 
 				$basePath = $src === '_'
