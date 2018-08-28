@@ -76,7 +76,7 @@ var JlContentFieldsFilter = {
             type: 'POST',
             url: form.attr('action'),
             cache: 'false',
-            data: form.serialize() + '&tmpl=component',
+            data: form.serialize() + '&tmpl=jlcomponent_ajax',
             dataType: 'html',
             success: function (data) {
                 jQuery(params.ajax_selector).html(data);

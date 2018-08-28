@@ -1,6 +1,6 @@
 <project name="jlcontentfieldsfilter" default="dist" basedir=".">
 
-	<property name="VERSION" value="1.6.0"/>
+	<property name="VERSION" value="1.6.1"/>
 	
 	<tstamp>
         <format property="DATE" pattern="%d.%m.%Y" />
@@ -29,7 +29,17 @@
             </filterchain>
         </copy>	
 
-		<copy todir="${build}/plg_system_jlcontentfieldsfilter">
+        <copy todir="${build}/file_jlcomponent_ajax">
+			<fileset dir="file_jlcomponent_ajax" />
+            <filterchain>
+                <replacetokens>
+                    <token key="version" value="${VERSION}" />
+                    <token key="date" value="${DATE}" />
+                </replacetokens>
+            </filterchain>
+        </copy>	
+		
+        <copy todir="${build}/plg_system_jlcontentfieldsfilter">
 			<fileset dir="plg_system_jlcontentfieldsfilter" />
             <filterchain>
                 <replacetokens>
@@ -37,7 +47,7 @@
                     <token key="date" value="${DATE}" />
                 </replacetokens>
             </filterchain>
-        </copy>		
+        </copy>			
     </target>
 
 	<target name="pack-plugins">
