@@ -14,7 +14,7 @@ JHtml::_('jquery.framework');
 
 $doc = JFactory::getDocument();
 
-$doc->addScript(JUri::root().'modules/mod_jlcontentfieldsfilter/assets/javascript/jlcontentfilter.js?v=1', array('version' => 'auto'));
+$doc->addScript(JUri::root().'modules/mod_jlcontentfieldsfilter/assets/javascript/jlcontentfilter.js', array('version' => 'auto'));
 $doc->addScriptDeclaration('
 	JlContentFieldsFilter.init({
 		"autho_send" : '.$autho_send.',
