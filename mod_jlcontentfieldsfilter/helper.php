@@ -45,9 +45,14 @@ class ModJlContentFieldsFilterHelper
 			);
 
 			$new = array();
+            $usedFieldIds = array();
 
 			foreach ($fields as $key => $original)
 			{
+			    if(in_array($original->id, $usedFieldIds)){
+			        continue;
+                }
+                $usedFieldIds[] = $original->id;
 				$field = clone $original;
 				$field->value = isset($values[$field->id]) ? $values[$field->id] : '';
 				$field->rawvalue = $field->value;
