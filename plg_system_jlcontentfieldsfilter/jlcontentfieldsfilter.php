@@ -41,13 +41,14 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 
 		$app = JFactory::getApplication();
 
-		if(!in_array($name, array( 'com_fields.fieldcom_content.article', 'com_fields.fieldcom_contact.contact' )) || !$app->isAdmin())
+		if(!in_array($name, array( 'com_fields.fieldcom_content.article', 'com_fields.field.com_content.article', 'com_fields.fieldcom_contact.contact', 'com_fields.field.com_contact.contact' ))
+            || !$app->isAdmin())
 		{
 			return true;
 		}
 		else
 		{
-			$category_extension = explode('.', str_replace('com_fields.field', '', $name))[0];
+			$category_extension = explode('.', str_replace(array('com_fields.field.', 'com_fields.field'), '', $name))[0];
 		}
 
 		JForm::addFormPath(__DIR__ . '/params');

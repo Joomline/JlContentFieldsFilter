@@ -71,7 +71,11 @@ class ModJlContentFieldsFilterHelper
 				}
 
 				$filter_layout = $original->params->get('filter_layout', '');
-				if(!empty($filter_layout)) {
+				if($content_filter == 'range'){
+                    $layout = $content_filter;
+                    $src = '_';
+                }
+                else if(!empty($filter_layout)) {
 					$filter_layout = explode(':', $filter_layout);
 					$src = $filter_layout[0];
 					$layout = $filter_layout[1];
