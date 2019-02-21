@@ -1,0 +1,37 @@
+.range-block {
+    width: 100% !important;
+    margin-top: 20px
+}
+
+.noUi-horizontal {
+    height: 6px;
+}
+
+html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
+    right: -7px;
+    left: auto;
+}
+
+.noUi-handle {
+    border-radius: 50%;
+}
+
+.noUi-handle:hover {
+    cursor: pointer;
+}
+
+.noUi-handle:focus {
+    outline: none;
+}
+
+.noUi-horizontal .noUi-handle {
+    width: 17px;
+    height: 17px;
+    top: -6px;
+}
+
+.noUi-handle:after,
+.noUi-handle:before
+{
+    display: none;
+}

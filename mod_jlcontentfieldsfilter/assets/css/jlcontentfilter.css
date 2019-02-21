@@ -117,3 +117,94 @@ label.jlmf-sublabel {
     line-height: 32px;
 	margin: 0;
 }
+
+
+
+
+.custom-range {
+    width: 100% !important;
+    position: relative;
+    margin-top: 10px;
+    display: flex;
+    justify-content: stretch;
+}
+
+.custom-range input {
+    margin: auto;
+    outline: none;
+    padding: 0;
+    height: 6px;
+    background-color: #eee;
+    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #F6953E), color-stop(100%, #F6953E));
+    background-image: -webkit-linear-gradient(#F6953E, #F6953E);
+    background-image: -moz-linear-gradient(#F6953E, #F6953E);
+    background-image: -o-linear-gradient(#F6953E, #F6953E);
+    background-image: linear-gradient(#F6953E, #F6953E);
+    background-size: 50% 100%;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    -webkit-appearance: none;
+    z-index: 1;
+    min-width: 17px;
+}
+
+.custom-range input:first-child {
+    border-radius: 10px 0 0 10px;
+    background-position-x: 100%;
+}
+
+.custom-range input:last-child {
+    border-radius: 0 10px 10px 0;
+    position: relative;
+}
+
+
+.custom-range input[type=range]::-webkit-slider-runnable-track {
+    box-shadow: none;
+    border: none;
+    background: transparent;
+    -webkit-appearance: none;
+    z-index: 2;
+}
+
+.custom-range input[type=range]::-moz-range-track {
+    box-shadow: none;
+    border: none;
+    background: transparent;
+    z-index: 2;
+}
+
+.custom-range input[type=range]::-moz-focus-outer {
+    border: 0;
+}
+
+.custom-range input[type=range]::-webkit-slider-thumb {
+    width: 17px;
+    height: 17px;
+    background: #fff;
+    border-radius: 100%;
+    box-shadow: 0 0 1px 0px rgba(0,0,0,0.1);
+    border: 1px solid #ddd;
+    -webkit-appearance: none;
+    z-index: 3;
+}
+
+.custom-range input[type=range]::-moz-range-thumb {
+    width: 17px;
+    height: 17px;
+    background: #fff;
+    border-radius: 100%;
+    box-shadow: 0 0 1px 0px rgba(0,0,0,0.1);
+    border: 1px solid #ddd;
+    z-index: 3;
+}
+
+.custom-range input[type=range]::-ms-thumb {
+    width: 17px;
+    height: 17px;
+    background: #fff;
+    border-color: transparent;
+    border-width: 6px 0;
+    color: transparent;
+    z-index: 3;
+}

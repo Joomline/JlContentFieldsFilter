@@ -2,7 +2,7 @@
 /**
  * JL Content Fields Filter
  *
- * @version 	1.5.0
+ * @version 	@version@
  * @author		Joomline
  * @copyright	(C) 2017 Arkadiy Sedelnikov, Joomline. All rights reserved.
  * @license 	GNU General Public License version 2 or later; see	LICENSE.txt
@@ -95,7 +95,7 @@ class ModJlContentFieldsFilterHelper
 
 				$displayData = array('field' => $field, 'params' => $params, 'moduleId' => $moduleId, 'rangedata' => array());
 
-				if($layout == 'range'){
+				if(preg_match("/^range?.*?$/isu", $layout)) {
 					$displayData = self::addRangeData($displayData, $category_id, $option);
 				}
 

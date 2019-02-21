@@ -28,7 +28,7 @@ var JlContentFieldsFilter = {
                     });
             }
             else if (params.ajax === 1) {
-                jQuery('input[type="submit"]', '#' + id).on('click', function (event) {
+                jQuery('#' + id).on('submit', function (event) {
                     event.preventDefault();
                     $this.loadData(id);
                 });
