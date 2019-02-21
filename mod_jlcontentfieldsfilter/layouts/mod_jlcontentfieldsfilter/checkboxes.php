@@ -48,7 +48,7 @@ if(!is_array($options) || !count($options)){
             name="jlcontentfieldsfilter[<?php echo $field->id; ?>][]"<?php echo $checked; ?>
             class="jlmf-checkbox"
         />
-        <label class="jlmf-sublabel" for="<?php echo $field->name.'-'. $i.'-'.$moduleId; ?>"><?php echo $v->name; ?></label>
+        <label class="jlmf-sublabel" for="<?php echo $field->name.'-'. $i.'-'.$moduleId; ?>"><?php echo JText::_($v->name); ?></label>
     </div>
     <?php
             $i++;

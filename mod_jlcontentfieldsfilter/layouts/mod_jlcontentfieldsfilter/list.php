@@ -40,6 +40,6 @@ if(!count($options)){
 
 	<?php foreach($options as $k => $v) : ?>
 	    <?php $checked = ($v->value == $value) ? ' selected="selected"' : ''; ?>
-        <option value="<?php echo $v->value; ?>" <?php echo $checked; ?>><?php echo $v->text; ?></option>
+        <option value="<?php echo $v->value; ?>" <?php echo $checked; ?>><?php echo JText::_($v->text); ?></option>
 	<?php endforeach; ?>
 </select>
