@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-    let range = document.querySelectorAll('.range');
+    let range = document.querySelectorAll('.jlmf-range');
     let links = document.querySelector('.jlmf-link');
     let sliders = [];
 
