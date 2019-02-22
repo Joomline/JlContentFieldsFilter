@@ -64,7 +64,7 @@ $doc->addStyleSheet('/modules/mod_jlcontentfieldsfilter/assets/css/range.css');
         />
     </div>
 
-    <div class="range-block">
-        <div class="range" data-min="<?php echo $min ?>" data-max="<?php echo $max ?>" data-from="<?php echo $from ?>" data-to="<?php echo $to ?>"></div>
+    <div class="jlmf-range-block">
+        <div class="jlmf-range" data-min="<?php echo $min ?>" data-max="<?php echo $max ?>" data-from="<?php echo $from ?>" data-to="<?php echo $to ?>"></div>
     </div>
 </div>
