@@ -216,8 +216,6 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 			list($ordering, $dirn) = explode('.', $filterData['ordering']);
 			$dirn = !empty($dirn) ? strtoupper($dirn) : 'ASC';
 
-			$ordering = '';
-
 			switch ($option){
 				case 'com_content':
 					switch ($ordering){
@@ -245,6 +243,7 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 							break;
 						case 'name':
 							$ordering = 'a.name';
+                            break;
 						case 'position':
 							$ordering = 'a.con_position';
 							break;
