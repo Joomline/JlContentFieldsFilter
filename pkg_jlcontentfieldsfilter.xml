@@ -4,7 +4,7 @@
     <author>Joomline</author>
 	<packagename>jlcontentfieldsfilter</packagename>
     <creationDate>@date@</creationDate>
-	<copyright>(C) 2017-2018 Joomline. All rights reserved.</copyright>
+	<copyright>(C) 2017-2019 Arkadiy Sedelnikov, Joomline. All rights reserved.</copyright>
 	<license>GNU General Public License version 2 or later; see	LICENSE.txt</license>
 	<authorEmail>sales@joomline.ru</authorEmail>
 	<packager>JoomLine</packager>
@@ -18,5 +18,5 @@
 			<folder type="file" id="file_jlcomponent_ajax" method="upgrade" client="site">file_jlcomponent_ajax</folder>
 		</files>
 
-    <updateservers><server type="extension" priority="1" name="Joomline">https://joomline.net/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=32&amp;dummy=extension.xml</server></updateservers>
+    <updateservers><server type="extension" priority="1" name="JL Content Fields Filter">https://joomline.net/update.html?extension_id=5.xml</server></updateservers>
 </extension>
