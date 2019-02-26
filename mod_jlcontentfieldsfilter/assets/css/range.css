@@ -35,3 +35,17 @@ html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
 {
     display: none;
 }
+
+@media screen and (max-width: 1024px) {
+
+    .noUi-horizontal {
+        height: 12px;
+    }
+
+    .noUi-horizontal .noUi-handle {
+        width: 25px;
+        height: 25px;
+        top: -8px;
+    }
+
+}
