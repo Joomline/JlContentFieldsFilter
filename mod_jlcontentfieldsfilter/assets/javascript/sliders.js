@@ -13,6 +13,10 @@ document.addEventListener("DOMContentLoaded", function () {
         from = parseInt(range[i].getAttribute('data-from')),
         to = parseInt(range[i].getAttribute('data-to'));
 
+        if(Number.isNaN(min) || Number.isNaN(max) || Number.isNaN(from) || Number.isNaN(to)) {
+            continue;
+        }
+        
         if(min !== max) {
 
             sliders[i] = noUiSlider.create(range[i], {
