@@ -33,7 +33,7 @@ class JlcontentfieldsfilterModelItem extends JModelAdmin
         return JTable::getInstance($type, $prefix, $config);
     }
 
-    function save($id, $cid, $meta_title, $meta_desc, $meta_keywords, $publish, $filterData)
+    function saveItem($id, $cid, $meta_title, $meta_desc, $meta_keywords, $publish, $filterData)
     {
         if (!is_array($filterData) || !count($filterData)) {
             return false;

@@ -13,7 +13,9 @@ window.addEventListener("load", function(event) {
             rows: Array,
             columns: Array
         },
-        data: {},
+        data: function () {
+            return {};
+        },
         computed: {
             sortedRows: function () {
                 return this.rows;

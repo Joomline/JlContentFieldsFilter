@@ -104,7 +104,7 @@ class JlcontentfieldsfilterControllerItems extends JControllerAdmin
         $filterData = $app->input->get('jlcontentfieldsfilter', array(), 'array');
 
         $model = $this->getModel();
-        $result = $model->save($id, $cid, $meta_title, $meta_desc, $meta_keywords, $publish, $filterData);
+        $result = $model->saveItem($id, $cid, $meta_title, $meta_desc, $meta_keywords, $publish, $filterData);
         exit(json_encode(array('error' => !$result, 'message' => $message)));
     }
 
