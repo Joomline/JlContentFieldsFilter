@@ -70,6 +70,14 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 		return true;
 	}
 
+	public function onBeforeCompileHead(){
+        if(JFactory::getApplication()->isClient('administrator'))
+        {
+            return;
+        }
+        $this->doMeta();
+    }
+
 	/** Подмена модели категории контента.
 	 * @throws Exception
 	 */
@@ -260,4 +268,75 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 			}
 		}
 	}
+
+	private function doMeta(){
+	    if(!JComponentHelper::isEnabled('com_jlcontentfieldsfilter')){
+	        return;
+        }
+
+        require_once JPATH_ROOT.'/administrator/components/com_jlcontentfieldsfilter/helpers/jlcontentfieldsfilter.php';
+
+        $app = JFactory::getApplication();
+        $input = $app->input;
+        $option = $input->getString('option', '');
+        $view = $input->getString('view', '');
+        $catid = $input->getInt('id', 0);
+
+        if(!in_array($option, array('com_content')) || $view != 'category' || $catid == 0)
+        {
+            return;
+        }
+
+        $filterData = $app->getUserStateFromRequest($option.'.cat_'.$catid.'.jlcontentfieldsfilter', 'jlcontentfieldsfilter', array(), 'array');
+
+	    $doc = JFactory::getDocument();
+
+        if(isset($filterData['ordering'])){
+            unset($filterData['ordering']);
+        }
+        if(isset($filterData['is_filter'])){
+            unset($filterData['is_filter']);
+        }
+
+        if (!is_array($filterData) || !count($filterData)) {
+            return;
+        }
+
+        $params = JComponentHelper::getParams('com_jlcontentfieldsfilter');
+        $autogeneration = $params->get('autogeneration', 0);
+
+        $filter = JlcontentfieldsfilterHelper::createFilterString($filterData);
+        $hash = JlcontentfieldsfilterHelper::createHash($filter);
+
+
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select('*')
+            ->from('`#__jlcontentfieldsfilter_data`')
+            ->where('`filter_hash` = '.$db->quote($hash))
+            ->where('`publish`  = 1')
+        ;
+        $result = $db->setQuery($query,0,1)->loadObject();
+        if(empty($result->filter_hash)){
+            if(!$autogeneration){
+                return;
+            }
+            else{
+                $result = JlcontentfieldsfilterHelper::createMeta($catid, $filterData);
+            }
+        }
+
+        if(!empty($result->meta_title)){
+            $doc->setTitle($result->meta_title);
+        }
+
+        if(!empty($result->meta_desc)){
+            $doc->setMetaData('description', $result->meta_desc);
+        }
+
+        if(!empty($result->meta_keywords)){
+            $doc->setMetaData('keywords', $result->meta_keywords);
+        }
+
+    }
 }
