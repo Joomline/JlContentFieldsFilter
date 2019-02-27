@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
-<extension type="component" version="1.6.0" method="upgrade">
+<extension type="component" version="3.8.0" method="upgrade">
     <name>com_jlcontentfieldsfilter</name>
     <author>Joomline</author>
     <authorEmail>sale@joomline.ru</authorEmail>
-    <authorUrl>joomline.ru</authorUrl>
-    <copyright>joomline.ru</copyright>
-    <license>GPL v2 or later</license>
-    <version>1.0</version>
+    <authorUrl>https://joomline.ru</authorUrl>
+    <copyright>(C) 2017-2019 Arkadiy Sedelnikov, Joomline. All rights reserved.</copyright>
+    <license>GNU General Public License version 2 or later; see	LICENSE.txt</license>
+    <version>@version@</version>
     <description>COM_JLCONTENTFIELDSFILTER_DESC</description>
-    <creationDate>26 February 2019</creationDate>
+    <creationDate>@date@</creationDate>
     <install>
         <sql>
             <file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
