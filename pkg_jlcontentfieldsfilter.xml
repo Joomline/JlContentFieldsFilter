@@ -16,6 +16,7 @@
 			<folder type="module" id="mod_jlcontentfieldsfilter" method="upgrade" client="site">mod_jlcontentfieldsfilter</folder>
 			<folder type="plugin" id="jlcontentfieldsfilter" group="system" method="upgrade" client="site">plg_system_jlcontentfieldsfilter</folder>
 			<folder type="file" id="file_jlcomponent_ajax" method="upgrade" client="site">file_jlcomponent_ajax</folder>
+			<folder type="component" id="com_jlcontentfieldsfilter" method="upgrade" client="site">com_jlcontentfieldsfilter</folder>
 		</files>
 
     <updateservers><server type="extension" priority="1" name="JL Content Fields Filter">https://joomline.net/update.html?extension_id=5.xml</server></updateservers>

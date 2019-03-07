@@ -37,7 +37,17 @@
                     <token key="date" value="${DATE}" />
                 </replacetokens>
             </filterchain>
-        </copy>	
+        </copy>
+
+        <copy todir="${build}/com_jlcontentfieldsfilter">
+			<fileset dir="com_jlcontentfieldsfilter" />
+            <filterchain>
+                <replacetokens>
+                    <token key="version" value="${VERSION}" />
+                    <token key="date" value="${DATE}" />
+                </replacetokens>
+            </filterchain>
+        </copy>		
 		
         <copy todir="${build}/plg_system_jlcontentfieldsfilter">
 			<fileset dir="plg_system_jlcontentfieldsfilter" />

@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * JL Content Fields Filter
+ *
+ * @version 	@version@
+ * @author		Joomline
+ * @copyright	(C) 2017-2019 Arkadiy Sedelnikov, Joomline. All rights reserved.
+ * @license 	GNU General Public License version 2 or later; see	LICENSE.txt
+ */
+
 // No direct access
 defined( '_JEXEC' ) or die;
 
