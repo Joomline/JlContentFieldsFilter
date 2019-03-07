@@ -121,8 +121,46 @@ class ModJlContentFieldsFilterHelper
 		      ->where('`field_id` ='.(int)$field->id)
 		;
 		$subquery = '';
-		if($option == 'com_content'){
-			$subquery = 'SELECT `id` FROM `#__content` WHERE `catid` = '.(int)$category_id;
+		if($option == 'com_content')
+		{
+            $params = JComponentHelper::getParams('com_content');
+            $showSubcategories = $params->get('show_subcategory_content', '0');
+
+            if($showSubcategories != 0){
+                $q = $db->getQuery(true);
+                $q->select('id, lft, rgt, level')
+                    ->from('#__categories')
+                    ->where('id = '.(int)$category_id)
+                ;
+                $oCat = $db->setQuery($q,0,1)->loadObject();
+
+                if(empty($oCat->id)){
+                    return $displayData;
+                }
+
+                $q->clear()->select('id')
+                    ->from('#__categories')
+                    ->where('lft >= '.(int)$oCat->lft)
+                    ->where('rgt <= '.(int)$oCat->rgt)
+                ;
+
+                if($showSubcategories > 0){
+                    $maxLevel = $oCat->level + $showSubcategories;
+                    $q->where('level <= '.(int)$maxLevel);
+                }
+
+                $aCats = $db->setQuery($q)->loadColumn();
+
+                if(!is_array($aCats) || !count($aCats)){
+                    return $displayData;
+                }
+
+                $subquery = 'SELECT `id` FROM `#__content` WHERE `catid` IN('.implode(',', $aCats).')';
+            }
+            else{//No subcategories
+                $subquery = 'SELECT `id` FROM `#__content` WHERE `catid` = '.(int)$category_id;
+            }
+
 		}
 		else if($option == 'com_contact'){
 			$subquery = 'SELECT `id` FROM `#__contact_details` WHERE `catid` = '.(int)$category_id;
