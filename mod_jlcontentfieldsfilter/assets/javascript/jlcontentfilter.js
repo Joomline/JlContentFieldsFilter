@@ -1,3 +1,18 @@
+// closest() polyfill for ie9+
+if (window.Element && !Element.prototype.closest) {
+    Element.prototype.closest = function (s) {
+        var
+            matches = (this.document || this.ownerDocument).querySelectorAll(s),
+            i,
+            el = this;
+        do {
+            i = matches.length;
+            while (--i >= 0 && matches.item(i) !== el) { };
+        } while ((i < 0) && (el = el.parentElement));
+        return el;
+    };
+}
+
 var JlContentFieldsFilter = {
     params: [],
     init: function (data) {
@@ -16,20 +31,22 @@ var JlContentFieldsFilter = {
             if (params.autho_send === 1) {
                 var sendTimeoutID = 0;
 
-                document.querySelectorAll('input[type="radio"], input[type="checkbox"], select, #' + id).forEach(function (e) {
-                    e.addEventListener('change', function (el) {
+                var els = document.querySelectorAll('input[type="radio"], input[type="checkbox"], select, #' + id);
+                for (var i = 0; i < els.length; i++) {
+                    els[i].addEventListener('change', function (el) {
                         params.ajax === 1 ? $this.loadData(id) : el.closest('form').submit();
                     });
-                });
+                }
 
-                document.querySelectorAll('input[type="text"], #' + id).forEach(function (e) {
-                    e.addEventListener('change', function (el) {
+                var els = document.querySelectorAll('input[type="text"], #' + id);
+                for (var i = 0; i < els.length; i++) {
+                    els[i].addEventListener('change', function (el) {
                         clearTimeout(sendTimeoutID);
                         sendTimeoutID = setTimeout(function () {
                             params.ajax === 1 ? $this.loadData(id) : el.closest('form').submit();
                         }, 500);
                     });
-                });
+                }
             } else if (params.ajax === 1) {
                 document.getElementById(id).addEventListener('submit', function (event) {
                     event.preventDefault();
@@ -44,22 +61,25 @@ var JlContentFieldsFilter = {
         var id = form.getAttribute('id');
         var params = this.params[id];
 
-        form.querySelectorAll('input[type="checkbox"], select>option, select').forEach(function (el) {
-            if (el.checked) {
-                el.checked = false;
+        var els = form.querySelectorAll('input[type="checkbox"], select>option, select');
+        for (var i = 0; i < els.length; i++) {
+            if (els[i].checked) {
+                els[i].checked = false;
             }
-            if (el.selected) {
-                el.selected = false;
+            if (els[i].selected) {
+                els[i].selected = false;
             }
-        });
+        }
 
-        form.querySelectorAll('input[type="text"]').forEach(function (el) {
-            el.value = '';
-        });
+        var els = form.querySelectorAll('input[type="text"]');
+        for (var i = 0; i < els.length; i++) {
+            els[i].value = '';
+        }
 
-        form.querySelectorAll('select').forEach(function (el) {
-            el.selectedIndex = 0;
-        });
+        var els = form.querySelectorAll('select');
+        for (var i = 0; i < els.length; i++) {
+            els[i].selectedIndex = 0;
+        }
 
         if (params.ajax === 1 && params.autho_send === 1) {
             this.loadData(id);
@@ -76,11 +96,12 @@ var JlContentFieldsFilter = {
         var id = form.getAttribute('id');
         var params = this.params[id];
 
-        form.querySelectorAll('input[type="radio"], select>option, select').forEach(function (el) {
-            if (el.checked) {
-                el.checked = false;
+        var els = form.querySelectorAll('input[type="radio"]');
+        for (var i = 0; i < els.length; i++) {
+            if (els[i].checked) {
+                els[i].checked = false;
             }
-        });
+        }
 
         if (params.autho_send === 1) {
             if (params.ajax === 1) {
