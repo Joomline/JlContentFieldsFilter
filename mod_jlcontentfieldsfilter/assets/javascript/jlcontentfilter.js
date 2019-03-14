@@ -11,110 +11,135 @@ var JlContentFieldsFilter = {
         };
         var $this = this;
         var params = this.params[id];
-        jQuery(document).ready(function () {
+
+        document.addEventListener('DOMContentLoaded', function () {
             if (params.autho_send === 1) {
                 var sendTimeoutID = 0;
-                jQuery('input[type="radio"], input[type="checkbox"], select', '#' + id)
-                    .on('change', function () {
-                        params.ajax === 1 ? $this.loadData(id) : jQuery(this).parents('form').submit();
+
+                document.querySelectorAll('input[type="radio"], input[type="checkbox"], select, #' + id).forEach(function (e) {
+                    e.addEventListener('change', function (el) {
+                        params.ajax === 1 ? $this.loadData(id) : el.closest('form').submit();
                     });
-                jQuery('input[type="text"]', '#' + id)
-                    .on('keyup', function () {
-                        var input = jQuery(this);
+                });
+
+                document.querySelectorAll('input[type="text"], #' + id).forEach(function (e) {
+                    e.addEventListener('change', function (el) {
                         clearTimeout(sendTimeoutID);
                         sendTimeoutID = setTimeout(function () {
-                            params.ajax === 1 ? $this.loadData(id) : input.parents('form').submit();
+                            params.ajax === 1 ? $this.loadData(id) : el.closest('form').submit();
                         }, 500);
                     });
-            }
-            else if (params.ajax === 1) {
-                jQuery('#' + id).on('submit', function (event) {
+                });
+            } else if (params.ajax === 1) {
+                document.getElementById(id).addEventListener('submit', function (event) {
                     event.preventDefault();
                     $this.loadData(id);
                 });
             }
         });
     },
+
     clearForm: function (element) {
-        var form = jQuery(element).parents('form');
-        var id = form.attr('id');
+        var form = element.closest('form');
+        var id = form.getAttribute('id');
         var params = this.params[id];
-        form.find(':checked, :selected, select')
-            .not('[type="button"], [type="submit"], [type="reset"], [type="hidden"]')
-            .removeAttr('checked')
-            .removeAttr('selected');
-        form.find('input[type="text"]').val('');
-        form.find('select').prop('selectedIndex', 0);
+
+        form.querySelectorAll('input[type="checkbox"], select>option, select').forEach(function (el) {
+            if (el.checked) {
+                el.checked = false;
+            }
+            if (el.selected) {
+                el.selected = false;
+            }
+        });
+
+        form.querySelectorAll('input[type="text"]').forEach(function (el) {
+            el.value = '';
+        });
+
+        form.querySelectorAll('select').forEach(function (el) {
+            el.selectedIndex = 0;
+        });
+
         if (params.ajax === 1 && params.autho_send === 1) {
             this.loadData(id);
         }
         else if (params.autho_send === 1) {
-            jQuery(id).submit();
+            document.getElementById(id).submit();
         }
+
         return false;
     },
+
     clearRadio: function (element) {
-        var form = jQuery(element).parents('form');
-        var id = form.attr('id');
+        var form = element.closest('form');
+        var id = form.getAttribute('id');
         var params = this.params[id];
-        jQuery(element).parent().find('input[type="radio"]:checked').removeAttr('checked');
+
+        form.querySelectorAll('input[type="radio"], select>option, select').forEach(function (el) {
+            if (el.checked) {
+                el.checked = false;
+            }
+        });
+
         if (params.autho_send === 1) {
             if (params.ajax === 1) {
                 this.loadData(id);
-            }
-            else {
-                jQuery(element).parents('form').submit();
+            } else {
+                document.getElementById(id).submit();
             }
         }
     },
+
     loadData: function (id) {
-        var $this = this;
-        var params = this.params[id];
-        var form = jQuery('#' + id);
+        var
+            $this = this,
+            params = this.params[id],
+            form = document.getElementById(id),
+            formData = new FormData(form),
+            request = new XMLHttpRequest();
+
         $this.ShowLoadingScreen(id);
-        jQuery.ajax({
-            type: 'POST',
-            url: form.attr('action'),
-            cache: 'false',
-            data: form.serialize() + '&tmpl=jlcomponent_ajax',
-            dataType: 'html',
-            success: function (data) {
-                jQuery(params.ajax_selector).html(data);
-                $this.HideLoadingScreen();
+
+        formData.append('tmpl', 'jlcomponent_ajax');
+
+        request.open('POST', form.getAttribute('action'));
+        request.send(formData);
+
+        request.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
+                try {
+                    document.querySelector(params.ajax_selector).innerHTML = this.response;
+                } catch (e) {
+                    console.log(this.response);
+                }
             }
-        });
+            $this.HideLoadingScreen();
+        };
+
     },
+
     ShowLoadingScreen: function (id) {
         var params = this.params[id];
-        jQuery("body").css("cursor", "wait");
+        document.body.style.cursor = 'wait';
 
-        var fade_div = jQuery("#id_admin_forms_fade");
+        var fade_div = document.getElementById('id_admin_forms_fade');
 
-        if (fade_div.length == 0) {
-            // Создаем div
-            fade_div = jQuery('<div></div>')
-                .appendTo(document.body)
-                .hide()
-                .attr('id', "id_admin_forms_fade")
-                .attr('className', "shadowed")
-                .css('z-index', "1500")
-                .css('position', "absolute")
-                .css('left', "50%")
-                .css('top', "50%")
-                .append('<img src="' + params.ajax_loader + '" id="id_fade_div_img" />')
-                .css('width', params.ajax_loader_width);
+        if (fade_div == null) {
+            // Create div
+            fade_div = document.createElement('div');
+            fade_div.setAttribute('id', 'id_admin_forms_fade');
+            fade_div.className = 'shadowed';
+            fade_div.setAttribute('style', 'display:none;z-index:1500;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:' + params.ajax_loader_width);
+            fade_div.innerHTML = '<img src="' + params.ajax_loader + '" id="id_fade_div_img" />';
+            document.body.appendChild(fade_div);
         }
 
-        fade_div
-            .show()
-            .css('top', (jQuery(window).height() - fade_div.outerHeight(true)) / 2 + jQuery(window).scrollTop())
-            .css('left', (jQuery(window).width() - fade_div.outerWidth(true)) / 2 + jQuery(window).scrollLeft());
+        fade_div.style.display = '';
     },
+
     HideLoadingScreen: function () {
-        jQuery("body").css("cursor", "auto");
-        jQuery("#id_admin_forms_fade").css('display', 'none');
+        document.body.style.cursor = 'auto';
+        document.getElementById('id_admin_forms_fade').style.display = 'none';
     }
 };
-
-
-
