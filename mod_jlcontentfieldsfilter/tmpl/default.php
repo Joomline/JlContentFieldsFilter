@@ -10,8 +10,6 @@
 
 defined('_JEXEC') or die;
 
-JHtml::_('jquery.framework');
-
 $doc = JFactory::getDocument();
 
 $doc->addScript(JUri::root().'modules/mod_jlcontentfieldsfilter/assets/javascript/jlcontentfilter.js', array('version' => 'auto'));
