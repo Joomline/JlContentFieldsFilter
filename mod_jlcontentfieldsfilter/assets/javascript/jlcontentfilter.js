@@ -1,18 +1,3 @@
-// closest() polyfill for ie9+
-if (window.Element && !Element.prototype.closest) {
-    Element.prototype.closest = function (s) {
-        var
-            matches = (this.document || this.ownerDocument).querySelectorAll(s),
-            i,
-            el = this;
-        do {
-            i = matches.length;
-            while (--i >= 0 && matches.item(i) !== el) { };
-        } while ((i < 0) && (el = el.parentElement));
-        return el;
-    };
-}
-
 var JlContentFieldsFilter = {
     params: [],
     init: function (data) {
@@ -31,10 +16,10 @@ var JlContentFieldsFilter = {
             if (params.autho_send === 1) {
                 var sendTimeoutID = 0;
 
-                var els = document.querySelectorAll('input[type="radio"], input[type="checkbox"], select, #' + id);
+                var els = document.querySelectorAll('input[type="radio"], input[type="checkbox"], select');
                 for (var i = 0; i < els.length; i++) {
                     els[i].addEventListener('change', function (el) {
-                        params.ajax === 1 ? $this.loadData(id) : el.closest('form').submit();
+                        params.ajax === 1 ? $this.loadData(id) : el.form.submit();
                     });
                 }
 
@@ -43,7 +28,7 @@ var JlContentFieldsFilter = {
                     els[i].addEventListener('change', function (el) {
                         clearTimeout(sendTimeoutID);
                         sendTimeoutID = setTimeout(function () {
-                            params.ajax === 1 ? $this.loadData(id) : el.closest('form').submit();
+                            params.ajax === 1 ? $this.loadData(id) : el.form.submit();
                         }, 500);
                     });
                 }
@@ -57,7 +42,7 @@ var JlContentFieldsFilter = {
     },
 
     clearForm: function (element) {
-        var form = element.closest('form');
+        var form = element.form;
         var id = form.getAttribute('id');
         var params = this.params[id];
 
@@ -85,14 +70,14 @@ var JlContentFieldsFilter = {
             this.loadData(id);
         }
         else if (params.autho_send === 1) {
-            document.getElementById(id).submit();
+            form.submit();
         }
 
         return false;
     },
 
     clearRadio: function (element) {
-        var form = element.closest('form');
+        var form = element.form;
         var id = form.getAttribute('id');
         var params = this.params[id];
 
