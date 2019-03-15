@@ -46,7 +46,7 @@ var JlContentFieldsFilter = {
         var id = form.getAttribute('id');
         var params = this.params[id];
 
-        var els = form.querySelectorAll('input[type="checkbox"], select>option, select');
+        var els = form.querySelectorAll('input[type="checkbox"], select > option');
         for (var i = 0; i < els.length; i++) {
             if (els[i].checked) {
                 els[i].checked = false;
@@ -54,16 +54,19 @@ var JlContentFieldsFilter = {
             if (els[i].selected) {
                 els[i].selected = false;
             }
+            els[i].dispatchEvent(new Event('change', {'bubbles': true}));
         }
 
         var els = form.querySelectorAll('input[type="text"]');
         for (var i = 0; i < els.length; i++) {
             els[i].value = '';
+            els[i].dispatchEvent(new Event('change', {'bubbles': true}));
         }
 
         var els = form.querySelectorAll('select');
         for (var i = 0; i < els.length; i++) {
             els[i].selectedIndex = 0;
+            els[i].dispatchEvent(new Event('change', {'bubbles': true}));
         }
 
         if (params.ajax === 1 && params.autho_send === 1) {
@@ -86,6 +89,7 @@ var JlContentFieldsFilter = {
             if (els[i].checked) {
                 els[i].checked = false;
             }
+            els[i].dispatchEvent(new Event('change', {'bubbles': true}));
         }
 
         if (params.autho_send === 1) {
