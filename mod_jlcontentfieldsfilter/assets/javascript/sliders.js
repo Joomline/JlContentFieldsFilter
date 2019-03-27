@@ -83,12 +83,15 @@ document.addEventListener("DOMContentLoaded", function () {
             min = parseInt(range[i].getAttribute('data-min')),
             max = parseInt(range[i].getAttribute('data-max'));
 
-            inputMin.value = min;
-            inputMax.value = max;
+            if(!isNaN(min) && !isNaN(max)) {
+                inputMin.value = min;
+                inputMax.value = max;
 
-            sliders[i].updateOptions({
-                start: [min, max]
-            });
+                sliders[i].updateOptions({
+                    start: [min, max]
+                });
+            }
+            
         }
     });
 
