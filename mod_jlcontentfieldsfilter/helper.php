@@ -121,7 +121,7 @@ class ModJlContentFieldsFilterHelper
 		      ->where('`field_id` ='.(int)$field->id)
 		;
 		$subquery = '';
-		if($option == 'com_content')
+		if(in_array($option, array('com_content', 'com_tags')))
 		{
             $params = JComponentHelper::getParams('com_content');
             $showSubcategories = $params->get('show_subcategory_content', '0');
