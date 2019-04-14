@@ -38,6 +38,7 @@
                 >
                     <option value="com_content">MOD_JLCONTENTFIELDSFILTER_ENABLE_COM_CONTENT</option>
                     <option value="com_contact">MOD_JLCONTENTFIELDSFILTER_ENABLE_COM_CONTACT</option>
+                    <option value="com_tags">MOD_JLCONTENTFIELDSFILTER_ENABLE_COM_TAGS</option>
                 </field>
                 <field
                     name="categories"
@@ -61,6 +62,23 @@
                 >
                     <option value="-1">JALL</option>
                 </field>
+                <field
+                        name="tags_tags"
+                        type="tag"
+                        label="MOD_JLCONTENTFIELDSFILTER_ALLOWED_TAGS_TAGS"
+                        description="MOD_JLCONTENTFIELDSFILTER_ALLOWED_TAGS_TAGS_DESC"
+                        multiple="true"
+                        filter="int_array"
+                />
+                <field
+                        name="tags_fields_category"
+                        type="category"
+                        extension='com_content'
+                        default="0"
+                        multiple="false"
+                        label="MOD_JLCONTENTFIELDSFILTER_ALLOWED_TAGS_FIELDS_CAT"
+                        description="MOD_JLCONTENTFIELDSFILTER_ALLOWED_TAGS_FIELDS_CAT_DESC"
+                />
                 <field
                     name="form_method"
                     type="list"

@@ -29,6 +29,7 @@ if($view == 'category')
 
 $jlContentFieldsFilter = $app->getUserStateFromRequest($option.'.cat_'.$catid.'.jlcontentfieldsfilter', 'jlcontentfieldsfilter', array(), 'array');
 
+$enabledComponents = $params->get('enabled_components', array());
 $allowedCats = $params->get('categories', array());
 $allowedContactCats = $params->get('contact_categories', array());
 $moduleclass_sfx = $params->get('moduleclass_sfx', '');
@@ -41,8 +42,21 @@ $ajax_loader = $params->get('ajax_loader', '');
 $ajax_loader = !empty(($ajax_loader)) ? JUri::root().$ajax_loader : '';
 $ajax_loader_width = (int)$params->get('ajax_loader_width', 32);
 
-if(
-	!in_array($option, array('com_content', 'com_contact'))
+
+
+if($option == 'com_tags'){
+    if($view != 'tag' || !in_array($option, $enabledComponents)){
+        return;
+    }
+    $allowedTags = $params->get('tags_tags', array());
+    $catid = (int)$params->get('tags_fields_category', 0);
+    $tagIds = $input->get('id', array(), 'array');
+    if(!count(array_intersect($allowedTags, $tagIds))){
+        return;
+    }
+}
+else if(
+	!in_array($option, $enabledComponents)
     || ($option == 'com_content' && !(!count($allowedCats) || in_array($catid, $allowedCats) || $allowedCats[0] == -1))
     || ($option == 'com_contact' && !(!count($allowedContactCats) || in_array($catid, $allowedContactCats) || $allowedContactCats[0] == -1))
 	|| $catid == 0
@@ -50,11 +64,15 @@ if(
 {
     return;
 }
+
 if($option == 'com_content'){
 	$action = JRoute::_(ContentHelperRoute::getCategoryRoute($catid));
 }
-else{
+else if($option == 'com_contact'){
 	$action = JRoute::_(ContactHelperRoute::getCategoryRoute($catid));
+}
+else{
+	$action = JRoute::_(TagsHelperRoute::getTagsRoute());
 }
 
 $fields = ModJlContentFieldsFilterHelper::getFields($params, $catid, $jlContentFieldsFilter, $module->id, $option);

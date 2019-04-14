@@ -93,14 +93,22 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 		$option = $input->getString('option', '');
 		$view = $input->getString('view', '');
 		$catid = $input->getInt('id', 0);
+        $itemid = $app->input->get('id', 0, 'int') . ':' . $app->input->get('Itemid', 0, 'int');
 
-		if(!in_array($option, array('com_content', 'com_contact')) || $view != 'category' || $catid == 0)
+		if($option == 'com_tags'){
+            if($view != 'tag'){
+                return;
+            }
+            $catid = $input->getInt('tag_category_id', 0);
+            $itemid = implode(',', $app->input->get('id', 0, 'int')) . ':' . $app->input->get('Itemid', 0, 'int');
+        }
+		else if(!in_array($option, array('com_content', 'com_contact')) || $view != 'category' || $catid == 0)
 		{
 			return;
 		}
 
 		$filterData = $app->getUserStateFromRequest($option.'.cat_'.$catid.'.jlcontentfieldsfilter', 'jlcontentfieldsfilter', array(), 'array');
-		$itemid = $app->input->get('id', 0, 'int') . ':' . $app->input->get('Itemid', 0, 'int');
+
 
 		if(!count($filterData))
 		{
@@ -116,6 +124,11 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 		{
 			require_once __DIR__.'/models/com_contact/category.php';
 			$context = 'com_contact.contact';
+		}
+		else if($option == 'com_tags' && !class_exists('TagsModelTag'))
+		{
+			require_once __DIR__.'//models/com_tags/tag.php';
+            $context = 'com_content.article';
 		}
 
 

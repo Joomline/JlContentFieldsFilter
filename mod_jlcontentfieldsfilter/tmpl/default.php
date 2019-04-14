@@ -55,5 +55,8 @@ if ($params->get('enable_css', 1)) {
 		</div>
 
 	</div>
+    <?php if($option == 'com_tags'){ ?>
+    <input type="hidden" name="tag_category_id" value="<?php echo $catid; ?>">
+    <?php } ?>
     <input type="hidden" name="jlcontentfieldsfilter[is_filter]" value="1">
 </form>
