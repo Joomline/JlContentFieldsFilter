@@ -165,12 +165,12 @@
 				<field
                     name="enable_no_jq"
                     type="list"
-                    default="0"
+                    default="1"
                     label="MOD_JLCONTENTFIELDSFILTER_ENABLE_NO_JQ"
                     description="MOD_JLCONTENTFIELDSFILTER_ENABLE_NO_JQ_DESC"
                 >
-                    <option value="1">JYES</option>
-                    <option value="0">JNO</option>
+                    <option value="1">JNO</option>
+                    <option value="0">JYES</option>
                 </field>
                 <field
                     name="layout"
