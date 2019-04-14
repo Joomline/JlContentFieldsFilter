@@ -9,12 +9,14 @@
  */
 
 defined('_JEXEC') or die;
-
-JHtml::_('jquery.framework');
-
 $doc = JFactory::getDocument();
+if ($params->get('enable_no_jq', 0)) {
+	JHtml::_('jquery.framework');
+	$doc->addScript(JUri::root().'modules/mod_jlcontentfieldsfilter/assets/javascript/jlcontentfilter.js', array('version' => 'auto'));
+} else {
+	$doc->addScript(JUri::root().'modules/mod_jlcontentfieldsfilter/assets/javascript/nojq_jlcontentfilter.js', array('version' => 'auto'));
+}
 
-$doc->addScript(JUri::root().'modules/mod_jlcontentfieldsfilter/assets/javascript/jlcontentfilter.js', array('version' => 'auto'));
 $doc->addScriptDeclaration('
 	JlContentFieldsFilter.init({
 		"autho_send" : '.$autho_send.',
