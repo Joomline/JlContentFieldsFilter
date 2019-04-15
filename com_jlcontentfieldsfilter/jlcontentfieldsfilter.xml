@@ -37,4 +37,5 @@
             <filename>jlcontentfieldsfilter.php</filename>
         </files>
     </administration>
+	<updateservers><server type="extension" priority="1" name="JL Content Fields Filter">https://joomline.net/update.html?extension_id=78.xml</server></updateservers>
 </extension>
