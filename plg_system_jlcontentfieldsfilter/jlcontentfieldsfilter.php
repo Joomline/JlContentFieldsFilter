@@ -99,8 +99,9 @@ class plgSystemJlContentFieldsFilter extends JPlugin
             if($view != 'tag'){
                 return;
             }
-            $catid = $input->getInt('tag_category_id', 0);
-            $itemid = implode(',', $app->input->get('id', 0, 'int')) . ':' . $app->input->get('Itemid', 0, 'int');
+            $catid = $app->getUserStateFromRequest($option.'.jlcontentfieldsfilter.tag_category_id', 'tag_category_id', 0, 'int');
+            $tagids = $app->getUserStateFromRequest($option.'.jlcontentfieldsfilter.tag_ids', 'id', array(), 'array');
+            $itemid = implode(',', $tagids) . ':' . $app->input->get('Itemid', 0, 'int');
         }
 		else if(!in_array($option, array('com_content', 'com_contact')) || $view != 'category' || $catid == 0)
 		{
