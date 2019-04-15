@@ -121,7 +121,22 @@ class ModJlContentFieldsFilterHelper
 		      ->where('`field_id` ='.(int)$field->id)
 		;
 		$subquery = '';
-		if(in_array($option, array('com_content', 'com_tags')))
+
+		if($option == 'com_tags'){
+		    $tagIds = JFactory::getApplication()->input->get('id', array(), 'array');
+		    if(!is_array($tagIds)){
+                $tagIds = array((int)$tagIds);
+            }
+            $tagIds = implode(', ', $tagIds);
+            $q = $db->getQuery(true);
+            $q->select('content_item_id')
+                ->from('#__contentitem_tag_map')
+                ->where('type_alias = '.$db->quote('com_content.article'))
+                ->where('tag_id IN('.$tagIds.')')
+            ;
+            $subquery = (string)$q;
+        }
+		else if($option == 'com_content')
 		{
             $params = JComponentHelper::getParams('com_content');
             $showSubcategories = $params->get('show_subcategory_content', '0');
