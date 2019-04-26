@@ -41,6 +41,30 @@
                     <option value="com_tags">MOD_JLCONTENTFIELDSFILTER_ENABLE_COM_TAGS</option>
                 </field>
                 <field
+                        name="show_only_category_page"
+                        type="radio"
+                        label="MOD_JLCONTENTFIELDSFILTER_SHOW_ONLY_CATEGORY_PAGE"
+                        description="MOD_JLCONTENTFIELDSFILTER_SHOW_ONLY_CATEGORY_PAGE_DESC"
+                        class="btn-group btn-group-yesno"
+                        default="0"
+                        filter="integer"
+                >
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+                <field
+                        name="hide_if_empty_category"
+                        type="radio"
+                        class="btn-group btn-group-yesno"
+                        label="MOD_JLCONTENTFIELDSFILTER_HIDE_IF_EMPTY_CATEGORY"
+                        description="MOD_JLCONTENTFIELDSFILTER_HIDE_IF_EMPTY_CATEGORY_DESC"
+                        default="0"
+                        filter="integer"
+                >
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+                <field
                     name="categories"
                     type="category"
                     extension='com_content'
@@ -91,7 +115,8 @@
                 </field>
                 <field
                     name="autho_send"
-                    type="list"
+                    type="radio"
+                    class="btn-group btn-group-yesno"
                     default="0"
                     label="MOD_JLCONTENTFIELDSFILTER_AUTHO_SEND"
                     description="MOD_JLCONTENTFIELDSFILTER_AUTHO_SEND_DESC"
@@ -101,7 +126,8 @@
                 </field>
                 <field
                     name="ajax"
-                    type="list"
+                    type="radio"
+                    class="btn-group btn-group-yesno"
                     default="0"
                     label="MOD_JLCONTENTFIELDSFILTER_AJAX"
                     description="MOD_JLCONTENTFIELDSFILTER_AJAX_DESC"
@@ -118,7 +144,8 @@
                 />
                 <field
                     name="enable_ordering"
-                    type="list"
+                    type="radio"
+                    class="btn-group btn-group-yesno"
                     default="0"
                     label="MOD_JLCONTENTFIELDSFILTER_ENABLE_ORDERING"
                     description="MOD_JLCONTENTFIELDSFILTER_ENABLE_ORDERING_DESC"
@@ -154,7 +181,8 @@
                 />
                 <field
                     name="enable_css"
-                    type="list"
+                    type="radio"
+                    class="btn-group btn-group-yesno"
                     default="1"
                     label="MOD_JLCONTENTFIELDSFILTER_ENABLE_CSS"
                     description="MOD_JLCONTENTFIELDSFILTER_ENABLE_CSS_DESC"
@@ -164,7 +192,8 @@
                 </field>
 				<field
                     name="enable_no_jq"
-                    type="list"
+                    type="radio"
+                    class="btn-group btn-group-yesno"
                     default="1"
                     label="MOD_JLCONTENTFIELDSFILTER_ENABLE_NO_JQ"
                     description="MOD_JLCONTENTFIELDSFILTER_ENABLE_NO_JQ_DESC"

@@ -232,4 +232,16 @@ class ModJlContentFieldsFilterHelper
 
 		return $html;
 	}
+
+	public static function countCatArticles($catid){
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select('COUNT(*)')
+            ->from('`#__content`')
+            ->where('`catid` ='.(int)$catid)
+            ->where('`state` = 1')
+        ;
+
+        return $db->setQuery($query)->loadResult();
+    }
 }

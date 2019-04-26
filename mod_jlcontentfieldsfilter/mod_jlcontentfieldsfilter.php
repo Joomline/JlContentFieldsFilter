@@ -22,9 +22,20 @@ $view = $input->getString('view', '');
 $catid = $input->getInt('catid', 0);
 $id = $input->getInt('id', 0);
 
+$hide_if_empty_category = $params->get('hide_if_empty_category', 0);
+$show_only_category_page = $params->get('show_only_category_page', 0);
+
+if($show_only_category_page && $view != 'category'){
+    return;
+}
+
 if($view == 'category')
 {
 	$catid = $id;
+
+    if($hide_if_empty_category && !ModJlContentFieldsFilterHelper::countCatArticles($catid)){
+        return;
+    }
 }
 
 $jlContentFieldsFilter = $app->getUserStateFromRequest($option.'.cat_'.$catid.'.jlcontentfieldsfilter', 'jlcontentfieldsfilter', array(), 'array');
