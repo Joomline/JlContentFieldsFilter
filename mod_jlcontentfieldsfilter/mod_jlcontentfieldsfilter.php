@@ -38,7 +38,6 @@ if($view == 'category')
     }
 }
 
-$jlContentFieldsFilter = $app->getUserStateFromRequest($option.'.cat_'.$catid.'.jlcontentfieldsfilter', 'jlcontentfieldsfilter', array(), 'array');
 
 $enabledComponents = $params->get('enabled_components', array());
 $allowedCats = $params->get('categories', array());
@@ -75,6 +74,15 @@ else if(
 {
     return;
 }
+
+if($option == 'com_tags'){
+    $context = $option.'.cat_'.implode('_', $tagIds).'.jlcontentfieldsfilter';
+}
+else{
+    $context = $option.'.cat_'.$catid.'.jlcontentfieldsfilter';
+}
+
+$jlContentFieldsFilter = $app->getUserStateFromRequest($context, 'jlcontentfieldsfilter', array(), 'array');
 
 if($option == 'com_content'){
 	$action = JRoute::_(ContentHelperRoute::getCategoryRoute($catid));

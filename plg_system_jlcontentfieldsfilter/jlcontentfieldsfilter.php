@@ -108,7 +108,14 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 			return;
 		}
 
-		$filterData = $app->getUserStateFromRequest($option.'.cat_'.$catid.'.jlcontentfieldsfilter', 'jlcontentfieldsfilter', array(), 'array');
+        if($option == 'com_tags'){
+            $context = $option.'.cat_'.implode('_', $tagids).'.jlcontentfieldsfilter';
+        }
+        else{
+            $context = $option.'.cat_'.$catid.'.jlcontentfieldsfilter';
+        }
+
+		$filterData = $app->getUserStateFromRequest($context, 'jlcontentfieldsfilter', array(), 'array');
 
 
 		if(!count($filterData))
@@ -301,7 +308,15 @@ class plgSystemJlContentFieldsFilter extends JPlugin
             return;
         }
 
-        $filterData = $app->getUserStateFromRequest($option.'.cat_'.$catid.'.jlcontentfieldsfilter', 'jlcontentfieldsfilter', array(), 'array');
+        if($option == 'com_tags'){
+            $tagids = $app->getUserStateFromRequest($option.'.jlcontentfieldsfilter.tag_ids', 'id', array(), 'array');
+            $context = $option.'.cat_'.implode('_', $tagids).'.jlcontentfieldsfilter';
+        }
+        else{
+            $context = $option.'.cat_'.$catid.'.jlcontentfieldsfilter';
+        }
+
+        $filterData = $app->getUserStateFromRequest($tagids, 'jlcontentfieldsfilter', array(), 'array');
 
 	    $doc = JFactory::getDocument();
 
