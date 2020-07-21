@@ -19,7 +19,7 @@ var JlContentFieldsFilter = {
                 var els = document.querySelectorAll('input[type="radio"], input[type="checkbox"], select');
                 for (var i = 0; i < els.length; i++) {
                     els[i].addEventListener('change', function (el) {
-                        params.ajax === 1 ? $this.loadData(id) : el.form.submit();
+                        params.ajax === 1 ? $this.loadData(id) : el.target.form.submit();
                     });
                 }
 
@@ -28,7 +28,7 @@ var JlContentFieldsFilter = {
                     els[i].addEventListener('change', function (el) {
                         clearTimeout(sendTimeoutID);
                         sendTimeoutID = setTimeout(function () {
-                            params.ajax === 1 ? $this.loadData(id) : el.form.submit();
+                            params.ajax === 1 ? $this.loadData(id) : el.target.form.submit();
                         }, 500);
                     });
                 }
