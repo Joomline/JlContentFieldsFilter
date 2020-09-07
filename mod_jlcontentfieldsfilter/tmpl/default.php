@@ -38,10 +38,12 @@ if ($params->get('enable_css', 1)) {
 	<div class="jlcontentfieldsfilter<?php echo $moduleclass_sfx; ?>">
 		
 		<?php foreach($fields as $v) : ?>
-		<div class="jlmf-section">
-            <?php echo $v; ?>
-		</div>	
-        <?php endforeach; ?>
+			<?php if($v):?>
+				<div class="jlmf-section">
+					<?php echo $v; ?>
+				</div>	
+			<?php endif;?>
+		<?php endforeach; ?>
 		
 		<?php if($enableOrdering) : ?>
 		<div class="jlmf-section">
