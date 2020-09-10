@@ -80,6 +80,7 @@ var JlContentFieldsFilter = {
             dataType: 'html',
             success: function (data) {
                 jQuery(params.ajax_selector).html(data);
+                let event = document.dispatchEvent(new CustomEvent('JlContentFieldsFilterLoadDataSuccess'));
                 $this.HideLoadingScreen();
             }
         });

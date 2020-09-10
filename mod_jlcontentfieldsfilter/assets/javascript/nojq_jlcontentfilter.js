@@ -120,6 +120,7 @@ var JlContentFieldsFilter = {
                     console.log(this.response);
                 }
             }
+            let event = document.dispatchEvent(new CustomEvent('JlContentFieldsFilterLoadDataSuccess'));
             $this.HideLoadingScreen();
         };
 
