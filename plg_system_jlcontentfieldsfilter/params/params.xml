@@ -14,7 +14,7 @@
 				>
 				<option value="">JNO</option>
 			</field>
-			<field 
+			<field
 				name="filter_layout"
 				type="jlcontentfieldslayouts"
 				label="PLG_JLCONTENTFIELDSFILTER_FILTER_LAYOUT"
@@ -29,6 +29,28 @@
 				label="PLG_JLCONTENTFIELDSFILTER_FILTER_DISABLEDCATS"
 				description="PLG_JLCONTENTFIELDSFILTER_FILTER_DISABLEDCATS_DESC"
 			/>
+			<field
+				name="field_hidden"
+				type="radio"
+				default="0"
+				label="PLG_JLCONTENTFIELDSFILTER_FILTER_FIELD_HIDDEN_EMPTY"
+				description="PLG_JLCONTENTFIELDSFILTER_FILTER_FIELD_HIDDEN_EMPTY_DESC"
+				class="btn-group"
+				>
+				<option value="0">JNO</option>
+				<option value="1">JYES</option>
+			</field>
+			<field
+				name="options_hidden"
+				type="radio"
+				default="0"
+				label="PLG_JLCONTENTFIELDSFILTER_FILTER_FIELD_HIDDEN_OPTIONS_EMPTY"
+				description="PLG_JLCONTENTFIELDSFILTER_FILTER_FIELD_HIDDEN_OPTIONS_EMPTY_DESC"
+				class="btn-group"
+				>
+				<option value="0">JNO</option>
+				<option value="1">JYES</option>
+			</field>
 		</fieldset>
 	</fields>
 </form>

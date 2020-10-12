@@ -4,7 +4,7 @@
  *
  * @version 	@version@
  * @author		Joomline
- * @copyright	(C) 2017-2019 Arkadiy Sedelnikov, Joomline. All rights reserved.
+ * @copyright	(C) 2017-2020 Arkadiy Sedelnikov, Joomline. All rights reserved.
  * @license 	GNU General Public License version 2 or later; see	LICENSE.txt
  */
 
@@ -22,6 +22,9 @@ $moduleId = $displayData['moduleId'];
 $min = $displayData['min'];
 $max = $displayData['max'];
 $field = $displayData['field'];
+if(!empty($field->hidden)){
+	return;
+}
 $label = JText::_($field->label);
 $value = $field->value;
 $from = !empty($value['from']) ? $value['from'] : $min;

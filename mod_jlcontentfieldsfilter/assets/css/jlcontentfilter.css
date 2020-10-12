@@ -3,7 +3,7 @@
  *
  * @version 	@version@
  * @author		Joomline
- * @copyright	(C) @date@ Aleksey Morozov, Joomline. All rights reserved.
+ * @copyright	(C) 2017-2020 Aleksey Morozov, Joomline. All rights reserved.
  * @license 	GNU General Public License version 2 or later; see	LICENSE.txt
  */
 
@@ -53,6 +53,10 @@ label.jlmf-sublabel {
 [class*="jlmf-list"] > div {
     box-sizing: border-box;
     padding-left: 10px;
+}
+
+[class*="jlmf-list"] > div:empty {
+    display: none;
 }
 
 [class*="jlmf-list"] > div > div:not(:first-child) {
