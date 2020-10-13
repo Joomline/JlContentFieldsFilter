@@ -4,7 +4,7 @@
  *
  * @version 	@version@
  * @author		Joomline
- * @copyright	(C) 2017-2019 Arkadiy Sedelnikov, Joomline. All rights reserved.
+ * @copyright	(C) 2017-2020 Arkadiy Sedelnikov, Joomline. All rights reserved.
  * @license 	GNU General Public License version 2 or later; see	LICENSE.txt
  */
 
@@ -17,6 +17,9 @@ if (!key_exists('field', $displayData))
 
 $moduleId = $displayData['moduleId'];
 $field = $displayData['field'];
+if(!empty($field->hidden)){
+	return;
+}
 $label = JText::_($field->label);
 $value = is_array($field->value) ? $field->value : array();
 $options = (array)$field->fieldparams->get('options', array());
@@ -38,6 +41,9 @@ if(!is_array($options) || !count($options)){
     foreach($groups as $options) {
         echo '<div>';
         foreach($options as $k => $v) {
+            if (!empty($v->hidden)) {
+                continue;
+            }
             $checked = in_array($v->value, $value) ? ' checked="checked"' : '';
     ?>
     <div>

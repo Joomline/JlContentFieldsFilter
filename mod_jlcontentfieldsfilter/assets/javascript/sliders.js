@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if(Number.isNaN(min) || Number.isNaN(max) || Number.isNaN(from) || Number.isNaN(to)) {
             continue;
         }
-        
+
         if(min !== max) {
 
             sliders[i] = noUiSlider.create(range[i], {
@@ -38,6 +38,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 let currentLeft = parseInt(this.value),
                 currentRight = parseInt(inputMax.value);
 
+                currentLeft = isNaN(currentLeft) ? min : currentLeft;
+
                 if(currentLeft > currentRight) {
                     currentLeft = currentRight;
                 }
@@ -56,6 +58,8 @@ document.addEventListener("DOMContentLoaded", function () {
             inputMax.addEventListener('change', function () {
                 let currentLeft = parseInt(inputMin.value),
                 currentRight = parseInt(this.value);
+
+                currentRight = isNaN(currentRight) ? max : currentRight;
 
                 if(currentLeft > currentRight) {
                     currentRight = currentLeft;
@@ -91,7 +95,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     start: [min, max]
                 });
             }
-            
+
         }
     });
 
