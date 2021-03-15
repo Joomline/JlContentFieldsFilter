@@ -258,13 +258,13 @@ class ContentModelCategory extends JModelList
 			$model->setState('filter.max_category_levels', $this->getState('filter.max_category_levels'));
 			$model->setState('list.links', $this->getState('list.links'));
 
-//			//Arkadiy hack
-//			$dispatcher = JEventDispatcher::getInstance();
-//			// Include the content plugins for the change of category state event.
-//			JPluginHelper::importPlugin('system');
-//			// Trigger the onCategoryChangeState event.
-//			$dispatcher->trigger('onGetContentItems', array(&$model));
-//			//end of Arkadiy hack
+			//Arkadiy hack
+			$dispatcher = JEventDispatcher::getInstance();
+			// Include the content plugins for the change of category state event.
+			JPluginHelper::importPlugin('system');
+			// Trigger the onCategoryChangeState event.
+			$dispatcher->trigger('onGetContentItems', array(&$model));
+			//end of Arkadiy hack
 
 			if ($limit >= 0)
 			{
