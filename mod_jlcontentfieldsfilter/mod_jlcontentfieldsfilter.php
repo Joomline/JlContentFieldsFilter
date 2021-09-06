@@ -10,9 +10,11 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Menu\AbstractMenu;
+use Joomla\Component\Contact\Site\Helper\RouteHelper as ContactRouteHelper;
+use Joomla\Component\Tags\Site\Helper\RouteHelper as TagsRouteHelper;
 // Include the helper.
 require_once __DIR__ . '/helper.php';
-require_once JPATH_ROOT. '/components/com_content/helpers/route.php';
 
 $app = JFactory::getApplication();
 $input = $app->input;
@@ -88,10 +90,13 @@ if($option == 'com_content'){
 	$action = JRoute::_(ContentHelperRoute::getCategoryRoute($catid));
 }
 else if($option == 'com_contact'){
-	$action = JRoute::_(ContactHelperRoute::getCategoryRoute($catid));
+	$action = JRoute::_(ContactRouteHelper::getCategoryRoute($catid));
 }
 else{
-	$action = JRoute::_(TagsHelperRoute::getTagsRoute());
+    $menus    = AbstractMenu::getInstance('site');
+    $active = $menus->getActive();
+	$action = JRoute::_($active->link.'&Itemid='.$active->id);
+
 }
 
 $fields = ModJlContentFieldsFilterHelper::getFields($params, $catid, $jlContentFieldsFilter, $module->id, $option);

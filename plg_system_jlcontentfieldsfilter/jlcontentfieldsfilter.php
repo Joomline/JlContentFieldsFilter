@@ -42,7 +42,7 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 		$app = JFactory::getApplication();
 
 		if(!in_array($name, array( 'com_fields.fieldcom_content.article', 'com_fields.field.com_content.article', 'com_fields.fieldcom_contact.contact', 'com_fields.field.com_contact.contact' ))
-            || !$app->isAdmin())
+            || !$app->isClient('administrator'))
 		{
 			return true;
 		}
@@ -92,7 +92,7 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 		$input = $app->input;
 		$option = $input->getString('option', '');
 		$view = $input->getString('view', '');
-
+		$catid = $input->getInt('id', 0);
 
 		if($option == 'com_tags'){
             if($view != 'tag'){
@@ -100,16 +100,14 @@ class plgSystemJlContentFieldsFilter extends JPlugin
             }
             $catid = $app->getUserStateFromRequest($option.'.jlcontentfieldsfilter.tag_category_id', 'tag_category_id', 0, 'int');
             $tagids = $app->getUserStateFromRequest($option.'.jlcontentfieldsfilter.tag_ids', 'id', array(), 'array');
-            $itemid = implode(',', $tagids) . ':' . $input->get('Itemid', 0, 'int');
+            $itemid = implode(',', $tagids) . ':' . $app->input->get('Itemid', 0, 'int');
         }
-		else{
-            $catid = $input->getInt('id', 0);
-            $itemid = $input->get('id', 0, 'int') . ':' . $input->get('Itemid', 0, 'int');
-
-            if(!in_array($option, array('com_content', 'com_contact')) || $view != 'category' || $catid == 0)
-            {
-                return;
-            }
+		else if(!in_array($option, array('com_content', 'com_contact')) || $view != 'category' || $catid == 0)
+		{
+			return;
+		}
+        else{
+            $itemid = $app->input->get('id', 0, 'int') . ':' . $app->input->get('Itemid', 0, 'int');
         }
 
         if($option == 'com_tags'){
@@ -127,21 +125,44 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 			return;
 		}
 
-		if($option == 'com_content' && !class_exists('ContentModelCategory'))
-		{
-			require_once __DIR__.'/models/com_content/category.php';
-			$context = 'com_content.article';
-		}
-		else if($option == 'com_contact' && !class_exists('ContactModelCategory'))
-		{
-			require_once __DIR__.'/models/com_contact/category.php';
-			$context = 'com_contact.contact';
-		}
-		else if($option == 'com_tags' && !class_exists('TagsModelTag'))
-		{
-			require_once __DIR__.'//models/com_tags/tag.php';
-            $context = 'com_content.article';
-		}
+        if (version_compare(JVERSION, '4', 'lt'))
+        {
+            if($option == 'com_content' && !class_exists('ContentModelCategory'))
+            {
+                require_once __DIR__.'/models/com_content/category.php';
+                $context = 'com_content.article';
+            }
+            else if($option == 'com_contact' && !class_exists('ContactModelCategory'))
+            {
+                require_once __DIR__.'/models/com_contact/category.php';
+                $context = 'com_contact.contact';
+            }
+            else if($option == 'com_tags' && !class_exists('TagsModelTag'))
+            {
+                require_once __DIR__.'//models/com_tags/tag.php';
+                $context = 'com_content.article';
+            }
+        }
+        else
+        {
+            if($option == 'com_content' && !class_exists('CategoryModel'))
+            {
+                require_once __DIR__.'/models/com_content/CategoryModel.php';
+                $context = 'com_content.article';
+            }
+            else if($option == 'com_contact' && !class_exists('CategoryModel'))
+            {
+                require_once __DIR__.'/models/com_contact/CategoryModel.php';
+                $context = 'com_contact.contact';
+            }
+            else if($option == 'com_tags' && !class_exists('TagModel'))
+            {
+                require_once __DIR__.'/models/com_tags/TagModel.php';
+                $context = 'com_content.article';
+            }
+        }
+
+
 
 
 		$db = JFactory::getDbo();
