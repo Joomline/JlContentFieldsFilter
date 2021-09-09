@@ -11,4 +11,4 @@ Official page: [RU](https://joomline.ru/rasshirenija/moduli/jlcontentfieldsfilte
 
 ### Статистика
 
-![GitHub all releases](https://img.shields.io/github/downloads/joomline/JlContentFieldsFilter/total?style=for-the-badge)  ![GitHub release (latest by SemVer)](https://img.shields.io/github/downloads/Joomline/JlContentFieldsFilter/latest/total?style=for-the-badge)
+![GitHub all releases](https://img.shields.io/github/downloads/joomline/JlContentFieldsFilter/total?style=for-the-badge&color=blue)  ![GitHub release (latest by SemVer)](https://img.shields.io/github/downloads/Joomline/JlContentFieldsFilter/latest/total?style=for-the-badge&color=blue)
