@@ -360,16 +360,18 @@ class plgSystemJlContentFieldsFilter extends JPlugin
         $autogeneration = $params->get('autogeneration', 0);
 
         $filter = JlcontentfieldsfilterHelper::createFilterString($filterData);
+        $unsafe_filter = JlcontentfieldsfilterHelper::createFilterString($filterData, false);
         $hash = JlcontentfieldsfilterHelper::createHash($filter);
-
+        $unsafe_hash = JlcontentfieldsfilterHelper::createHash($unsafe_filter);
 
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
         $query->select('*')
             ->from('`#__jlcontentfieldsfilter_data`')
-            ->where('`filter_hash` = '.$db->quote($hash))
-            ->where('`publish`  = 1')
-        ;
+            ->where('`filter_hash` = '.$db->quote($hash), 'OR')
+            ->where('`filter_hash` = '.$db->quote($unsafe_hash))
+            ->where('`publish`  = 1');
+
         $result = $db->setQuery($query,0,1)->loadObject();
         if(empty($result->filter_hash)){
             if(!$autogeneration){

@@ -43,7 +43,7 @@ class JlcontentfieldsfilterHelper
         return $result;
     }
 
-    public static function createFilterString($filter)
+    public static function createFilterString($filter, $safe=true)
     {
         ksort($filter);
         $data = array();
@@ -58,14 +58,14 @@ class JlcontentfieldsfilterHelper
                     }
 
                     if (!empty($v)) {
-                        $val[] = $v;
+                        $val[] = $safe ? urlencode($v) : $v;
                     }
                 }
                 if (count($val)) {
                     $data[] = $key . '=' . implode(',', $val);
                 }
             } else {
-                $data[] = $key . '=' . $item;
+                $data[] = $key . '=' . $safe ? urlencode($item) : $item;;
             }
         }
 
