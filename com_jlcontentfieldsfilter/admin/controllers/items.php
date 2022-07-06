@@ -88,8 +88,6 @@ class JlcontentfieldsfilterControllerItems extends JControllerAdmin
         }
 
         $filterData = $app->input->get('jlcontentfieldsfilter', array(), 'array');
-        $filter = JlcontentfieldsfilterHelper::createFilterString($filterData);
-        $hash = JlcontentfieldsfilterHelper::createHash($filter);
 
         $model = $this->getModel();
         $rows = $model->getRows($filterData);
