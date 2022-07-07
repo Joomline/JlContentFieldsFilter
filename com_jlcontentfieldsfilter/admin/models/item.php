@@ -49,25 +49,32 @@ class JlcontentfieldsfilterModelItem extends JModelAdmin
 
         $table = $this->getTable();
         $filter = JlcontentfieldsfilterHelper::createFilterString($filterData);
+        $unsafe_filter = JlcontentfieldsfilterHelper::createFilterString($filterData, false);
         $hash = JlcontentfieldsfilterHelper::createHash($filter);
+        $unsafe_hash = JlcontentfieldsfilterHelper::createHash($unsafe_filter);
         if ($id > 0) {
             $table->load($id);
         } else {
             $table->load(array('filter_hash' => $hash));
             $id = $table->id;
+
+			if($id == 0){
+				$table->load(array('filter_hash' => $unsafe_hash));
+				$id = $table->id;
+			}
         }
 
         $data = array(
-            'meta_title' => $meta_title,
-            'meta_desc' => $meta_desc,
-            'meta_keywords' => $meta_keywords,
-            'publish' => $publish
+	        'filter_hash'   => $hash,
+	        'filter'        => $filter,
+	        'meta_title'    => $meta_title,
+	        'meta_desc'     => $meta_desc,
+	        'meta_keywords' => $meta_keywords,
+	        'publish'       => $publish
         );
 
         if ($id == 0) {
             $data['catid'] = $cid;
-            $data['filter_hash'] = $hash;
-            $data['filter'] = $filter;
         }
 
         return $table->save($data);
@@ -76,14 +83,16 @@ class JlcontentfieldsfilterModelItem extends JModelAdmin
     function getRows($filterData)
     {
         $filter = JlcontentfieldsfilterHelper::createFilterString($filterData);
+		$unsafe_filter = JlcontentfieldsfilterHelper::createFilterString($filterData, false);
         $hash = JlcontentfieldsfilterHelper::createHash($filter);
+	    $unsafe_hash = JlcontentfieldsfilterHelper::createHash($unsafe_filter);
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
         $query->select('*')
             ->from('#__jlcontentfieldsfilter_data')
-//            ->where('filter LIKE ' . $db->quote('%' . $filter . '%'))
-            ->where('filter_hash = ' . $db->quote($hash))
-        ;
+            ->where('filter_hash = ' . $db->quote($hash), 'OR')
+            ->where('filter_hash = ' . $db->quote($unsafe_hash));
+
         $result = $db->setQuery($query)->loadObjectList('id');
         if (!is_array($result)) {
             $result = array();
