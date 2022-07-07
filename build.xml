@@ -1,6 +1,6 @@
 <project name="jlcontentfieldsfilter" default="dist" basedir=".">
 
-	<property name="VERSION" value="2.0.0"/>
+	<property name="VERSION" value="2.0.1"/>
 	
 	<tstamp>
         <format property="DATE" pattern="%d.%m.%Y" />
@@ -58,7 +58,11 @@
                     <token key="date" value="${DATE}" />
                 </replacetokens>
             </filterchain>
-        </copy>			
+        </copy>	
+		
+		<copy todir="${build}/language" >
+			<fileset dir="language" />
+		</copy>
     </target>
 
 	<target name="pack-plugins">
@@ -70,6 +74,7 @@
                 </replacetokens>
             </filterchain>
         </copy>
+
 	</target>
 	
 	<target name="dist" depends="init, replacemodule, pack-plugins">
@@ -78,6 +83,7 @@
 				<include name="file_jlcomponent_ajax/**" />
 				<include name="mod_jlcontentfieldsfilter/**" />
 				<include name="plg_system_jlcontentfieldsfilter/**" />
+				<include name="language/**" />
 				<include name="pkg_jlcontentfieldsfilter.xml" />
 			</fileset>
 		</zip>
