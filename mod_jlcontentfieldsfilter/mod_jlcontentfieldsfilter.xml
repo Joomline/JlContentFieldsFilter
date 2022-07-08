@@ -3,7 +3,7 @@
     <name>MOD_JLCONTENTFIELDSFILTER</name>
     <author>Joomline</author>
     <creationDate>@date@</creationDate>
-    <copyright>(C) 2017-2019 Arkadiy Sedelnikov, Joomline. All rights reserved.</copyright>
+    <copyright>(C) 2017-2022 Arkadiy Sedelnikov, Joomline. All rights reserved.</copyright>
     <license>GNU General Public License version 2 or later</license>
     <authorEmail>sales@joomline.ru</authorEmail>
     <authorUrl>joomline.ru</authorUrl>
@@ -83,7 +83,7 @@
                     multiple="multiple"
                     label="MOD_JLCONTENTFIELDSFILTER_ALLOWED_CONTACT_CATEGORY"
                     description="MOD_JLCONTENTFIELDSFILTER_ALLOWED_CONTACT_CATEGORY_DESC"
-                >
+					>
                     <option value="-1">JALL</option>
                 </field>
                 <field
