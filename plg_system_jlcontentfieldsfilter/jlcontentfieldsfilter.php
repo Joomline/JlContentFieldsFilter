@@ -368,9 +368,9 @@ class plgSystemJlContentFieldsFilter extends JPlugin
         $query = $db->getQuery(true);
         $query->select('*')
             ->from('`#__jlcontentfieldsfilter_data`')
-            ->where('`filter_hash` = '.$db->quote($hash), 'OR')
-            ->where('`filter_hash` = '.$db->quote($unsafe_hash))
-            ->where('`publish`  = 1');
+	        ->where('`filter_hash` = '.$db->quote($hash), 'OR')
+	        ->where('`filter_hash` = '.$db->quote($unsafe_hash))
+	        ->andWhere('`publish`  = 1');
 
         $result = $db->setQuery($query,0,1)->loadObject();
         if(empty($result->filter_hash)){
