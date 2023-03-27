@@ -287,7 +287,7 @@ class ModJlContentFieldsFilterHelper
 		$field = $displayData['field'];
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
-        $query->select('DISTINCT A.`value`, B.`title`')
+		$query->select('DISTINCT A.`value`, B.`title`')
 			->from('`#__fields_values` A')
 			->leftJoin('`#__content` B ON A.`value` = B.`id`')
 			->where('A.`field_id` ='.(int)$field->id)
