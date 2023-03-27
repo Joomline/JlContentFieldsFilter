@@ -188,6 +188,8 @@ class plgSystemJlContentFieldsFilter extends JPlugin
 				case 'radio':
 				case 'checkboxes':
 				case 'list':
+				case 'articles':
+				case 'articleslinked':
 					if(is_array($v) && count($v)){
 						$newVal = array();
 						foreach ( $v as $val ) {
