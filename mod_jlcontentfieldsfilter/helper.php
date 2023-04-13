@@ -291,7 +291,8 @@ class ModJlContentFieldsFilterHelper
 			->from('`#__fields_values` A')
 			->leftJoin('`#__content` B ON A.`value` = B.`id`')
 			->where('A.`field_id` ='.(int)$field->id)
-			->order('A.`value` ASC');
+			->where('B.`state` = 1')
+			->order('B.`title` ASC');
 		;
 		$displayData['articleoptions'] = $db->setQuery($query)->loadObjectList();
 		return $displayData;
