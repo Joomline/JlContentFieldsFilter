@@ -49,7 +49,7 @@ var JlContentFieldsFilter = {
             this.loadData(id);
         }
         else if (params.autho_send === 1) {
-            jQuery(id).submit();
+            jQuery(form).submit();
         }
         return false;
     },

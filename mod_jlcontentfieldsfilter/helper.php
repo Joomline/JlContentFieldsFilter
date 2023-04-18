@@ -92,10 +92,14 @@ class ModJlContentFieldsFilterHelper
                     $field = self::setHiddenOptions($field, $category_id, $option);
                 }
 
-				$displayData = array('field' => $field, 'params' => $params, 'moduleId' => $moduleId, 'rangedata' => array());
+				$displayData = array('field' => $field, 'params' => $params, 'moduleId' => $moduleId, 'rangedata' => array(), 'articleoptions');
 
 				if (preg_match("/^range?.*?$/isu", $layout)) {
 					$displayData = self::addRangeData($displayData, $category_id, $option);
+				}
+
+				if ($layout == 'articles') {
+					$displayData = self::addArticlesFieldData($displayData);
 				}
 
 				$new[$key] = JLayoutHelper::render(
@@ -276,6 +280,21 @@ class ModJlContentFieldsFilterHelper
 		$result = $db->setQuery($query)->loadObject();
 		$displayData['min'] = !empty($result->min) ? (int)$result->min : 0;
 		$displayData['max'] = !empty($result->max) ? (int)$result->max : 0;
+		return $displayData;
+	}
+
+	private static function addArticlesFieldData($displayData) {
+		$field = $displayData['field'];
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select('DISTINCT A.`value`, B.`title`')
+			->from('`#__fields_values` A')
+			->leftJoin('`#__content` B ON A.`value` = B.`id`')
+			->where('A.`field_id` ='.(int)$field->id)
+			->where('B.`state` = 1')
+			->order('B.`title` ASC');
+		;
+		$displayData['articleoptions'] = $db->setQuery($query)->loadObjectList();
 		return $displayData;
 	}
 
