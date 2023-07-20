@@ -14,6 +14,7 @@ use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Form\Form;
+use Joomla\Database\DatabaseInterface;
 
 defined('_JEXEC') or die;
 
@@ -127,7 +128,8 @@ class Jlcontentfieldsfilter extends CMSPlugin
 
 
         if ($option == 'com_content' && !class_exists('CategoryModel')) {
-            require_once __DIR__ . '/models/com_content/CategoryModel.php';
+
+            require_once JPATH_SITE . '/plugins/system/jlcontentfieldsfilter/models/com_content/CategoryModel.php';
             $context = 'com_content.article';
         } else if ($option == 'com_contact' && !class_exists('CategoryModel')) {
             require_once __DIR__ . '/models/com_contact/CategoryModel.php';
@@ -137,7 +139,7 @@ class Jlcontentfieldsfilter extends CMSPlugin
             $context = 'com_content.article';
         }
 
-        $db = $this->getDatabase();
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
 
         $query->select('id, type');
