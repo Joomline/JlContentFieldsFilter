@@ -71,7 +71,7 @@ class plgSystemJlcontentfieldsfilterInstallerScript
      */
     public function postflight($type, $parent)
     {
-    	$db = JFactory::getDbo();
+    	$db = \Joomla\CMS\Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
     	$query = $db->getQuery(true);
     	$query->update('#__extensions')
 	          ->set('enabled = 1')
