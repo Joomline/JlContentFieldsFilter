@@ -11,6 +11,7 @@
 namespace Joomla\Plugin\System\Jlcontentfieldsfilter\Extension;
 
 use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Form\Form;
 
@@ -53,7 +54,10 @@ class Jlcontentfieldsfilter extends CMSPlugin
             $category_extension = explode('.', str_replace(array('com_fields.field.', 'com_fields.field'), '', $name))[0];
         }
 
-        Form::addFormPath(__DIR__ . '/params');
+        Form::addFormPath(JPATH_SITE . '/plugins/system/jlcontentfieldsfilter/src/Params');
+        $plugin = 'plg_system_jlcontentfieldsfilter';
+        $lang = $app->getLanguage();
+        $lang->load($plugin , JPATH_ADMINISTRATOR);
         $form->loadFile('params', false);
 
         if (is_object($data) && !empty($data->type)) {
@@ -101,7 +105,8 @@ class Jlcontentfieldsfilter extends CMSPlugin
             $catid = $app->getUserStateFromRequest($option . '.jlcontentfieldsfilter.tag_category_id', 'tag_category_id', 0, 'int');
             $tagids = $app->getUserStateFromRequest($option . '.jlcontentfieldsfilter.tag_ids', 'id', array(), 'array');
             $itemid = implode(',', $tagids) . ':' . $app->getInput()->get('Itemid', 0, 'int');
-        } else if (!in_array($option, array('com_content', 'com_contact')) || $view != 'category' || $catid == 0) {
+        } else if (
+            !in_array($option, array('com_content', 'com_contact')) || $view != 'category' || $catid == 0) {
             return;
         } else {
             $itemid = $app->getInput()->get('id', 0, 'int') . ':' . $app->getInput()->get('Itemid', 0, 'int');

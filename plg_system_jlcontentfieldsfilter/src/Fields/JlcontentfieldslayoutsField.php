@@ -1,15 +1,25 @@
 <?php
+
+namespace Joomla\Plugin\System\Jlcontentfieldsfilter\Fields;
+
 defined('JPATH_PLATFORM') or die;
 
+use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\Filesystem\Folder;
+use Joomla\Filesystem\Path;
 use Joomla\CMS\Form\FormHelper;
+use Joomla\CMS\Form\Form;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use \Joomla\CMS\Form\FormField;
-jimport('joomla.filesystem.folder');
-// class JlcontentfieldslayoutsField extends FormField
-class JFormFieldJlContentFieldsLayouts extends JFormField
+use Joomla\Database\DatabaseInterface;
+
+
+class JlcontentfieldslayoutsField extends FormField
 {
-    protected $type = 'jlcontentfieldslayouts';
+    protected $type = 'Jlcontentfieldslayouts';
 
     protected $layouts_path = '/modules/mod_jlcontentfieldsfilter/layouts/mod_jlcontentfieldsfilter';
 
@@ -17,7 +27,7 @@ class JFormFieldJlContentFieldsLayouts extends JFormField
 
     protected function getFrontTemplate()
     {
-        $db = JFactory::getDbo();
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
 
         $query
@@ -32,32 +42,23 @@ class JFormFieldJlContentFieldsLayouts extends JFormField
 
     protected function getInput()
     {
-        $client = JApplicationHelper::getClientInfo(0);
-        $client_admin = JApplicationHelper::getClientInfo(1);
+        $client = ApplicationHelper::getClientInfo(0);
 
-        $plugin = 'jlcontentfieldsfilter';
-        $folder = 'system';
-
-
-        $lang = JFactory::getLanguage();
-        $lang->load($plugin . '.sys', $client_admin->path, null, false, true)
-        || $lang->load($plugin . '.sys', $client_admin->path . '/plugins/system/jlcontentfieldsfilter', null, false, true);
-
-        $layouts_path = JPath::clean($client->path . $this->layouts_path);
+        $layouts_path = Path::clean($client->path . $this->layouts_path);
 
         $plugin_layouts = [];
 
         $groups = [];
 
-        if (is_dir($layouts_path) && ($plugin_layouts = JFolder::files($layouts_path, '^[^_]*\.php$'))) {
+        if (is_dir($layouts_path) && ($plugin_layouts = Folder::files($layouts_path, '^[^_]*\.php$'))) {
             $groups['_'] = [];
             $groups['_']['id'] = $this->id . '__';
-            $groups['_']['text'] = JText::sprintf('JOPTION_FROM_MODULE');
-            $groups['_']['items'] = [ JHtml::_('select.option', '', Text::_('JNO')) ];
+            $groups['_']['text'] = Text::sprintf('JOPTION_FROM_MODULE');
+            $groups['_']['items'] = [ HTMLHelper::_('select.option', '', Text::_('JNO')) ];
 
             foreach ($plugin_layouts as $file) {
                 $value = basename($file, '.php');
-                $groups['_']['items'][] = JHtml::_('select.option', '_:' . $value, $value);
+                $groups['_']['items'][] = HTMLHelper::_('select.option', '_:' . $value, $value);
             }
         }
 
@@ -65,12 +66,11 @@ class JFormFieldJlContentFieldsLayouts extends JFormField
         $template = $this->getFrontTemplate();
 
         $template_style_id = '';
-        if ($this->form instanceof JForm) {
-            $template_style_id = $this->form->getValue('template_style_id');
+        if ($this->form instanceof Form && !empty($template_style_id = $this->form->getValue('template_style_id'))) {
             $template_style_id = preg_replace('#\W#', '', $template_style_id);
         }
 
-        $db = JFactory::getDbo();
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
 
         $query
@@ -92,15 +92,15 @@ class JFormFieldJlContentFieldsLayouts extends JFormField
 
         $db->setQuery($query);
         $templates = $db->loadObjectList('element');
-
+        $lang = Factory::getApplication()->getLanguage();
         if ($templates) {
             foreach ($templates as $template) {
                 $lang->load('tpl_' . $template->element . '.sys', $client->path, null, false, true)
                 || $lang->load('tpl_' . $template->element . '.sys', $client->path . '/templates/' . $template->element, null, false, true);
 
-                $template_path = JPath::clean($client->path . '/templates/' . $template->element . '/html/layouts' . $this->layouts_overrided_path);
+                $template_path = Path::clean($client->path . '/templates/' . $template->element . '/html/layouts' . $this->layouts_overrided_path);
 
-                if (is_dir($template_path) && ($files = JFolder::files($template_path, '^[^_]*\.php$'))) {
+                if (is_dir($template_path) && ($files = Folder::files($template_path, '^[^_]*\.php$'))) {
 
                     foreach ($files as $i => $file) {
                         if (in_array($file, $plugin_layouts)) {
@@ -111,12 +111,12 @@ class JFormFieldJlContentFieldsLayouts extends JFormField
                     if (count($files)) {
                         $groups[$template->element] = [];
                         $groups[$template->element]['id'] = $this->id . '_' . $template->element;
-                        $groups[$template->element]['text'] = JText::sprintf('JOPTION_FROM_TEMPLATE', $template->name);
+                        $groups[$template->element]['text'] = Text::sprintf('JOPTION_FROM_TEMPLATE', $template->name);
                         $groups[$template->element]['items'] = [];
 
                         foreach ($files as $file) {
                             $value = basename($file, '.php');
-                            $groups[$template->element]['items'][] = JHtml::_('select.option', $template->element . ':' . $value, $value);
+                            $groups[$template->element]['items'][] = HTMLHelper::_('select.option', $template->element . ':' . $value, $value);
                         }
                     }
                 }
@@ -129,7 +129,7 @@ class JFormFieldJlContentFieldsLayouts extends JFormField
 
         $selected = [$this->value];
 
-        $html[] = JHtml::_('select.groupedlist', $groups, $this->name, ['id' => $this->id, 'group.id' => 'id', 'list.attr' => $attr, 'list.select' => $selected]);
+        $html[] = HTMLHelper::_('select.groupedlist', $groups, $this->name, ['id' => $this->id, 'group.id' => 'id', 'list.attr' => $attr, 'list.select' => $selected]);
 
         return implode($html);
 

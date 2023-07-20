@@ -38,7 +38,6 @@ return new class () implements ServiceProviderInterface {
                 $config = (array)PluginHelper::getPlugin('system', 'Jlcontentfieldsfilter');
                 $plugin = new Jlcontentfieldsfilter($subject, $config);
                 $plugin->setApplication(Factory::getApplication());
-                $plugin->setDatabase(Factory::getContainer()->get(DatabaseInterface::class));
                 return $plugin;
             }
         );

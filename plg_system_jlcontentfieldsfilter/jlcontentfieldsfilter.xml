@@ -11,12 +11,11 @@
 	<description>PLG_JLCONTENTFIELDSFILTER_XML_DESCRIPTION</description>
 	<namespace path="src">Joomla\Plugin\System\Jlcontentfieldsfilter</namespace>
 	<files>
-		<folder>fields</folder>
-		<folder>language</folder>
+		<folder plugin="jlcontentfieldsfilter">src</folder>
+		<folder>services</folder>
 		<folder>models</folder>
 		<folder>params</folder>
-        <filename>index.html</filename>
-		<filename plugin="jlcontentfieldsfilter">jlcontentfieldsfilter.php</filename>
+		<filename>jlcontentfieldsfilter.xml</filename>
 	</files>
 	
 	<languages folder="language">
@@ -31,7 +30,7 @@
 	<scriptfile>script.php</scriptfile>
 
 	<config>
-		<fields name="params" addfieldpath="/plugins/system/minicck/elements">
+		<fields name="params">
             <fieldset name="basic">
 
             </fieldset>
