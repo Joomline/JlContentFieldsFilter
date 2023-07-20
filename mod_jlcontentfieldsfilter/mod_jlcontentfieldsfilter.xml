@@ -3,32 +3,38 @@
     <name>MOD_JLCONTENTFIELDSFILTER</name>
     <author>Joomline</author>
     <creationDate>@date@</creationDate>
-    <copyright>(C) 2017-2022 Arkadiy Sedelnikov, Joomline. All rights reserved.</copyright>
+    <copyright>(C) 2017-2023 Arkadiy Sedelnikov, Joomline. All rights reserved.</copyright>
     <license>GNU General Public License version 2 or later</license>
     <authorEmail>sales@joomline.ru</authorEmail>
-    <authorUrl>joomline.ru</authorUrl>
+    <authorUrl>https://joomline.ru</authorUrl>
     <version>@version@</version>
     <description>MOD_JLCONTENTFIELDSFILTER_XML_DESCRIPTION</description>
+    <namespace path="src">Joomla\Module\Jlcontentfieldsfilter</namespace>
     <files>
+        <folder module="mod_jlcontentfieldsfilter">src</folder>
+        <folder>services</folder>
         <folder>assets</folder>
-        <folder>elements</folder>
-        <folder>language</folder>
+<!--        <folder>elements</folder>-->
         <folder>layouts</folder>
         <folder>tmpl</folder>
-        <filename module="mod_jlcontentfieldsfilter">mod_jlcontentfieldsfilter.php</filename>
-        <filename>helper.php</filename>
-        <filename>index.html</filename>
         <filename>mod_jlcontentfieldsfilter.xml</filename>
     </files>
+    <media folder="media" destination="mod_jlcontentfieldsfilter">
+        <folder>css</folder>
+        <folder>images</folder>
+        <folder>js</folder>
+    </media>
     <languages>
-        <language tag="en-GB">language/en-GB/en-GB.mod_jlcontentfieldsfilter.ini</language>
-        <language tag="en-GB">language/en-GB/en-GB.mod_jlcontentfieldsfilter.sys.ini</language>
-        <language tag="ru-RU">language/ru-RU/ru-RU.mod_jlcontentfieldsfilter.ini</language>
-        <language tag="ru-RU">language/ru-RU/ru-RU.mod_jlcontentfieldsfilter.sys.ini</language>
+        <language tag="en-GB">language/en-GB/mod_jlcontentfieldsfilter.ini</language>
+        <language tag="en-GB">language/en-GB/mod_jlcontentfieldsfilter.sys.ini</language>
+        <language tag="ru-RU">language/ru-RU/mod_jlcontentfieldsfilter.ini</language>
+        <language tag="ru-RU">language/ru-RU/mod_jlcontentfieldsfilter.sys.ini</language>
+        <language tag="fr-FR">language/ru-RU/mod_jlcontentfieldsfilter.ini</language>
+        <language tag="fr-FR">language/ru-RU/mod_jlcontentfieldsfilter.sys.ini</language>
     </languages>
 
     <config>
-        <fields name="params" addfieldpath="/modules/mod_jlcontentfieldsfilter/elements">
+        <fields name="params">
             <fieldset name="basic">
                 <field
                     name="enabled_components"
