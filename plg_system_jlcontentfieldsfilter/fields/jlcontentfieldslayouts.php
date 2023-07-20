@@ -4,9 +4,9 @@ defined('JPATH_PLATFORM') or die;
 use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-
+use \Joomla\CMS\Form\FormField;
 jimport('joomla.filesystem.folder');
-
+// class JlcontentfieldslayoutsField extends FormField
 class JFormFieldJlContentFieldsLayouts extends JFormField
 {
     protected $type = 'jlcontentfieldslayouts';

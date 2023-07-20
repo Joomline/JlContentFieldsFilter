@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="3.8" type="plugin" group="system" method="upgrade">
+<extension type="plugin" group="system" method="upgrade">
 	<name>PLG_JLCONTENTFIELDSFILTER</name>
 	<author>Joomline</author>
 	<creationDate>@date@</creationDate>
@@ -9,7 +9,7 @@
 	<authorUrl>https://joomline.ru</authorUrl>
 	<version>@version@</version>
 	<description>PLG_JLCONTENTFIELDSFILTER_XML_DESCRIPTION</description>
-
+	<namespace path="src">Joomla\Plugin\System\Jlcontentfieldsfilter</namespace>
 	<files>
 		<folder>fields</folder>
 		<folder>language</folder>
@@ -20,10 +20,12 @@
 	</files>
 	
 	<languages folder="language">
-        <language tag="en-GB">en-GB/en-GB.plg_system_jlcontentfieldsfilter.ini</language>
-        <language tag="en-GB">en-GB/en-GB.plg_system_jlcontentfieldsfilter.sys.ini</language>
-        <language tag="ru-RU">ru-RU/ru-RU.plg_system_jlcontentfieldsfilter.ini</language>
-        <language tag="ru-RU">ru-RU/ru-RU.plg_system_jlcontentfieldsfilter.sys.ini</language>
+        <language tag="en-GB">en-GB/plg_system_jlcontentfieldsfilter.ini</language>
+        <language tag="en-GB">en-GB/plg_system_jlcontentfieldsfilter.sys.ini</language>
+        <language tag="ru-RU">ru-RU/plg_system_jlcontentfieldsfilter.ini</language>
+        <language tag="ru-RU">ru-RU/plg_system_jlcontentfieldsfilter.sys.ini</language>
+		<language tag="fr-FR">fr-FR/plg_system_jlcontentfieldsfilter.ini</language>
+        <language tag="fr-FR">fr-FR/plg_system_jlcontentfieldsfilter.sys.ini</language>
     </languages>
 
 	<scriptfile>script.php</scriptfile>

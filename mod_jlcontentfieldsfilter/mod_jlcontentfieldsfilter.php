@@ -55,7 +55,6 @@ $ajax_loader = !empty(($ajax_loader)) ? JUri::root().$ajax_loader : '';
 $ajax_loader_width = (int)$params->get('ajax_loader_width', 32);
 
 
-
 if($option == 'com_tags'){
     if($view != 'tag' || !in_array($option, $enabledComponents)){
         return;

@@ -108,7 +108,6 @@ var JlContentFieldsFilter = {
         $this.ShowLoadingScreen(id);
 
         formData.append('tmpl', 'jlcomponent_ajax');
-
         request.open('POST', form.getAttribute('action'));
         request.send(formData);
 
