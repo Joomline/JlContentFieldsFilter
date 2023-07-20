@@ -10,7 +10,9 @@
 
 namespace Joomla\Plugin\System\Jlcontentfieldsfilter\Extension;
 
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Plugin\CMSPlugin;
+use Joomla\CMS\Form\Form;
 
 defined('_JEXEC') or die;
 
@@ -36,13 +38,13 @@ class Jlcontentfieldsfilter extends CMSPlugin
      */
     public function onContentPrepareForm($form, $data)
     {
-        if (!($form instanceof JForm)) {
+        if (!($form instanceof Form)) {
             return false;
         }
 
         $name = $form->getName();
 
-        $app = JFactory::getApplication();
+        $app = $this->getApplication();
 
         if (!in_array($name, array('com_fields.fieldcom_content.article', 'com_fields.field.com_content.article', 'com_fields.fieldcom_contact.contact', 'com_fields.field.com_contact.contact'))
             || !$app->isClient('administrator')) {
@@ -51,7 +53,7 @@ class Jlcontentfieldsfilter extends CMSPlugin
             $category_extension = explode('.', str_replace(array('com_fields.field.', 'com_fields.field'), '', $name))[0];
         }
 
-        JForm::addFormPath(__DIR__ . '/params');
+        Form::addFormPath(__DIR__ . '/params');
         $form->loadFile('params', false);
 
         if (is_object($data) && !empty($data->type)) {
@@ -70,26 +72,27 @@ class Jlcontentfieldsfilter extends CMSPlugin
 
     public function onBeforeCompileHead()
     {
-        if (JFactory::getApplication()->isClient('administrator')) {
+        if ($this->getApplication()->isClient('administrator')) {
             return;
         }
         $this->doMeta();
     }
 
-    /** Подмена модели категории контента.
+    /**
+     * Подмена модели категории контента.
+     *
      * @throws Exception
      */
     public function onAfterRoute()
     {
-        if (JFactory::getApplication()->isClient('administrator')) {
+        if ($this->getApplication()->isClient('administrator')) {
             return;
         }
 
-        $app = JFactory::getApplication();
-        $input = $app->input;
-        $option = $input->getString('option', '');
-        $view = $input->getString('view', '');
-        $catid = $input->getInt('id', 0);
+        $app = $this->getApplication();
+        $option = $app->getInput()->getString('option', '');
+        $view = $app->getInput()->getString('view', '');
+        $catid = $app->getInput()->getInt('id', 0);
 
         if ($option == 'com_tags') {
             if ($view != 'tag') {
@@ -97,11 +100,11 @@ class Jlcontentfieldsfilter extends CMSPlugin
             }
             $catid = $app->getUserStateFromRequest($option . '.jlcontentfieldsfilter.tag_category_id', 'tag_category_id', 0, 'int');
             $tagids = $app->getUserStateFromRequest($option . '.jlcontentfieldsfilter.tag_ids', 'id', array(), 'array');
-            $itemid = implode(',', $tagids) . ':' . $app->input->get('Itemid', 0, 'int');
+            $itemid = implode(',', $tagids) . ':' . $app->getInput()->get('Itemid', 0, 'int');
         } else if (!in_array($option, array('com_content', 'com_contact')) || $view != 'category' || $catid == 0) {
             return;
         } else {
-            $itemid = $app->input->get('id', 0, 'int') . ':' . $app->input->get('Itemid', 0, 'int');
+            $itemid = $app->getInput()->get('id', 0, 'int') . ':' . $app->getInput()->get('Itemid', 0, 'int');
         }
 
         if ($option == 'com_tags') {
@@ -117,34 +120,19 @@ class Jlcontentfieldsfilter extends CMSPlugin
             return;
         }
 
-        if (version_compare(JVERSION, '4', 'lt')) {
-            // для Joomla 3
-            if ($option == 'com_content' && !class_exists('ContentModelCategory')) {
-                require_once __DIR__ . '/models/com_content/category.php';
-                $context = 'com_content.article';
-            } else if ($option == 'com_contact' && !class_exists('ContactModelCategory')) {
-                require_once __DIR__ . '/models/com_contact/category.php';
-                $context = 'com_contact.contact';
-            } else if ($option == 'com_tags' && !class_exists('TagsModelTag')) {
-                require_once __DIR__ . '//models/com_tags/tag.php';
-                $context = 'com_content.article';
-            }
-        } else {
-            // для Joomla 4
-            if ($option == 'com_content' && !class_exists('CategoryModel')) {
-                require_once __DIR__ . '/models/com_content/CategoryModel.php';
-                $context = 'com_content.article';
-            } else if ($option == 'com_contact' && !class_exists('CategoryModel')) {
-                require_once __DIR__ . '/models/com_contact/CategoryModel.php';
-                $context = 'com_contact.contact';
-            } else if ($option == 'com_tags' && !class_exists('TagModel')) {
-                require_once __DIR__ . '/models/com_tags/TagModel.php';
-                $context = 'com_content.article';
-            }
+
+        if ($option == 'com_content' && !class_exists('CategoryModel')) {
+            require_once __DIR__ . '/models/com_content/CategoryModel.php';
+            $context = 'com_content.article';
+        } else if ($option == 'com_contact' && !class_exists('CategoryModel')) {
+            require_once __DIR__ . '/models/com_contact/CategoryModel.php';
+            $context = 'com_contact.contact';
+        } else if ($option == 'com_tags' && !class_exists('TagModel')) {
+            require_once __DIR__ . '/models/com_tags/TagModel.php';
+            $context = 'com_content.article';
         }
 
-
-        $db = JFactory::getDbo();
+        $db = $this->getDatabase();
         $query = $db->getQuery(true);
 
         $query->select('id, type');
@@ -286,17 +274,16 @@ class Jlcontentfieldsfilter extends CMSPlugin
 
     private function doMeta()
     {
-        if (!JComponentHelper::isEnabled('com_jlcontentfieldsfilter')) {
+        if (!ComponentHelper::isEnabled('com_jlcontentfieldsfilter')) {
             return;
         }
 
         require_once JPATH_ROOT . '/administrator/components/com_jlcontentfieldsfilter/helpers/jlcontentfieldsfilter.php';
 
-        $app = JFactory::getApplication();
-        $input = $app->input;
-        $option = $input->getString('option', '');
-        $view = $input->getString('view', '');
-        $catid = $input->getInt('id', 0);
+        $app = $this->getApplication();
+        $option = $app->getInput()->getString('option', '');
+        $view = $app->getInput()->getString('view', '');
+        $catid = $app->getInput()->getInt('id', 0);
 
         if (!in_array($option, array('com_content')) || $view != 'category' || $catid == 0) {
             return;
@@ -311,7 +298,7 @@ class Jlcontentfieldsfilter extends CMSPlugin
 
         $filterData = $app->getUserStateFromRequest($tagids, 'jlcontentfieldsfilter', array(), 'array');
 
-        $doc = JFactory::getDocument();
+        $doc = $app->getDocument();
 
         if (isset($filterData['ordering'])) {
             unset($filterData['ordering']);
@@ -324,7 +311,7 @@ class Jlcontentfieldsfilter extends CMSPlugin
             return;
         }
 
-        $params = JComponentHelper::getParams('com_jlcontentfieldsfilter');
+        $params = ComponentHelper::getParams('com_jlcontentfieldsfilter');
         $autogeneration = $params->get('autogeneration', 0);
 
         $filter = JlcontentfieldsfilterHelper::createFilterString($filterData);
@@ -332,7 +319,7 @@ class Jlcontentfieldsfilter extends CMSPlugin
         $hash = JlcontentfieldsfilterHelper::createHash($filter);
         $unsafe_hash = JlcontentfieldsfilterHelper::createHash($unsafe_filter);
 
-        $db = JFactory::getDbo();
+        $db = $this->getDbo();
         $query = $db->getQuery(true);
         $query->select('*')
             ->from('`#__jlcontentfieldsfilter_data`')
