@@ -75,7 +75,7 @@ class Dispatcher extends AbstractModuleDispatcher
 		$data['autho_send'] = (int)($data['params'])->get('autho_send', 0);
 		$data['ajax'] = (int)($data['params'])->get('ajax', 0);
 		$data['ajax_selector'] = ($data['params'])->get('ajax_selector', '#content');
-		$data['enableOrdering'] = ($data['params'])->get('enable_ordering', 0);
+		$data['enableOrdering'] = $enableOrdering = ($data['params'])->get('enable_ordering', 0);
 
 		$ajax_loader = ($data['params'])->get('ajax_loader', '');
 		$data['ajax_loader'] = !empty(($ajax_loader)) ? Uri::root().$ajax_loader : '';
@@ -127,7 +127,12 @@ class Dispatcher extends AbstractModuleDispatcher
 
 		$data['fields'] = $helper->getFields(($data['params']), $catid, $jlContentFieldsFilter, $data['module']->id, $option);
 
-
+		if(count($data['fields'])){
+			if($enableOrdering){
+				$selectedOrdering = !empty($jlContentFieldsFilter['ordering']) ? $jlContentFieldsFilter['ordering'] : '';
+				$data['orderingSelect'] = $helper->getOrderingSelect($selectedOrdering, $data['module']->id, $option);
+			}
+		}
 
 
 		return $data;

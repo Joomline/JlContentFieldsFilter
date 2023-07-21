@@ -6,39 +6,39 @@ var JlContentFieldsFilter = {
             autho_send: typeof data.autho_send !== 'undefined' ? data.autho_send : 0,
             ajax: typeof data.ajax !== 'undefined' ? data.ajax : 0,
             ajax_selector: typeof data.ajax_selector !== 'undefined' ? data.ajax_selector : '#content',
-            ajax_loader: typeof data.ajax_loader !== 'undefined' && data.ajax_loader != '' ? data.ajax_loader : '/modules/mod_jlcontentfieldsfilter/assets/images/ajax_loader.gif',
+            ajax_loader: typeof data.ajax_loader !== 'undefined' && data.ajax_loader != '' ? data.ajax_loader : '/media/mod_jlcontentfieldsfilter/images/ajax_loader.gif',
             ajax_loader_width: typeof data.ajax_loader_width !== 'undefined' ? data.ajax_loader_width : 32
         };
         var $this = this;
         var params = this.params[id];
 
-        document.addEventListener('DOMContentLoaded', function () {
-            if (params.autho_send === 1) {
-                var sendTimeoutID = 0;
+        if (params.autho_send === 1) {
 
-                var els = document.querySelectorAll('input[type="radio"], input[type="checkbox"], select');
-                for (var i = 0; i < els.length; i++) {
-                    els[i].addEventListener('change', function (el) {
-                        params.ajax === 1 ? $this.loadData(id) : el.target.form.submit();
-                    });
-                }
+            var sendTimeoutID = 0;
+            var els = document.querySelectorAll('input[type="radio"], input[type="checkbox"], select');
 
-                var els = document.querySelectorAll('input[type="text"], #' + id);
-                for (var i = 0; i < els.length; i++) {
-                    els[i].addEventListener('change', function (el) {
-                        clearTimeout(sendTimeoutID);
-                        sendTimeoutID = setTimeout(function () {
-                            params.ajax === 1 ? $this.loadData(id) : el.target.form.submit();
-                        }, 500);
-                    });
-                }
-            } else if (params.ajax === 1) {
-                document.getElementById(id).addEventListener('submit', function (event) {
-                    event.preventDefault();
-                    $this.loadData(id);
+            for (var i = 0; i < els.length; i++) {
+                els[i].addEventListener('change', function (el) {
+
+                    params.ajax === 1 ? $this.loadData(id) : el.target.form.submit();
                 });
             }
-        });
+
+            var els = document.querySelectorAll('input[type="text"], #' + id);
+            for (var i = 0; i < els.length; i++) {
+                els[i].addEventListener('change', function (el) {
+                    clearTimeout(sendTimeoutID);
+                    sendTimeoutID = setTimeout(function () {
+                        params.ajax === 1 ? $this.loadData(id) : el.target.form.submit();
+                    }, 500);
+                });
+            }
+        } else if (params.ajax === 1) {
+            document.getElementById(id).addEventListener('submit', function (event) {
+                event.preventDefault();
+                $this.loadData(id);
+            });
+        }
     },
 
     clearForm: function (element) {
@@ -46,19 +46,19 @@ var JlContentFieldsFilter = {
         var id = form.getAttribute('id');
         var params = this.params[id];
 
-         var els = form.querySelectorAll('input[type="checkbox"], select > option');
+        var els = form.querySelectorAll('input[type="checkbox"], select > option');
         for (var i = 0; i < els.length; i++) {
             if (els[i].checked) {
                 els[i].checked = false;
             }
             if (els[i].selected) {
                 els[i].selected = false;
-            }          
+            }
         }
 
         var els = form.querySelectorAll('input[type="text"]');
         for (var i = 0; i < els.length; i++) {
-            els[i].value = ''; 
+            els[i].value = '';
         }
 
         var els = form.querySelectorAll('select');
@@ -68,8 +68,7 @@ var JlContentFieldsFilter = {
 
         if (params.ajax === 1 && params.autho_send === 1) {
             this.loadData(id);
-        }
-        else if (params.autho_send === 1) {
+        } else if (params.autho_send === 1) {
             form.submit();
         }
 
@@ -85,7 +84,7 @@ var JlContentFieldsFilter = {
         for (var i = 0; i < els.length; i++) {
             if (els[i].checked) {
                 els[i].checked = false;
-            }          
+            }
         }
 
         if (params.autho_send === 1) {
