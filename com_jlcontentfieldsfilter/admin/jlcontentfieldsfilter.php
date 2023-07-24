@@ -8,12 +8,15 @@
  * @license 	GNU General Public License version 2 or later; see	LICENSE.txt
  */
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Controller\BaseController;
+
 defined( '_JEXEC' ) or die; // No direct access
 /**
  * Component jlcontentfieldsfilter
  * @author Joomline
  */
 require_once JPATH_COMPONENT.'/helpers/jlcontentfieldsfilter.php';
-$controller = JControllerLegacy::getInstance( 'jlcontentfieldsfilter' );
-$controller->execute( JFactory::getApplication()->input->get( 'task' ) );
+$controller = BaseController::getInstance( 'jlcontentfieldsfilter' );
+$controller->execute( Factory::getApplication()->getInput()->get( 'task' ) );
 $controller->redirect();

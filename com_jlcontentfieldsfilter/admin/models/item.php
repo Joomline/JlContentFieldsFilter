@@ -9,6 +9,10 @@
  */
 
 // No direct access
+use Joomla\CMS\Factory;
+use Joomla\CMS\Table\Table;
+use Joomla\Database\DatabaseInterface;
+
 defined('_JEXEC') or die;
 
 /**
@@ -38,7 +42,7 @@ class JlcontentfieldsfilterModelItem extends JModelAdmin
      */
     public function getTable($type = 'jlcontentfieldsfilter_data', $prefix = 'Table', $config = array())
     {
-        return JTable::getInstance($type, $prefix, $config);
+        return Table::getInstance($type, $prefix, $config);
     }
 
     function saveItem($id, $cid, $meta_title, $meta_desc, $meta_keywords, $publish, $filterData)
@@ -86,7 +90,7 @@ class JlcontentfieldsfilterModelItem extends JModelAdmin
 		$unsafe_filter = JlcontentfieldsfilterHelper::createFilterString($filterData, false);
         $hash = JlcontentfieldsfilterHelper::createHash($filter);
 	    $unsafe_hash = JlcontentfieldsfilterHelper::createHash($unsafe_filter);
-        $db = JFactory::getDbo();
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select('*')
             ->from('#__jlcontentfieldsfilter_data')

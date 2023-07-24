@@ -8,6 +8,13 @@
  * @license 	GNU General Public License version 2 or later; see	LICENSE.txt
  */
 
+use Joomla\CMS\Access\Access;
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\Helpers\Sidebar;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Object\CMSObject;
+use Joomla\Database\DatabaseInterface;
+
 defined('_JEXEC') or die;
 
 /**
@@ -21,22 +28,25 @@ class JlcontentfieldsfilterHelper
      */
     static function addSubmenu($vName)
     {
-        JHtmlSidebar::addEntry(
-            JText::_('ITEM_SUBMENU'),
+        Sidebar::addEntry(
+            Text::_('ITEM_SUBMENU'),
             'index.php?option=com_jlcontentfieldsfilter&view=items',
             $vName == 'items');
     }
 
     /**
      * Получаем доступные действия для текущего пользователя
-     * @return JObject
+     * @return CMSObject
      */
     public static function getActions()
     {
-        $user = JFactory::getUser();
-        $result = new JObject;
+        $user = Factory::getApplication()->getIdentity();
+        $result = new CMSObject;
         $assetName = 'com_jlcontentfieldsfilter';
-        $actions = JAccess::getActions($assetName);
+	    $actions = Access::getActionsFromFile(
+		    JPATH_ADMINISTRATOR . '/components/com_jlcontentfieldsfilter/access.xml',
+		    '/access/section[@name="component"]/'
+	    );
         foreach ($actions as $action) {
             $result->set($action->name, $user->authorise($action->name, $assetName));
         }
@@ -80,7 +90,7 @@ class JlcontentfieldsfilterHelper
 
     public static function createMeta($catid, $filterData)
     {
-        $object = new stdClass();
+        $object = new \stdClass();
         $object->meta_title = '';
         $object->meta_desc = '';
         $object->meta_keywords = '';
@@ -88,7 +98,7 @@ class JlcontentfieldsfilterHelper
         if(!$catid){
             return $object;
         }
-        $db = JFactory::getDbo();
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select('`title`')
             ->from('#__categories')
@@ -121,13 +131,13 @@ class JlcontentfieldsfilterHelper
                     if(is_numeric($key)){
                         $key = (int)$key;
                     }
-                    $values[$key] = JText::_($option['name']);
+                    $values[$key] = Text::_($option['name']);
                }
             }
 
             $fields[$field->id] = array(
                 'id' => $field->id,
-                'name' => JText::_($field->title),
+                'name' => Text::_($field->title),
                 'values' => $values,
             );
         }

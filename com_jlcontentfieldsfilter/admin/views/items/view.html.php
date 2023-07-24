@@ -10,6 +10,11 @@
  */
 
 // No direct access
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\Helpers\Sidebar;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+
 defined( '_JEXEC' ) or die;
 
 /**
@@ -42,17 +47,17 @@ class JlcontentfieldsfilterViewItems extends JViewLegacy
 
 	/**
 	 * Method to display the current pattern
-	 * @param type $tpl
+	 * @param string $tpl
 	 */
 	public function display( $tpl = null )
 	{
         $this->categoryOptions = $this->get( 'CategoryOptions' );
 		$this->pagination = $this->get( 'Pagination' );
 		$this->state = $this->get( 'State' );
-		$this->user = JFactory::getUser();
+		$this->user = Factory::getApplication()->getIdentity();
 		$this->loadHelper( 'jlcontentfieldsfilter' );
 		$this->addToolbar();
-		$this->sidebar = JHtmlSidebar::render();
+		$this->sidebar = Sidebar::render();
 
 		parent::display( $tpl );
 	}
@@ -62,24 +67,24 @@ class JlcontentfieldsfilterViewItems extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		JToolBarHelper::title( JText::_( 'COM_JLCONTENTFIELDSFILTER' ) );
+		ToolBarHelper::title( Text::_( 'COM_JLCONTENTFIELDSFILTER' ) );
 		$canDo = jlcontentfieldsfilterHelper::getActions( 'item' );
 
 		if ( $canDo->get( 'core.admin' ) ) {
-			JToolBarHelper::preferences( 'com_jlcontentfieldsfilter' );
-			JToolBarHelper::divider();
+			ToolBarHelper::preferences( 'com_jlcontentfieldsfilter' );
+			ToolBarHelper::divider();
 		}
 	}
 
 	protected function getSortFields()
 	{
 		return array(
-			'ordering' => JText::_( 'JGRID_HEADING_ORDERING' ),
-			'published' => JText::_( 'JSTATUS' ),
-			'title' => JText::_( 'JGLOBAL_TITLE' ),
-			'created_by' => JText::_( 'JAUTHOR' ),
-			'created' => JText::_( 'JDATE' ),
-			'id' => JText::_( 'JGRID_HEADING_ID' )
+			'ordering' => Text::_( 'JGRID_HEADING_ORDERING' ),
+			'published' => Text::_( 'JSTATUS' ),
+			'title' => Text::_( 'JGLOBAL_TITLE' ),
+			'created_by' => Text::_( 'JAUTHOR' ),
+			'created' => Text::_( 'JDATE' ),
+			'id' => Text::_( 'JGRID_HEADING_ID' )
 		);
 	}
 }

@@ -9,6 +9,10 @@
  */
 
 // No direct access
+use Joomla\CMS\Factory;
+use Joomla\CMS\Helper\ModuleHelper;
+use Joomla\Registry\Registry;
+
 defined('_JEXEC') or die;
 
 /**
@@ -45,8 +49,8 @@ class JlcontentfieldsfilterControllerItems extends JControllerAdmin
         $error = 0;
         $message = '';
 
-        $app = JFactory::getApplication();
-        $cid = $app->input->getInt('cid', 0);
+        $app = Factory::getApplication();
+        $cid = $app->getInput()->getInt('cid', 0);
 
         if ($cid == 0) {
             $error = 1;
@@ -54,17 +58,21 @@ class JlcontentfieldsfilterControllerItems extends JControllerAdmin
         }
 
         if (!$error) {
-            $file = JPATH_ROOT . '/modules/mod_jlcontentfieldsfilter/helper.php';
+            $file = JPATH_ROOT . '/modules/mod_jlcontentfieldsfilter/src/Helper/JlcontentfieldsfilterHelper.php';
             if (!is_file($file)) {
                 $error = 1;
                 $message = 'Module helper not found';
             } else {
-                JFactory::getLanguage()->load('mod_jlcontentfieldsfilter', JPATH_ROOT . '/modules/mod_jlcontentfieldsfilter');
-                include_once $file;
-                $module = JModuleHelper::getModule('mod_jlcontentfieldsfilter');
-                $params = new JRegistry;
+                $module = ModuleHelper::getModule('mod_jlcontentfieldsfilter');
+                $params = new Registry;
                 $params->loadString($module->params);
-                $fields = ModJlContentFieldsFilterHelper::getFields($params, $cid, array(), $module->id, 'com_content');
+				$module = $app->bootModule('mod_jlcontentfieldsfilter', 'Site');
+	            $lang = $app->getLanguage();
+	            $lang->load('mod_jlcontentfieldsfilter' , JPATH_SITE);
+				$module_helper = $module->getHelper('JlcontentfieldsfilterHelper');
+	            $module->id = 1; // чтоб завелось
+
+                $fields = $module_helper->getFields($params, $cid, array(), $module->id, 'com_content');
             }
         }
 
@@ -78,16 +86,16 @@ class JlcontentfieldsfilterControllerItems extends JControllerAdmin
         $error = 0;
         $message = '';
 
-        $app = JFactory::getApplication();
-        $cid = $app->input->getInt('cid', 0);
-        JFactory::getLanguage()->load('mod_jlcontentfieldsfilter', JPATH_ROOT . '/modules/mod_jlcontentfieldsfilter');
+        $app = Factory::getApplication();
+        $cid = $app->getInput()->getInt('cid', 0);
+	    $app->getLanguage()->load('mod_jlcontentfieldsfilter', JPATH_ROOT . '/modules/mod_jlcontentfieldsfilter');
 
         if ($cid == 0) {
             $error = 1;
             $message = 'CID = 0';
         }
 
-        $filterData = $app->input->get('jlcontentfieldsfilter', array(), 'array');
+        $filterData = $app->getInput()->get('jlcontentfieldsfilter', array(), 'array');
 
         $model = $this->getModel();
         $rows = $model->getRows($filterData);
@@ -100,14 +108,14 @@ class JlcontentfieldsfilterControllerItems extends JControllerAdmin
     {
         $error = 0;
         $message = '';
-        $app = JFactory::getApplication();
-        $cid = $app->input->getInt('cid', 0);
-        $id = $app->input->getInt('id', 0);
-        $meta_title = $app->input->getString('meta_title', '');
-        $meta_desc = $app->input->getString('meta_desc', '');
-        $meta_keywords = $app->input->getString('meta_keywords', '');
-        $publish = $app->input->getInt('publish', 0);
-        $filterData = $app->input->get('jlcontentfieldsfilter', array(), 'array');
+        $app = Factory::getApplication();
+        $cid = $app->getInput()->getInt('cid', 0);
+        $id = $app->getInput()->getInt('id', 0);
+        $meta_title = $app->getInput()->getString('meta_title', '');
+        $meta_desc = $app->getInput()->getString('meta_desc', '');
+        $meta_keywords = $app->getInput()->getString('meta_keywords', '');
+        $publish = $app->getInput()->getInt('publish', 0);
+        $filterData = $app->getInput()->get('jlcontentfieldsfilter', array(), 'array');
 
         $model = $this->getModel();
         $result = $model->saveItem($id, $cid, $meta_title, $meta_desc, $meta_keywords, $publish, $filterData);
@@ -116,8 +124,8 @@ class JlcontentfieldsfilterControllerItems extends JControllerAdmin
 
     public function delete()
     {
-        $app = JFactory::getApplication();
-        $id = $app->input->getInt('id', 0);
+        $app = Factory::getApplication();
+        $id = $app->getInput()->getInt('id', 0);
         $model = $this->getModel();
         $result = $model->delete($id);
         $message = $result ? '' : 'Error delete item';
