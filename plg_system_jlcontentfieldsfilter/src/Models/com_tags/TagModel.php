@@ -162,9 +162,9 @@ class TagModel extends ListModel
 	    $app = Factory::getApplication();
 	    $itemid = implode(',', $app->getInput()->get('id', 0, 'int')) . ':' . $app->getInput()->get('Itemid', 0, 'int');
 	    $context = 'com_tags.category.list.' . $itemid;
-
-	    $article_id_include = $app->getUserState($context . 'filter.article_id_include', false);
+		$article_id_include = $app->getUserState($context . 'filter.article_id_include', false);
 	    $filterArticles = $app->getUserState($context . 'filter.article_id', array());
+
 	    if($article_id_include && is_array($filterArticles) && count($filterArticles)){
 		    $query->where($this->_db->quoteName('m.type_alias') . ' = ' . $this->_db->quote('com_content.article'));
 		    $query->where($this->_db->quoteName('m.content_item_id') . ' IN ("'.implode('","', $filterArticles).'")');
@@ -267,6 +267,13 @@ class TagModel extends ListModel
         // Optional filter text
         $filterSearch = $app->getUserStateFromRequest('com_tags.tag.list.' . $itemid . '.filter_search', 'filter-search', '', 'string');
         $this->setState('list.filter', $filterSearch);
+
+	    //Joomline hack start
+	    $value = $this->getUserStateFromRequest('com_content.category.list.' . $itemid . 'filter.article_id_include', 'filter_article_id_include', false, 'boolen');
+	    $this->setState('filter.article_id.include', $value);
+	    $value = $this->getUserStateFromRequest('com_content.category.list.' . $itemid . 'filter.article_id', 'filter_article_id', null, 'array');
+	    $this->setState('filter.article_id', $value);
+	    //Joomline hack end
     }
 
     /**
@@ -321,7 +328,6 @@ class TagModel extends ListModel
                 throw new \Exception(Text::_('COM_TAGS_TAG_NOT_FOUND'), 404);
             }
         }
-
         return $this->item;
     }
 

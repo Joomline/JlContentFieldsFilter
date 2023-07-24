@@ -252,6 +252,18 @@ class JlcontentfieldsfilterHelper
 		if ($option == 'com_tags')
 		{
 			$tagIds = Factory::getApplication()->getInput()->get('id', [], 'array');
+			// tags in tags array can be like {tag_id}:{tag_alias} - 2:tag-alias
+			if (!empty($tagIds))
+			{
+				foreach ($tagIds as $key => $tag)
+				{
+					if(!is_numeric($tag) && strpos($tag,':')){
+						$tag = explode(':', $tag);
+						$tagIds[$key] = $tag[0];
+					}
+				}
+			}
+
 			if (!is_array($tagIds))
 			{
 				$tagIds = array((int) $tagIds);

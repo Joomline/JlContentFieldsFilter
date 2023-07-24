@@ -2,10 +2,10 @@
 /**
  * JL Content Fields Filter
  *
- * @version 	@version@
- * @author		Joomline
- * @copyright	(C) 2017-2019 Arkadiy Sedelnikov, Joomline. All rights reserved.
- * @license 	GNU General Public License version 2 or later; see	LICENSE.txt
+ * @version          @version@
+ * @author           Joomline
+ * @copyright    (C) 2017-2019 Arkadiy Sedelnikov, Joomline. All rights reserved.
+ * @license          GNU General Public License version 2 or later; see    LICENSE.txt
  */
 
 namespace Joomla\Module\Jlcontentfieldsfilter\Site\Dispatcher;
@@ -36,59 +36,78 @@ class Dispatcher extends AbstractModuleDispatcher
 	 */
 	protected function getLayoutData()
 	{
-		$data = parent::getLayoutData();
-		$app = $this->getApplication();
+		$data   = parent::getLayoutData();
+		$app    = $this->getApplication();
 		$helper = $app->bootModule('mod_jlcontentfieldsfilter', 'Site')->getHelper('JlcontentfieldsfilterHelper');
-		$input = $app->getInput();
+		$input  = $app->getInput();
 		$option = $data['option'] = $input->getString('option', '');
-		$view = $input->getString('view', '');
-		$catid = $input->getInt('catid', 0);
-		$id = $input->getInt('id', 0);
+		$view   = $input->getString('view', '');
+		$catid  = $input->getInt('catid', 0);
+		$id     = $input->getInt('id', 0);
 
-		$hide_if_empty_category = ($data['params'])->get('hide_if_empty_category', 0);
+		$hide_if_empty_category  = ($data['params'])->get('hide_if_empty_category', 0);
 		$show_only_category_page = ($data['params'])->get('show_only_category_page', 0);
 
-		if($show_only_category_page && $view != 'category'){
+		if ($show_only_category_page && $view != 'category')
+		{
 			return $data;
 		}
 
-		if($view == 'category')
+		if ($view == 'category')
 		{
 			$catid = $id;
 
-			if($hide_if_empty_category && !$helper->countCatArticles($catid)){
+			if ($hide_if_empty_category && !$helper->countCatArticles($catid))
+			{
 				return $data;
 			}
 		}
 
 
-		$enabledComponents = ($data['params'])->get('enabled_components', array());
-		$allowedCats = ($data['params'])->get('categories', array());
-		$allowedContactCats = ($data['params'])->get('contact_categories', array());
+		$enabledComponents       = ($data['params'])->get('enabled_components', array());
+		$allowedCats             = ($data['params'])->get('categories', array());
+		$allowedContactCats      = ($data['params'])->get('contact_categories', array());
 		$data['moduleclass_sfx'] = ($data['params'])->get('moduleclass_sfx', '');
-		$data['form_method'] = ($data['params'])->get('form_method', 'post');
-		$data['autho_send'] = (int)($data['params'])->get('autho_send', 0);
-		$data['ajax'] = (int)($data['params'])->get('ajax', 0);
-		$data['ajax_selector'] = ($data['params'])->get('ajax_selector', '#content');
-		$data['enableOrdering'] = $enableOrdering = ($data['params'])->get('enable_ordering', 0);
+		$data['form_method']     = ($data['params'])->get('form_method', 'post');
+		$data['autho_send']      = (int) ($data['params'])->get('autho_send', 0);
+		$data['ajax']            = (int) ($data['params'])->get('ajax', 0);
+		$data['ajax_selector']   = ($data['params'])->get('ajax_selector', '#content');
+		$data['enableOrdering']  = $enableOrdering = ($data['params'])->get('enable_ordering', 0);
 
-		$ajax_loader = ($data['params'])->get('ajax_loader', '');
-		$data['ajax_loader'] = !empty(($ajax_loader)) ? Uri::root().$ajax_loader : '';
-		$data['ajax_loader_width'] = (int)($data['params'])->get('ajax_loader_width', 32);
+		$ajax_loader               = ($data['params'])->get('ajax_loader', '');
+		$data['ajax_loader']       = !empty(($ajax_loader)) ? Uri::root() . $ajax_loader : '';
+		$data['ajax_loader_width'] = (int) ($data['params'])->get('ajax_loader_width', 32);
 
 
-		if($option == 'com_tags'){
-			if($view != 'tag' || !in_array($option, $enabledComponents)){
-				return $data;
+		if ($option == 'com_tags')
+		{
+			if ($view != 'tag' || !in_array($option, $enabledComponents))
+			{
+				return false;
 			}
 			$allowedTags = ($data['params'])->get('tags_tags', array());
-			$catid = (int)($data['params'])->get('tags_fields_category', 0);
-			$tagIds = $input->get('id', array(), 'array');
-			if(!count(array_intersect($allowedTags, $tagIds))){
-				return $data;
+			$catid       = (int) ($data['params'])->get('tags_fields_category', 0);
+			$data['catid'] = $catid;
+			$tagIds      = $input->get('id', array(), 'array');
+
+			// tags in tags array can be like {tag_id}:{tag_alias} - 2:tag-alias
+			if (!empty($tagIds))
+			{
+				foreach ($tagIds as $key => $tag)
+				{
+					if(!is_numeric($tag) && strpos($tag,':')){
+						$tag = explode(':', $tag);
+						$tagIds[$key] = $tag[0];
+					}
+				}
+			}
+
+			if (!count(array_intersect($allowedTags, $tagIds)))
+			{
+				return false;
 			}
 		}
-		else if(
+		else if (
 			!in_array($option, $enabledComponents)
 			|| ($option == 'com_content' && !(!count($allowedCats) || in_array($catid, $allowedCats) || $allowedCats[0] == -1))
 			|| ($option == 'com_contact' && !(!count($allowedContactCats) || in_array($catid, $allowedContactCats) || $allowedContactCats[0] == -1))
@@ -98,35 +117,44 @@ class Dispatcher extends AbstractModuleDispatcher
 			return $data;
 		}
 
-		if($option == 'com_tags'){
-			$context = $option.'.cat_'.implode('_', $tagIds).'.jlcontentfieldsfilter';
+		if ($option == 'com_tags')
+		{
+			$context = $option . '.cat_' . implode('_', $tagIds) . '.jlcontentfieldsfilter';
 		}
-		else{
-			$context = $option.'.cat_'.$catid.'.jlcontentfieldsfilter';
+		else
+		{
+			$context = $option . '.cat_' . $catid . '.jlcontentfieldsfilter';
 		}
 
 		$jlContentFieldsFilter = $app->getUserStateFromRequest($context, 'jlcontentfieldsfilter', array(), 'array');
 
-		if($option == 'com_content'){
+		if ($option == 'com_content')
+		{
 			$data['action'] = Route::_(ContentHelperRoute::getCategoryRoute($catid));
 		}
-		else if($option == 'com_contact'){
+		else if ($option == 'com_contact')
+		{
 			$data['action'] = Route::_(ContactRouteHelper::getCategoryRoute($catid));
+		}
+		else if ($option == 'com_tags')
+		{
+			$uri = Uri::getInstance();
+			$data['action'] = $uri->toString();
 		}
 		else
 		{
 
-			$menus    = Factory::getContainer()->get(MenuFactoryInterface::class)->createMenu('site');
-			$active = $menus->getActive();
-			$data['action'] = Route::_($active->link.'&Itemid='.$active->id);
-
+			$active = $app->getMenu()->getActive();
+			$data['action'] = Route::_($active->link . '&Itemid=' . $active->id);
 		}
 
 		$data['fields'] = $helper->getFields(($data['params']), $catid, $jlContentFieldsFilter, $data['module']->id, $option);
 
-		if(count($data['fields'])){
-			if($enableOrdering){
-				$selectedOrdering = !empty($jlContentFieldsFilter['ordering']) ? $jlContentFieldsFilter['ordering'] : '';
+		if (count($data['fields']))
+		{
+			if ($enableOrdering)
+			{
+				$selectedOrdering       = !empty($jlContentFieldsFilter['ordering']) ? $jlContentFieldsFilter['ordering'] : '';
 				$data['orderingSelect'] = $helper->getOrderingSelect($selectedOrdering, $data['module']->id, $option);
 			}
 		}

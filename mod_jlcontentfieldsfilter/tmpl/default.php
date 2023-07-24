@@ -9,16 +9,21 @@
  */
 
 /**
- * $module - объект модуля. Оттуда Вы можете взять id модуля ($module->id), заголовок модуля, его позицию и т.д.
- * $app - объект приложения. Это значит, что Вам не нужно самостоятельно вызывать Joomla\CMS\Factory::getApplication(). Он уже есть для Вашего удобства.
- * $input - также в макете модуля теперь сразу доступен объект Input (через него мы получаем GET, POST параметры, SERVER и т.д.), который раньше приходилось вызывать самостоятельно.
- * $params - параметры модуля. Получаем их как раньше: $params->get('param_name' , 'default_value_if_value_is_empty'). Эти параметры мы собираем с помощью различных типов полей Joomla в xml-манифесте модуля.
- * $template - параметры настроек стиля текущего шаблона. У шаблонов Joomla есть templateDetails.xml, в которых можно задавать различные параметры шаблона: логотипы, шрифты, пользовательские скрипты в <head> и <body> и всё, что душе угодно. Теперь в модуле Вы имеете возможность без лишних шевелений получить доступ к этим параметрам. Однако, стоит помнить, что многие студийные шаблоны (JoomShaper Helix и иже с ними) не используют стандартное место хранение параметров, поэтому там может оказаться пусто.
+ * module object. From there you can take the module id ($module->id), the module title, its position, etc.
+ * $app - the application object. This means that you do not need to call Joomla\CMS\Factory::getApplication() by yourself. It is already there for your convenience.
+ * $input - also, the Input object is now immediately available in the module layout (through it we get GET, POST parameters, SERVER, etc.), which previously had to be called independently.
+ * $params - module parameters. We get them as before: $params->get('param_name' , 'default_value_if_value_is_empty'). We collect these parameters using various types of Joomla fields in the module's xml manifest.
+ * $template - parameters of the style settings of the current template. Joomla templates have templateDetails.xml in which you can set various template parameters: logos, fonts, custom scripts in <head> and <body> and whatever your heart desires. Now in the module you have the opportunity to access these parameters without unnecessary movements. However, it is worth remembering that many studio templates (JoomShaper Helix and others like them) do not use a standard parameter storage location, so it may be empty there.
  */
 
 use Joomla\CMS\Language\Text;
 
 defined('_JEXEC') or die;
+
+if(empty($fields)){
+	return '';
+}
+
 $doc = $app->getDocument();
 $wa  = $doc->getWebAssetManager();
 if ($params->get('enable_no_jq', 0))
@@ -81,8 +86,8 @@ if ($params->get('enable_css', 1))
         </div>
 
     </div>
-	<?php if ($option == 'com_tags') { ?>
+	<?php if ($option == 'com_tags') : ?>
         <input type="hidden" name="tag_category_id" value="<?php echo $catid; ?>">
-	<?php } ?>
+	<?php endif; ?>
     <input type="hidden" name="jlcontentfieldsfilter[is_filter]" value="1">
 </form>

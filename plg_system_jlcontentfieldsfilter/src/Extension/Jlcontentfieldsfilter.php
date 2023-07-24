@@ -105,7 +105,21 @@ class Jlcontentfieldsfilter extends CMSPlugin
             }
             $catid = $app->getUserStateFromRequest($option . '.jlcontentfieldsfilter.tag_category_id', 'tag_category_id', 0, 'int');
             $tagids = $app->getUserStateFromRequest($option . '.jlcontentfieldsfilter.tag_ids', 'id', array(), 'array');
+
+
+	        if (!empty($tagids))
+	        {
+		        foreach ($tagids as $key => $tag)
+		        {
+			        if(!is_numeric($tag) && strpos($tag,':')){
+				        $tag = explode(':', $tag);
+				        $tagids[$key] = $tag[0];
+			        }
+		        }
+	        }
+
             $itemid = implode(',', $tagids) . ':' . $app->getInput()->get('Itemid', 0, 'int');
+
         } else if (
             !in_array($option, array('com_content', 'com_contact')) || $view != 'category' || $catid == 0) {
             return;
@@ -202,7 +216,6 @@ class Jlcontentfieldsfilter extends CMSPlugin
                 $query->group('item_id');
                 $aIds = $db->setQuery($query)->loadColumn();
                 $aIds = !is_array($aIds) ? array() : $aIds;
-
                 if ($count == 0) {
                     $filterArticles = $aIds;
                 } else {
