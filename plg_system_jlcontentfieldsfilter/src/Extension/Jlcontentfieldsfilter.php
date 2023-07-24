@@ -127,15 +127,16 @@ class Jlcontentfieldsfilter extends CMSPlugin
         }
 
 
-        if ($option == 'com_content' && !class_exists('CategoryModel')) {
 
-            require_once JPATH_SITE . '/plugins/system/jlcontentfieldsfilter/models/com_content/CategoryModel.php';
+
+        if ($option == 'com_content' && !class_exists('CategoryModel')) {
+            require_once JPATH_SITE . '/plugins/system/jlcontentfieldsfilter/src/Models/com_content/CategoryModel.php';
             $context = 'com_content.article';
         } else if ($option == 'com_contact' && !class_exists('CategoryModel')) {
-            require_once __DIR__ . '/models/com_contact/CategoryModel.php';
+            require_once JPATH_SITE . '/plugins/system/jlcontentfieldsfilter/src/Models/com_contact/CategoryModel.php';
             $context = 'com_contact.contact';
         } else if ($option == 'com_tags' && !class_exists('TagModel')) {
-            require_once __DIR__ . '/models/com_tags/TagModel.php';
+            require_once JPATH_SITE . '/plugins/system/jlcontentfieldsfilter/src/Models/com_tags/TagModel.php';
             $context = 'com_content.article';
         }
 

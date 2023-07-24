@@ -12,18 +12,13 @@ namespace Joomla\Module\Jlcontentfieldsfilter\Site\Dispatcher;
 
 \defined('JPATH_PLATFORM') or die;
 
-use Joomla\CMS\Application\CMSApplicationInterface;
 use Joomla\CMS\Dispatcher\AbstractModuleDispatcher;
-use Joomla\CMS\Extension\ModuleInterface;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Menu\AbstractMenu;
 use Joomla\CMS\Menu\MenuFactoryInterface;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Component\Content\Site\Helper\RouteHelper as ContentHelperRoute;
 use Joomla\Component\Contact\Site\Helper\RouteHelper as ContactRouteHelper;
-use Joomla\Input\Input;
-use Joomla\Registry\Registry;
 
 /**
  * Dispatcher class for mod_Jlcontentfieldsfilter
@@ -118,7 +113,9 @@ class Dispatcher extends AbstractModuleDispatcher
 		else if($option == 'com_contact'){
 			$data['action'] = Route::_(ContactRouteHelper::getCategoryRoute($catid));
 		}
-		else{
+		else
+		{
+
 			$menus    = Factory::getContainer()->get(MenuFactoryInterface::class)->createMenu('site');
 			$active = $menus->getActive();
 			$data['action'] = Route::_($active->link.'&Itemid='.$active->id);
@@ -133,7 +130,6 @@ class Dispatcher extends AbstractModuleDispatcher
 				$data['orderingSelect'] = $helper->getOrderingSelect($selectedOrdering, $data['module']->id, $option);
 			}
 		}
-
 
 		return $data;
 	}

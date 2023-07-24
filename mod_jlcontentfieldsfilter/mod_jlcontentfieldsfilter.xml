@@ -13,8 +13,6 @@
     <files>
         <folder module="mod_jlcontentfieldsfilter">src</folder>
         <folder>services</folder>
-        <folder>assets</folder>
-<!--        <folder>elements</folder>-->
         <folder>layouts</folder>
         <folder>tmpl</folder>
         <filename>mod_jlcontentfieldsfilter.xml</filename>

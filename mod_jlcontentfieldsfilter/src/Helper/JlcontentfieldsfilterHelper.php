@@ -9,20 +9,13 @@
 
 namespace Joomla\Module\Jlcontentfieldsfilter\Site\Helper;
 
-use Joomla\CMS\Access\Access;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Helper\ModuleHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Layout\LayoutHelper;
-use Joomla\CMS\Router\Route;
-use Joomla\CMS\Uri\Uri;
-use Joomla\Component\Content\Site\Helper\RouteHelper;
 use Joomla\Component\Fields\Administrator\Helper\FieldsHelper;
 use Joomla\Database\DatabaseInterface;
-use Joomla\Registry\Registry;
 
 \defined('_JEXEC') or die;
 
@@ -36,7 +29,6 @@ class JlcontentfieldsfilterHelper
 	public function getFields($params, $category_id, $values, $moduleId, $option)
 	{
 		$app      = Factory::getApplication();
-		$fields   = array();
 		$template = $app->getTemplate();
 
 		$context = '';
@@ -259,7 +251,7 @@ class JlcontentfieldsfilterHelper
 
 		if ($option == 'com_tags')
 		{
-			$tagIds = Factory::getApplication()->input->get('id', array(), 'array');
+			$tagIds = Factory::getApplication()->getInput()->get('id', [], 'array');
 			if (!is_array($tagIds))
 			{
 				$tagIds = array((int) $tagIds);
