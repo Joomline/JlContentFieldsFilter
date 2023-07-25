@@ -13,6 +13,7 @@
     <description>PLG_JLCONTENTFIELSDFILTER_DESC_ALL</description>
 
 		<files>
+			<folder type="component" id="com_jlcontentfieldsfilter">com_jlcontentfieldsfilter</folder>
 			<folder type="module" id="mod_jlcontentfieldsfilter" method="upgrade" client="site">mod_jlcontentfieldsfilter</folder>
 			<folder type="plugin" id="jlcontentfieldsfilter" group="system" method="upgrade" client="site">plg_system_jlcontentfieldsfilter</folder>
 			<folder type="file" id="file_jlcomponent_ajax" method="upgrade" client="site">file_jlcomponent_ajax</folder>			
