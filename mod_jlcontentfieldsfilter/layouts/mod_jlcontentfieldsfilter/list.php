@@ -26,8 +26,8 @@ if (!empty($field->hidden))
 	return;
 }
 $value       = $field->value;
-$listOptions = (array) $field->fieldparams->get('options', array());
-$options     = array();
+$listOptions = (array) $field->fieldparams->get('options', []);
+$options     = [];
 if (is_array($listOptions))
 {
 	foreach ($listOptions as $listOption)

@@ -23,7 +23,7 @@ class JlcontentfieldsfilterController extends JControllerLegacy
 	 * @param array $urlparams
 	 * @return JControllerLegacy
 	 */
-	function display( $cachable = false, $urlparams = array() )
+	function display( $cachable = false, $urlparams = [] )
 	{
 		$this->default_view = 'items';
 		parent::display( $cachable, $urlparams );

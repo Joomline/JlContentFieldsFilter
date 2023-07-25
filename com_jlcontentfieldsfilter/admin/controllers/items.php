@@ -26,7 +26,7 @@ class JlcontentfieldsfilterControllerItems extends JControllerAdmin
      * Class constructor
      * @param array $config
      */
-    function __construct($config = array())
+    function __construct($config = [])
     {
         parent::__construct($config);
     }
@@ -38,14 +38,14 @@ class JlcontentfieldsfilterControllerItems extends JControllerAdmin
      * @param Array $config
      * @return object model for current element
      */
-    public function getModel($name = 'Item', $prefix = 'JlcontentfieldsfilterModel', $config = array('ignore_request' => true))
+    public function getModel($name = 'Item', $prefix = 'JlcontentfieldsfilterModel', $config = ['ignore_request' => true])
     {
         return parent::getModel($name, $prefix, $config);
     }
 
     function get_form()
     {
-        $fields = array();
+        $fields = [];
         $error = 0;
         $message = '';
 
@@ -76,17 +76,17 @@ class JlcontentfieldsfilterControllerItems extends JControllerAdmin
 	             */
 				$module->id = 1;
 
-                $fields = $module_helper->getFields($params, $cid, array(), $module->id, 'com_content');
+                $fields = $module_helper->getFields($params, $cid, [], $module->id, 'com_content');
             }
         }
 
 
-        exit(json_encode(array('error' => $error, 'message' => $message, 'fields' => $fields)));
+        exit(json_encode(['error' => $error, 'message' => $message, 'fields' => $fields]));
     }
 
     function get_rows()
     {
-        $fields = array();
+        $fields = [];
         $error = 0;
         $message = '';
 
@@ -99,13 +99,13 @@ class JlcontentfieldsfilterControllerItems extends JControllerAdmin
             $message = 'CID = 0';
         }
 
-        $filterData = $app->getInput()->get('jlcontentfieldsfilter', array(), 'array');
+        $filterData = $app->getInput()->get('jlcontentfieldsfilter', [], 'array');
 
         $model = $this->getModel();
         $rows = $model->getRows($filterData);
 
 
-        exit(json_encode(array('error' => $error, 'message' => $message, 'rows' => $rows)));
+        exit(json_encode(['error' => $error, 'message' => $message, 'rows' => $rows]));
     }
 
     public function save()
@@ -119,11 +119,11 @@ class JlcontentfieldsfilterControllerItems extends JControllerAdmin
         $meta_desc = $app->getInput()->getString('meta_desc', '');
         $meta_keywords = $app->getInput()->getString('meta_keywords', '');
         $publish = $app->getInput()->getInt('publish', 0);
-        $filterData = $app->getInput()->get('jlcontentfieldsfilter', array(), 'array');
+        $filterData = $app->getInput()->get('jlcontentfieldsfilter', [], 'array');
 
         $model = $this->getModel();
         $result = $model->saveItem($id, $cid, $meta_title, $meta_desc, $meta_keywords, $publish, $filterData);
-        exit(json_encode(array('error' => !$result, 'message' => $message)));
+        exit(json_encode(['error' => !$result, 'message' => $message]));
     }
 
     public function delete()
@@ -133,6 +133,6 @@ class JlcontentfieldsfilterControllerItems extends JControllerAdmin
         $model = $this->getModel();
         $result = $model->delete($id);
         $message = $result ? '' : 'Error delete item';
-        exit(json_encode(array('error' => !$result, 'message' => $message)));
+        exit(json_encode(['error' => !$result, 'message' => $message]));
     }
 }

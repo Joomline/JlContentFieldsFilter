@@ -9,11 +9,11 @@
  */
 
 /**
- * module object. From there you can take the module id ($module->id), the module title, its position, etc.
- * $app - the application object. This means that you do not need to call Joomla\CMS\Factory::getApplication() by yourself. It is already there for your convenience.
- * $input - also, the Input object is now immediately available in the module layout (through it we get GET, POST parameters, SERVER, etc.), which previously had to be called independently.
- * $params - module parameters. We get them as before: $params->get('param_name' , 'default_value_if_value_is_empty'). We collect these parameters using various types of Joomla fields in the module's xml manifest.
- * $template - parameters of the style settings of the current template. Joomla templates have templateDetails.xml in which you can set various template parameters: logos, fonts, custom scripts in <head> and <body> and whatever your heart desires. Now in the module you have the opportunity to access these parameters without unnecessary movements. However, it is worth remembering that many studio templates (JoomShaper Helix and others like them) do not use a standard parameter storage location, so it may be empty there.
+ * @var $module object. From there you can take the module id ($module->id), the module title, its position, etc.
+ * @var $app object - the application object. This means that you do not need to call Joomla\CMS\Factory::getApplication() by yourself. It is already there for your convenience.
+ * @var $input object - also, the Input object is now immediately available in the module layout (through it we get GET, POST parameters, SERVER, etc.), which previously had to be called independently.
+ * @var $params object - module parameters. We get them as before: $params->get('param_name' , 'default_value_if_value_is_empty'). We collect these parameters using various types of Joomla fields in the module's xml manifest.
+ * @var $template object - parameters of the style settings of the current template. Joomla templates have templateDetails.xml in which you can set various template parameters: logos, fonts, custom scripts in <head> and <body> and whatever your heart desires. Now in the module you have the opportunity to access these parameters without unnecessary movements. However, it is worth remembering that many studio templates (JoomShaper Helix and others like them) do not use a standard parameter storage location, so it may be empty there.
  */
 
 use Joomla\CMS\Language\Text;
@@ -51,7 +51,7 @@ $wa->addInlineScript('
 
 if ($params->get('enable_css', 1))
 {
-	$wa->registerAndUseStyle('mod_jlcontentfieldsfilter.jlcontentfilter.style','mod_jlcontentfieldsfilter/jlcontentfilter.css', array('version' => 'auto'));
+	$wa->registerAndUseStyle('mod_jlcontentfieldsfilter.jlcontentfilter.style','mod_jlcontentfieldsfilter/jlcontentfilter.css', ['version' => 'auto']);
 }
 
 ?>

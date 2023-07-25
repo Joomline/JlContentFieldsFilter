@@ -28,7 +28,7 @@ class JlcontentfieldsfilterModelItem extends JModelAdmin
      * @param Boolean $loadData
      * @return Object form data
      */
-    public function getForm($data = array(), $loadData = true)
+    public function getForm($data = [], $loadData = true)
     {
         return false;
     }
@@ -40,7 +40,7 @@ class JlcontentfieldsfilterModelItem extends JModelAdmin
      * @param array $config
      * @return JTable|mixed
      */
-    public function getTable($type = 'jlcontentfieldsfilter_data', $prefix = 'Table', $config = array())
+    public function getTable($type = 'jlcontentfieldsfilter_data', $prefix = 'Table', $config = [])
     {
         return Table::getInstance($type, $prefix, $config);
     }
@@ -59,23 +59,23 @@ class JlcontentfieldsfilterModelItem extends JModelAdmin
         if ($id > 0) {
             $table->load($id);
         } else {
-            $table->load(array('filter_hash' => $hash));
+            $table->load(['filter_hash' => $hash]);
             $id = $table->id;
 
 			if($id == 0){
-				$table->load(array('filter_hash' => $unsafe_hash));
+				$table->load(['filter_hash' => $unsafe_hash]);
 				$id = $table->id;
 			}
         }
 
-        $data = array(
+        $data = [
 	        'filter_hash'   => $hash,
 	        'filter'        => $filter,
 	        'meta_title'    => $meta_title,
 	        'meta_desc'     => $meta_desc,
 	        'meta_keywords' => $meta_keywords,
 	        'publish'       => $publish
-        );
+        ];
 
         if ($id == 0) {
             $data['catid'] = $cid;
@@ -99,7 +99,7 @@ class JlcontentfieldsfilterModelItem extends JModelAdmin
 
         $result = $db->setQuery($query)->loadObjectList('id');
         if (!is_array($result)) {
-            $result = array();
+            $result = [];
         }
         return $result;
     }

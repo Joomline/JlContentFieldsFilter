@@ -78,13 +78,13 @@ class JlcontentfieldsfilterViewItems extends JViewLegacy
 
 	protected function getSortFields()
 	{
-		return array(
+		return [
 			'ordering' => Text::_( 'JGRID_HEADING_ORDERING' ),
 			'published' => Text::_( 'JSTATUS' ),
 			'title' => Text::_( 'JGLOBAL_TITLE' ),
 			'created_by' => Text::_( 'JAUTHOR' ),
 			'created' => Text::_( 'JDATE' ),
 			'id' => Text::_( 'JGRID_HEADING_ID' )
-		);
+		];
 	}
 }

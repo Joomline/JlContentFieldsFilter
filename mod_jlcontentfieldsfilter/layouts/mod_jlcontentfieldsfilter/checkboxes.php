@@ -24,8 +24,8 @@ if (!empty($field->hidden))
 	return;
 }
 $label        = Text::_($field->label);
-$value        = is_array($field->value) ? $field->value : array();
-$options      = (array) $field->fieldparams->get('options', array());
+$value        = is_array($field->value) ? $field->value : [];
+$options      = (array) $field->fieldparams->get('options', []);
 $moduleParams = $displayData['params'];
 $count_cols   = (int) $moduleParams->get('count_cols', 2);
 $width        = (int) (100 / $count_cols);

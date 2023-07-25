@@ -163,7 +163,7 @@ class TagModel extends ListModel
 	    $itemid = implode(',', $app->getInput()->get('id', 0, 'int')) . ':' . $app->getInput()->get('Itemid', 0, 'int');
 	    $context = 'com_tags.category.list.' . $itemid;
 		$article_id_include = $app->getUserState($context . 'filter.article_id_include', false);
-	    $filterArticles = $app->getUserState($context . 'filter.article_id', array());
+	    $filterArticles = $app->getUserState($context . 'filter.article_id', []);
 
 	    if($article_id_include && is_array($filterArticles) && count($filterArticles)){
 		    $query->where($this->_db->quoteName('m.type_alias') . ' = ' . $this->_db->quote('com_content.article'));

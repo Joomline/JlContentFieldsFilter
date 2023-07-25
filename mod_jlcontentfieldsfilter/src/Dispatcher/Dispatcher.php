@@ -64,9 +64,9 @@ class Dispatcher extends AbstractModuleDispatcher
 		}
 
 
-		$enabledComponents       = ($data['params'])->get('enabled_components', array());
-		$allowedCats             = ($data['params'])->get('categories', array());
-		$allowedContactCats      = ($data['params'])->get('contact_categories', array());
+		$enabledComponents       = ($data['params'])->get('enabled_components', []);
+		$allowedCats             = ($data['params'])->get('categories', []);
+		$allowedContactCats      = ($data['params'])->get('contact_categories', []);
 		$data['moduleclass_sfx'] = ($data['params'])->get('moduleclass_sfx', '');
 		$data['form_method']     = ($data['params'])->get('form_method', 'post');
 		$data['autho_send']      = (int) ($data['params'])->get('autho_send', 0);
@@ -85,10 +85,10 @@ class Dispatcher extends AbstractModuleDispatcher
 			{
 				return false;
 			}
-			$allowedTags = ($data['params'])->get('tags_tags', array());
+			$allowedTags = ($data['params'])->get('tags_tags', []);
 			$catid       = (int) ($data['params'])->get('tags_fields_category', 0);
 			$data['catid'] = $catid;
-			$tagIds      = $input->get('id', array(), 'array');
+			$tagIds      = $input->get('id', [], 'array');
 
 			// tags in tags array can be like {tag_id}:{tag_alias} - 2:tag-alias
 			if (!empty($tagIds))
@@ -126,7 +126,7 @@ class Dispatcher extends AbstractModuleDispatcher
 			$context = $option . '.cat_' . $catid . '.jlcontentfieldsfilter';
 		}
 
-		$jlContentFieldsFilter = $app->getUserStateFromRequest($context, 'jlcontentfieldsfilter', array(), 'array');
+		$jlContentFieldsFilter = $app->getUserStateFromRequest($context, 'jlcontentfieldsfilter', [], 'array');
 
 		if ($option == 'com_content')
 		{

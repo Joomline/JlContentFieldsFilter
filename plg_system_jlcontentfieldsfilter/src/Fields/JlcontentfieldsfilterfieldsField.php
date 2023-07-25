@@ -70,7 +70,7 @@ class JlcontentfieldsfilterfieldsField extends ListField
 	 */
 	protected function getOptions()
 	{
-		$options   = array();
+		$options   = [];
 		$options[] = HTMLHelper::_('select.option', '', Text::_('JNO'));
 
 		switch ($this->dataType)

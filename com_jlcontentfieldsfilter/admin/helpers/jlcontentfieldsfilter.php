@@ -56,10 +56,10 @@ class JlcontentfieldsfilterHelper
     public static function createFilterString($filter, $safe=true)
     {
         ksort($filter);
-        $data = array();
+        $data = [];
         foreach ($filter as $key => $item) {
             if (is_array($item)) {
-                $val = array();
+                $val = [];
                 ksort($item);
                 foreach ($item as $k => $v) {
 
@@ -117,7 +117,7 @@ class JlcontentfieldsfilterHelper
             return $object;
         }
 
-        $fields = array();
+        $fields = [];
 
         foreach ($result as $field)
         {
@@ -125,7 +125,7 @@ class JlcontentfieldsfilterHelper
 
             $fieldparams = json_decode($field->fieldparams, true);
             if(isset($fieldparams['options']) && is_array($fieldparams['options']) && count($fieldparams['options'])){
-                $values = array();
+                $values = [];
                 foreach ($fieldparams['options'] as $option) {
                     $key = $option['value'];
                     if(is_numeric($key)){
@@ -135,23 +135,23 @@ class JlcontentfieldsfilterHelper
                }
             }
 
-            $fields[$field->id] = array(
+            $fields[$field->id] = [
                 'id' => $field->id,
                 'name' => Text::_($field->title),
                 'values' => $values,
-            );
+            ];
         }
 
-        $titles = $desc = $keyvords = array();
+        $titles = $desc = $keyvords = [];
         foreach ($filterData as $key => $f) {
             if(!isset($fields[$key]) || empty($f)){
                 continue;
             }
             $fname = $fields[$key]['name'];
             if(is_array($f)){
-                $fValues = array();
+                $fValues = [];
                 foreach ($f as $fk => $fv) {
-                    if(in_array($fk, array('from', 'to'))){
+                    if(in_array($fk, ['from', 'to'])){
                         continue;
                     }
                     if(empty($fv)){

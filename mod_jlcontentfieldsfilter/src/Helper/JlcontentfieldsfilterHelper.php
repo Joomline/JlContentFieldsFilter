@@ -57,8 +57,8 @@ class JlcontentfieldsfilterHelper
 				$fields
 			);
 
-			$new          = array();
-			$usedFieldIds = array();
+			$new          = [];
+			$usedFieldIds = [];
 
 			foreach ($fields as $key => $original)
 			{
@@ -73,7 +73,7 @@ class JlcontentfieldsfilterHelper
 
 				$content_filter = $original->params->get('content_filter', '');
 
-				$disabled_categories = $original->params->get('disabled_categories', array());
+				$disabled_categories = $original->params->get('disabled_categories', []);
 				if (in_array($category_id, $disabled_categories))
 				{
 					continue;
@@ -115,7 +115,12 @@ class JlcontentfieldsfilterHelper
 					$field = $this->setHiddenOptions($field, $category_id, $option);
 				}
 
-				$displayData = array('field' => $field, 'params' => $params, 'moduleId' => $moduleId, 'rangedata' => array());
+				$displayData = [
+					'field' => $field,
+					'params' => $params,
+					'moduleId' => $moduleId,
+					'rangedata' => []
+				];
 
 				if (preg_match("/^range?.*?$/isu", $layout))
 				{
@@ -126,7 +131,10 @@ class JlcontentfieldsfilterHelper
 					'mod_jlcontentfieldsfilter.' . $layout,
 					$displayData,
 					$basePath,
-					array('component' => 'auto', 'client' => 0, 'suffixes' => array())
+					[
+						'component' => 'auto',
+						'client' => 0,
+						'suffixes' => []]
 				);
 			}
 			$fields = $new;
@@ -339,7 +347,7 @@ class JlcontentfieldsfilterHelper
 		$app      = Factory::getApplication();
 		$template = $app->getTemplate();
 
-		$options = array();
+		$options = [];
 		if ($option == 'com_content')
 		{
 			$options[] = HTMLHelper::_('select.option', '', Text::_('MOD_JLCONTENTFIELDSFILTER_ORDERING_DEFAULT'));
@@ -373,9 +381,9 @@ class JlcontentfieldsfilterHelper
 
 		$html = LayoutHelper::render(
 			'mod_jlcontentfieldsfilter.ordering',
-			array('options' => $options, 'selected' => $selectedOrdering, 'moduleId' => $moduleId),
+			['options' => $options, 'selected' => $selectedOrdering, 'moduleId' => $moduleId],
 			$basePath,
-			array('component' => 'auto', 'client' => 0)
+			['component' => 'auto', 'client' => 0]
 		);
 
 		return $html;

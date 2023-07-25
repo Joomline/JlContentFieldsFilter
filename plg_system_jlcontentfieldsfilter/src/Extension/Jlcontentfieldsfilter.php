@@ -48,11 +48,11 @@ class Jlcontentfieldsfilter extends CMSPlugin
 
         $app = $this->getApplication();
 
-        if (!in_array($name, array('com_fields.fieldcom_content.article', 'com_fields.field.com_content.article', 'com_fields.fieldcom_contact.contact', 'com_fields.field.com_contact.contact'))
+        if (!in_array($name, ['com_fields.fieldcom_content.article', 'com_fields.field.com_content.article', 'com_fields.fieldcom_contact.contact', 'com_fields.field.com_contact.contact'])
             || !$app->isClient('administrator')) {
             return true;
         } else {
-            $category_extension = explode('.', str_replace(array('com_fields.field.', 'com_fields.field'), '', $name))[0];
+            $category_extension = explode('.', str_replace(['com_fields.field.', 'com_fields.field'], '', $name))[0];
         }
 
         Form::addFormPath(JPATH_SITE . '/plugins/system/jlcontentfieldsfilter/src/Params');
@@ -104,7 +104,7 @@ class Jlcontentfieldsfilter extends CMSPlugin
                 return;
             }
             $catid = $app->getUserStateFromRequest($option . '.jlcontentfieldsfilter.tag_category_id', 'tag_category_id', 0, 'int');
-            $tagids = $app->getUserStateFromRequest($option . '.jlcontentfieldsfilter.tag_ids', 'id', array(), 'array');
+            $tagids = $app->getUserStateFromRequest($option . '.jlcontentfieldsfilter.tag_ids', 'id', [], 'array');
 
 
 	        if (!empty($tagids))
@@ -121,7 +121,7 @@ class Jlcontentfieldsfilter extends CMSPlugin
             $itemid = implode(',', $tagids) . ':' . $app->getInput()->get('Itemid', 0, 'int');
 
         } else if (
-            !in_array($option, array('com_content', 'com_contact')) || $view != 'category' || $catid == 0) {
+            !in_array($option, ['com_content', 'com_contact']) || $view != 'category' || $catid == 0) {
             return;
         } else {
             $itemid = $app->getInput()->get('id', 0, 'int') . ':' . $app->getInput()->get('Itemid', 0, 'int');
@@ -133,7 +133,7 @@ class Jlcontentfieldsfilter extends CMSPlugin
             $context = $option . '.cat_' . $catid . '.jlcontentfieldsfilter';
         }
 
-        $filterData = $app->getUserStateFromRequest($context, 'jlcontentfieldsfilter', array(), 'array');
+        $filterData = $app->getUserStateFromRequest($context, 'jlcontentfieldsfilter', [], 'array');
 
 
         if (!count($filterData)) {
@@ -160,7 +160,7 @@ class Jlcontentfieldsfilter extends CMSPlugin
         $fieldsTypes = $db->setQuery($query)->loadObjectList('id');
 
         $count = 0;
-        $filterArticles = array();
+        $filterArticles = [];
 
         foreach ($filterData as $k => $v) {
             if (!isset($fieldsTypes[$k])) {
@@ -174,7 +174,7 @@ class Jlcontentfieldsfilter extends CMSPlugin
                 case 'checkboxes':
                 case 'list':
                     if (is_array($v) && count($v)) {
-                        $newVal = array();
+                        $newVal = [];
                         foreach ($v as $val) {
                             if ($val !== '')
                                 $newVal[] = $val;
@@ -212,7 +212,7 @@ class Jlcontentfieldsfilter extends CMSPlugin
                 $query->where($where);
                 $query->group('item_id');
                 $aIds = $db->setQuery($query)->loadColumn();
-                $aIds = !is_array($aIds) ? array() : $aIds;
+                $aIds = !is_array($aIds) ? [] : $aIds;
                 if ($count == 0) {
                     $filterArticles = $aIds;
                 } else {
@@ -231,7 +231,7 @@ class Jlcontentfieldsfilter extends CMSPlugin
 
         if ($count > 0) {
             if (!count($filterArticles)) {
-                $filterArticles = array(0);
+                $filterArticles = [0];
             }
 
             $app->setUserState($context . 'filter.article_id_include', true);
@@ -306,13 +306,13 @@ class Jlcontentfieldsfilter extends CMSPlugin
         }
 
         if ($option == 'com_tags') {
-            $tagIds = $app->getUserStateFromRequest($option . '.jlcontentfieldsfilter.tag_ids', 'id', array(), 'array');
+            $tagIds = $app->getUserStateFromRequest($option . '.jlcontentfieldsfilter.tag_ids', 'id', [], 'array');
             $context = $option . '.cat_' . implode('_', $tagIds) . '.jlcontentfieldsfilter';
         } else {
             $context = $option . '.cat_' . $catid . '.jlcontentfieldsfilter';
         }
 
-        $filterData = $app->getUserStateFromRequest($context, 'jlcontentfieldsfilter', array(), 'array');
+        $filterData = $app->getUserStateFromRequest($context, 'jlcontentfieldsfilter', [], 'array');
 
 
         if (isset($filterData['ordering'])) {
