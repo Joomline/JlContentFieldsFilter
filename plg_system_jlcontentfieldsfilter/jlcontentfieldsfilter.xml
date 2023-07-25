@@ -13,8 +13,6 @@
 	<files>
 		<folder plugin="jlcontentfieldsfilter">src</folder>
 		<folder>services</folder>
-		<folder>models</folder>
-		<folder>params</folder>
 		<filename>jlcontentfieldsfilter.xml</filename>
 	</files>
 	
