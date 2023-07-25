@@ -30,9 +30,9 @@ $doc->addStyleSheet(Uri::root() . 'administrator/components/com_jlcontentfieldsf
                 <div id="sidebar" class="sidebar">
                     <div class="sidebar-nav">
                         <ul id="submenu" class="nav nav-list">
-                            <li>
-                                <label></label>
-                                <select name="cid" v-model="cid" v-on:change="loadFilter">
+                            <li class="mb-3">
+                                <label class="form-label"><?php echo Text::_('JCATEGORY'); ?></label>
+                                <select name="cid" class="form-select" v-model="cid" v-on:change="loadFilter">
                                     <option value=""><?php echo Text::_('SELECT_CATEGORY'); ?></option>
 									<?php echo $this->categoryOptions; ?>
                                 </select>

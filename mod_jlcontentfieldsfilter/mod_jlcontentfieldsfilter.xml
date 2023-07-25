@@ -74,6 +74,7 @@
                     extension='com_content'
                     default="0"
                     multiple="multiple"
+                    layout="joomla.form.field.list-fancy-select"
                     label="MOD_JLCONTENTFIELDSFILTER_ALLOWED_CATEGORY"
                     description="MOD_JLCONTENTFIELDSFILTER_ALLOWED_CATEGORY_DESC"
                 >
@@ -85,6 +86,7 @@
                     extension='com_contact'
                     default="0"
                     multiple="multiple"
+                    layout="joomla.form.field.list-fancy-select"
                     label="MOD_JLCONTENTFIELDSFILTER_ALLOWED_CONTACT_CATEGORY"
                     description="MOD_JLCONTENTFIELDSFILTER_ALLOWED_CONTACT_CATEGORY_DESC"
 					>
