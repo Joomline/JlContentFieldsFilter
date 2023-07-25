@@ -9,6 +9,8 @@
  */
 
 // No direct access
+use Joomla\CMS\Factory;
+
 defined( '_JEXEC' ) or die;
 
 /**
@@ -41,7 +43,7 @@ class JlcontentfieldsfilterControllerItem extends JControllerForm
 	{
 		// Initialise variables.
 		$recordId = ( int )isset( $data[$key] ) ? $data[$key] : 0;
-		$user = JFactory::getUser();
+		$user = Factory::getApplication()->getIdentity();
 		$userId = $user->get( 'id' );
 		// Check general edit permission first.
 		if ( $user->authorise( 'core.edit', 'com_jlcontentfieldsfilter.item.' . $recordId ) ) {

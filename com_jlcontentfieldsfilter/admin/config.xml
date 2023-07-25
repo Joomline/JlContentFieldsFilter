@@ -4,8 +4,8 @@
         <field name="autogeneration"
                type="list"
                default="0"
-               label="Автогенерация"
-               description="Автогенерация мета в процессе использования фильтра"
+               label="Autogeneration"
+               description="Meta data autogeneration in the process of using the filter"
         >
             <option value="1">JYES</option>
             <option value="0">JNO</option>

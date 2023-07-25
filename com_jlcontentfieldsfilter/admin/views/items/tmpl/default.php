@@ -2,10 +2,10 @@
 /**
  * JL Content Fields Filter
  *
- * @version 	@version@
- * @author		Joomline
- * @copyright	(C) 2017-2019 Arkadiy Sedelnikov, Joomline. All rights reserved.
- * @license 	GNU General Public License version 2 or later; see	LICENSE.txt
+ * @version          @version@
+ * @author           Joomline
+ * @copyright    (C) 2017-2019 Arkadiy Sedelnikov, Joomline. All rights reserved.
+ * @license          GNU General Public License version 2 or later; see    LICENSE.txt
  */
 
 /** @var $this JlcontentfieldsfilterViewItems */
@@ -34,7 +34,7 @@ $doc->addStyleSheet(Uri::root() . 'administrator/components/com_jlcontentfieldsf
                                 <label></label>
                                 <select name="cid" v-model="cid" v-on:change="loadFilter">
                                     <option value=""><?php echo Text::_('SELECT_CATEGORY'); ?></option>
-                                    <?php echo $this->categoryOptions; ?>
+									<?php echo $this->categoryOptions; ?>
                                 </select>
                             </li>
 
@@ -65,18 +65,27 @@ $doc->addStyleSheet(Uri::root() . 'administrator/components/com_jlcontentfieldsf
             <div slot="body">
                 <input type="hidden" name="id" v-bind:value="id">
                 <!--            <input type="hidden" name="cid" v-bind:value="cid">-->
-                <label>Title</label>
-                <input type="text" name="meta_title" v-bind:value="title">
-                <label>Meta Description</label>
-                <textarea name="meta_desc">{{meta_desc}}</textarea>
-                <label>Meta Keywords</label>
-                <textarea name="meta_keywords">{{meta_keywords}}</textarea>
-                <label>Publish</label>
-                <input type="checkbox" name="publish" value="1" v-bind:checked="publish == 1">
+                <div class="mb-3">
+                    <label class="form-label" for="meta_title">Title</label>
+                    <input type="text" name="meta_title" id="meta_title" class="form-control" v-bind:value="title">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="meta_desc">Meta Description</label>
+                    <textarea name="meta_desc" id="meta_desc" class="form-control">{{meta_desc}}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="meta_keywords">Meta Keywords</label>
+                    <textarea name="meta_keywords" id="meta_keywords" class="form-control">{{meta_keywords}}</textarea>
+                </div>
+                <div class="mb-3 form-check form-switch">
+                    <input type="checkbox" name="publish" id="publish" class="form-check-input" value="1"
+                           v-bind:checked="publish == 1">
+                    <label class="form-check-label" for="publish">Publish</label>
+                </div>
             </div>
             <div slot="footer">
-                <button class="modal-default-button" @click="SaveRow">Save</button>
-                <button class="modal-default-button" @click="Chancel">Chancel</button>
+                <button class="modal-default-button btn btn-sm btn-danger" @click="SaveRow">Save</button>
+                <button class="modal-default-button btn btn-sm btn-success" @click="Chancel">Cancel</button>
             </div>
         </modal>
     </form>

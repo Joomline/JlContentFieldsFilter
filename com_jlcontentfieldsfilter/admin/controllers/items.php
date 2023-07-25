@@ -36,7 +36,7 @@ class JlcontentfieldsfilterControllerItems extends JControllerAdmin
      * @param String $name (model name)
      * @param String $prefix (model prefox)
      * @param Array $config
-     * @return model for current element
+     * @return object model for current element
      */
     public function getModel($name = 'Item', $prefix = 'JlcontentfieldsfilterModel', $config = array('ignore_request' => true))
     {
@@ -70,7 +70,11 @@ class JlcontentfieldsfilterControllerItems extends JControllerAdmin
 	            $lang = $app->getLanguage();
 	            $lang->load('mod_jlcontentfieldsfilter' , JPATH_SITE);
 				$module_helper = $module->getHelper('JlcontentfieldsfilterHelper');
-	            $module->id = 1; // чтоб завелось
+	            /**
+	             * Поля тянутся из модуля. Методу нужны параметры конкретного модуля (на самом деле для админки - нет),
+	             * поэтому ставим тут любое число.
+	             */
+				$module->id = 1;
 
                 $fields = $module_helper->getFields($params, $cid, array(), $module->id, 'com_content');
             }
