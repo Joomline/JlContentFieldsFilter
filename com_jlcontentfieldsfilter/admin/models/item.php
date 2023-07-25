@@ -52,10 +52,10 @@ class JlcontentfieldsfilterModelItem extends JModelAdmin
         }
 
         $table = $this->getTable();
-        $filter = JlcontentfieldsfilterHelper::createFilterString($filterData);
-        $unsafe_filter = JlcontentfieldsfilterHelper::createFilterString($filterData, false);
-        $hash = JlcontentfieldsfilterHelper::createHash($filter);
-        $unsafe_hash = JlcontentfieldsfilterHelper::createHash($unsafe_filter);
+        $filter = \JlcontentfieldsfilterHelper::createFilterString($filterData);
+        $unsafe_filter = \JlcontentfieldsfilterHelper::createFilterString($filterData, false);
+        $hash = \JlcontentfieldsfilterHelper::createHash($filter);
+        $unsafe_hash = \JlcontentfieldsfilterHelper::createHash($unsafe_filter);
         if ($id > 0) {
             $table->load($id);
         } else {
@@ -86,10 +86,10 @@ class JlcontentfieldsfilterModelItem extends JModelAdmin
 
     function getRows($filterData)
     {
-        $filter = JlcontentfieldsfilterHelper::createFilterString($filterData);
-		$unsafe_filter = JlcontentfieldsfilterHelper::createFilterString($filterData, false);
-        $hash = JlcontentfieldsfilterHelper::createHash($filter);
-	    $unsafe_hash = JlcontentfieldsfilterHelper::createHash($unsafe_filter);
+        $filter = \JlcontentfieldsfilterHelper::createFilterString($filterData);
+		$unsafe_filter = \JlcontentfieldsfilterHelper::createFilterString($filterData, false);
+        $hash = \JlcontentfieldsfilterHelper::createHash($filter);
+	    $unsafe_hash = \JlcontentfieldsfilterHelper::createHash($unsafe_filter);
         $db = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select('*')

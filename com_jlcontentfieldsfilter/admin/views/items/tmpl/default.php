@@ -15,7 +15,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 
 defined('_JEXEC') or die;// No direct access
-$doc = Factory::getDocument();
+$doc = Factory::getApplication()->getDocument();
 $doc->addScript(Uri::root() . 'administrator/components/com_jlcontentfieldsfilter/assets/js/vue.js');
 $doc->addScript(Uri::root() . 'administrator/components/com_jlcontentfieldsfilter/assets/js/axios.min.js');
 $doc->addScript(Uri::root() . 'administrator/components/com_jlcontentfieldsfilter/assets/js/script.js');
