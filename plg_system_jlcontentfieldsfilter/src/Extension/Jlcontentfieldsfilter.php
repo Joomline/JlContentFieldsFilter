@@ -140,9 +140,6 @@ class Jlcontentfieldsfilter extends CMSPlugin
             return;
         }
 
-
-
-
         if ($option == 'com_content' && !class_exists('CategoryModel')) {
             require_once JPATH_SITE . '/plugins/system/jlcontentfieldsfilter/src/Models/com_content/CategoryModel.php';
             $context = 'com_content.article';
@@ -299,27 +296,24 @@ class Jlcontentfieldsfilter extends CMSPlugin
             return;
         }
 
-        require_once JPATH_ROOT . '/administrator/components/com_jlcontentfieldsfilter/helpers/jlcontentfieldsfilter.php';
-
         $app = $this->getApplication();
         $option = $app->getInput()->getString('option', '');
         $view = $app->getInput()->getString('view', '');
         $catid = $app->getInput()->getInt('id', 0);
 
-        if (!in_array($option, array('com_content')) || $view != 'category' || $catid == 0) {
+        if (!in_array($option, ['com_content']) || $view != 'category' || $catid == 0) {
             return;
         }
 
         if ($option == 'com_tags') {
-            $tagids = $app->getUserStateFromRequest($option . '.jlcontentfieldsfilter.tag_ids', 'id', array(), 'array');
-            $context = $option . '.cat_' . implode('_', $tagids) . '.jlcontentfieldsfilter';
+            $tagIds = $app->getUserStateFromRequest($option . '.jlcontentfieldsfilter.tag_ids', 'id', array(), 'array');
+            $context = $option . '.cat_' . implode('_', $tagIds) . '.jlcontentfieldsfilter';
         } else {
             $context = $option . '.cat_' . $catid . '.jlcontentfieldsfilter';
         }
 
-        $filterData = $app->getUserStateFromRequest($tagids, 'jlcontentfieldsfilter', array(), 'array');
+        $filterData = $app->getUserStateFromRequest($context, 'jlcontentfieldsfilter', array(), 'array');
 
-        $doc = $app->getDocument();
 
         if (isset($filterData['ordering'])) {
             unset($filterData['ordering']);
@@ -335,12 +329,14 @@ class Jlcontentfieldsfilter extends CMSPlugin
         $params = ComponentHelper::getParams('com_jlcontentfieldsfilter');
         $autogeneration = $params->get('autogeneration', 0);
 
-        $filter = JlcontentfieldsfilterHelper::createFilterString($filterData);
-        $unsafe_filter = JlcontentfieldsfilterHelper::createFilterString($filterData, false);
-        $hash = JlcontentfieldsfilterHelper::createHash($filter);
-        $unsafe_hash = JlcontentfieldsfilterHelper::createHash($unsafe_filter);
+	    \JLoader::register('JlcontentfieldsfilterHelper', JPATH_ADMINISTRATOR . '/components/com_jlcontentfieldsfilter/helpers/jlcontentfieldsfilter.php');
 
-        $db = $this->getDbo();
+        $filter = \JlcontentfieldsfilterHelper::createFilterString($filterData);
+        $unsafe_filter = \JlcontentfieldsfilterHelper::createFilterString($filterData, false);
+        $hash = \JlcontentfieldsfilterHelper::createHash($filter);
+        $unsafe_hash = \JlcontentfieldsfilterHelper::createHash($unsafe_filter);
+
+	    $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select('*')
             ->from('`#__jlcontentfieldsfilter_data`')
@@ -353,10 +349,10 @@ class Jlcontentfieldsfilter extends CMSPlugin
             if (!$autogeneration) {
                 return;
             } else {
-                $result = JlcontentfieldsfilterHelper::createMeta($catid, $filterData);
+                $result = \JlcontentfieldsfilterHelper::createMeta($catid, $filterData);
             }
         }
-
+	    $doc = $app->getDocument();
         if (!empty($result->meta_title)) {
             $doc->setTitle($result->meta_title);
         }
