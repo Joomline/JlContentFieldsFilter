@@ -9,6 +9,8 @@
  */
 
 // No direct access
+use Joomla\CMS\Factory;
+
 defined( '_JEXEC' ) or die;
 
 /**
@@ -22,7 +24,7 @@ class JlcontentfieldsfilterControllerItem extends JControllerForm
 	 * Class constructor
 	 * @param array $config
 	 */
-	function __construct( $config = array() )
+	function __construct( $config = [] )
 	{
 		$this->view_list = 'items';
 		parent::__construct( $config );
@@ -37,11 +39,11 @@ class JlcontentfieldsfilterControllerItem extends JControllerForm
 	 * @return    boolean
 	 * @since    1.6
 	 */
-	protected function allowEdit( $data = array(), $key = 'id' )
+	protected function allowEdit( $data = [], $key = 'id' )
 	{
 		// Initialise variables.
 		$recordId = ( int )isset( $data[$key] ) ? $data[$key] : 0;
-		$user = JFactory::getUser();
+		$user = Factory::getApplication()->getIdentity();
 		$userId = $user->get( 'id' );
 		// Check general edit permission first.
 		if ( $user->authorise( 'core.edit', 'com_jlcontentfieldsfilter.item.' . $recordId ) ) {

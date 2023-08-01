@@ -9,6 +9,8 @@
  */
 
 // No direct access
+use Joomla\CMS\HTML\HTMLHelper;
+
 defined( '_JEXEC' ) or die;
 
 /**
@@ -31,11 +33,12 @@ class JlcontentfieldsfilterModelItems extends JModelList
 
 	public function getCategoryOptions()
     {
-        $categoryOptions = JHtml::_(
+        $categoryOptions = HTMLHelper::_(
             'select.options',
-            JHtml::_('category.options', 'com_content'),
+            HTMLHelper::_('category.options', 'com_content'),
             'value',
             'text',
+			['class'=>'form-select'],
             0
         );
         return $categoryOptions;

@@ -8,6 +8,13 @@
  * @license 	GNU General Public License version 2 or later; see	LICENSE.txt
  */
 
+use Joomla\CMS\Access\Access;
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\Helpers\Sidebar;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Object\CMSObject;
+use Joomla\Database\DatabaseInterface;
+
 defined('_JEXEC') or die;
 
 /**
@@ -21,22 +28,25 @@ class JlcontentfieldsfilterHelper
      */
     static function addSubmenu($vName)
     {
-        JHtmlSidebar::addEntry(
-            JText::_('ITEM_SUBMENU'),
+        Sidebar::addEntry(
+            Text::_('ITEM_SUBMENU'),
             'index.php?option=com_jlcontentfieldsfilter&view=items',
             $vName == 'items');
     }
 
     /**
      * Получаем доступные действия для текущего пользователя
-     * @return JObject
+     * @return CMSObject
      */
     public static function getActions()
     {
-        $user = JFactory::getUser();
-        $result = new JObject;
+        $user = Factory::getApplication()->getIdentity();
+        $result = new CMSObject;
         $assetName = 'com_jlcontentfieldsfilter';
-        $actions = JAccess::getActions($assetName);
+	    $actions = Access::getActionsFromFile(
+		    JPATH_ADMINISTRATOR . '/components/com_jlcontentfieldsfilter/access.xml',
+		    '/access/section[@name="component"]/'
+	    );
         foreach ($actions as $action) {
             $result->set($action->name, $user->authorise($action->name, $assetName));
         }
@@ -46,10 +56,10 @@ class JlcontentfieldsfilterHelper
     public static function createFilterString($filter, $safe=true)
     {
         ksort($filter);
-        $data = array();
+        $data = [];
         foreach ($filter as $key => $item) {
             if (is_array($item)) {
-                $val = array();
+                $val = [];
                 ksort($item);
                 foreach ($item as $k => $v) {
 
@@ -80,7 +90,7 @@ class JlcontentfieldsfilterHelper
 
     public static function createMeta($catid, $filterData)
     {
-        $object = new stdClass();
+        $object = new \stdClass();
         $object->meta_title = '';
         $object->meta_desc = '';
         $object->meta_keywords = '';
@@ -88,7 +98,7 @@ class JlcontentfieldsfilterHelper
         if(!$catid){
             return $object;
         }
-        $db = JFactory::getDbo();
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select('`title`')
             ->from('#__categories')
@@ -107,7 +117,7 @@ class JlcontentfieldsfilterHelper
             return $object;
         }
 
-        $fields = array();
+        $fields = [];
 
         foreach ($result as $field)
         {
@@ -115,33 +125,33 @@ class JlcontentfieldsfilterHelper
 
             $fieldparams = json_decode($field->fieldparams, true);
             if(isset($fieldparams['options']) && is_array($fieldparams['options']) && count($fieldparams['options'])){
-                $values = array();
+                $values = [];
                 foreach ($fieldparams['options'] as $option) {
                     $key = $option['value'];
                     if(is_numeric($key)){
                         $key = (int)$key;
                     }
-                    $values[$key] = JText::_($option['name']);
+                    $values[$key] = Text::_($option['name']);
                }
             }
 
-            $fields[$field->id] = array(
+            $fields[$field->id] = [
                 'id' => $field->id,
-                'name' => JText::_($field->title),
+                'name' => Text::_($field->title),
                 'values' => $values,
-            );
+            ];
         }
 
-        $titles = $desc = $keyvords = array();
+        $titles = $desc = $keyvords = [];
         foreach ($filterData as $key => $f) {
             if(!isset($fields[$key]) || empty($f)){
                 continue;
             }
             $fname = $fields[$key]['name'];
             if(is_array($f)){
-                $fValues = array();
+                $fValues = [];
                 foreach ($f as $fk => $fv) {
-                    if(in_array($fk, array('from', 'to'))){
+                    if(in_array($fk, ['from', 'to'])){
                         continue;
                     }
                     if(empty($fv)){

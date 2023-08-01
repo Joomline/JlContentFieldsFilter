@@ -9,13 +9,19 @@
  */
 
 // No direct access
+use Joomla\CMS\Access\Rules;
+use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Table\Table;
+use Joomla\Registry\Registry;
+
 defined( '_JEXEC' ) or die;
 
 /**
  * Object Class Table
  * @author Joomline
  */
-class TableJlcontentfieldsfilter_Data extends JTable
+class TableJlcontentfieldsfilter_Data extends Table
 {
 
 	/**
@@ -36,19 +42,19 @@ class TableJlcontentfieldsfilter_Data extends JTable
 	public function bind( $array, $ignore = '' )
 	{
 		if ( empty( $array['created_by'] ) ) {
-			$user = JFactory::getUser();
+			$user = Factory::getApplication()->getIdentity();
 			$array['created_by'] = $user->id;
 		}
 		if ( empty( $array['created'] ) ) {
 			$array['created'] = date( 'Y-m-d H:i:s' );
 		}
 		if ( isset( $array['rules'] ) && is_array( $array['rules'] ) ) {
-			$rules = new JAccessRules( $array['rules'] );
+			$rules = new Rules( $array['rules'] );
 			$this->setRules( $rules );
 		}
-		$array['alias'] = JApplication::stringURLSafe( $array['alias'] );
+		$array['alias'] = ApplicationHelper::stringURLSafe( $array['alias'] );
 		if ( trim( str_replace( '-', '', $array['alias'] ) ) == '' ) {
-			$array['alias'] = JApplication::stringURLSafe( $array['title'] );
+			$array['alias'] = ApplicationHelper::stringURLSafe( $array['title'] );
 		}
 
 		if ( isset( $array['text'] ) )
@@ -69,7 +75,7 @@ class TableJlcontentfieldsfilter_Data extends JTable
 
 		if ( isset( $array['params'] ) && is_array( $array['params'] ) )
 		{
-			$registry = new JRegistry;
+			$registry = new Registry;
 			$registry->loadArray( $array['params'] );
 			$array['params'] = (string) $registry;
 		}

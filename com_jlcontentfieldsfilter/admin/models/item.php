@@ -9,6 +9,10 @@
  */
 
 // No direct access
+use Joomla\CMS\Factory;
+use Joomla\CMS\Table\Table;
+use Joomla\Database\DatabaseInterface;
+
 defined('_JEXEC') or die;
 
 /**
@@ -24,7 +28,7 @@ class JlcontentfieldsfilterModelItem extends JModelAdmin
      * @param Boolean $loadData
      * @return Object form data
      */
-    public function getForm($data = array(), $loadData = true)
+    public function getForm($data = [], $loadData = true)
     {
         return false;
     }
@@ -36,9 +40,9 @@ class JlcontentfieldsfilterModelItem extends JModelAdmin
      * @param array $config
      * @return JTable|mixed
      */
-    public function getTable($type = 'jlcontentfieldsfilter_data', $prefix = 'Table', $config = array())
+    public function getTable($type = 'jlcontentfieldsfilter_data', $prefix = 'Table', $config = [])
     {
-        return JTable::getInstance($type, $prefix, $config);
+        return Table::getInstance($type, $prefix, $config);
     }
 
     function saveItem($id, $cid, $meta_title, $meta_desc, $meta_keywords, $publish, $filterData)
@@ -48,30 +52,30 @@ class JlcontentfieldsfilterModelItem extends JModelAdmin
         }
 
         $table = $this->getTable();
-        $filter = JlcontentfieldsfilterHelper::createFilterString($filterData);
-        $unsafe_filter = JlcontentfieldsfilterHelper::createFilterString($filterData, false);
-        $hash = JlcontentfieldsfilterHelper::createHash($filter);
-        $unsafe_hash = JlcontentfieldsfilterHelper::createHash($unsafe_filter);
+        $filter = \JlcontentfieldsfilterHelper::createFilterString($filterData);
+        $unsafe_filter = \JlcontentfieldsfilterHelper::createFilterString($filterData, false);
+        $hash = \JlcontentfieldsfilterHelper::createHash($filter);
+        $unsafe_hash = \JlcontentfieldsfilterHelper::createHash($unsafe_filter);
         if ($id > 0) {
             $table->load($id);
         } else {
-            $table->load(array('filter_hash' => $hash));
+            $table->load(['filter_hash' => $hash]);
             $id = $table->id;
 
 			if($id == 0){
-				$table->load(array('filter_hash' => $unsafe_hash));
+				$table->load(['filter_hash' => $unsafe_hash]);
 				$id = $table->id;
 			}
         }
 
-        $data = array(
+        $data = [
 	        'filter_hash'   => $hash,
 	        'filter'        => $filter,
 	        'meta_title'    => $meta_title,
 	        'meta_desc'     => $meta_desc,
 	        'meta_keywords' => $meta_keywords,
 	        'publish'       => $publish
-        );
+        ];
 
         if ($id == 0) {
             $data['catid'] = $cid;
@@ -82,11 +86,11 @@ class JlcontentfieldsfilterModelItem extends JModelAdmin
 
     function getRows($filterData)
     {
-        $filter = JlcontentfieldsfilterHelper::createFilterString($filterData);
-		$unsafe_filter = JlcontentfieldsfilterHelper::createFilterString($filterData, false);
-        $hash = JlcontentfieldsfilterHelper::createHash($filter);
-	    $unsafe_hash = JlcontentfieldsfilterHelper::createHash($unsafe_filter);
-        $db = JFactory::getDbo();
+        $filter = \JlcontentfieldsfilterHelper::createFilterString($filterData);
+		$unsafe_filter = \JlcontentfieldsfilterHelper::createFilterString($filterData, false);
+        $hash = \JlcontentfieldsfilterHelper::createHash($filter);
+	    $unsafe_hash = \JlcontentfieldsfilterHelper::createHash($unsafe_filter);
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select('*')
             ->from('#__jlcontentfieldsfilter_data')
@@ -95,7 +99,7 @@ class JlcontentfieldsfilterModelItem extends JModelAdmin
 
         $result = $db->setQuery($query)->loadObjectList('id');
         if (!is_array($result)) {
-            $result = array();
+            $result = [];
         }
         return $result;
     }
