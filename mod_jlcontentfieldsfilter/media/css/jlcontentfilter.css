@@ -116,8 +116,7 @@ label.jlmf-sublabel {
     background-color: #0070a5;
 }
 
-.jlcontentfieldsfilter input {
-    height: 32px;
+.jlcontentfieldsfilter input {  
     line-height: 32px;
 	margin: 0;
 }
