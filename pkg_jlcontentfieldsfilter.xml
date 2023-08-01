@@ -4,11 +4,11 @@
     <author>Joomline</author>
 	<packagename>jlcontentfieldsfilter</packagename>
     <creationDate>@date@</creationDate>
-	<copyright>(C) 2017-2022 Arkadiy Sedelnikov, Joomline. All rights reserved.</copyright>
+	<copyright>(C) 2017-2023 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.</copyright>
 	<license>GNU General Public License version 2 or later; see	LICENSE.txt</license>
 	<authorEmail>sales@joomline.ru</authorEmail>
 	<packager>JoomLine</packager>
-	<packagerurl>http://joomline.ru</packagerurl>
+	<packagerurl>https://joomline.ru</packagerurl>
     <version>@version@</version>
     <description>PLG_JLCONTENTFIELSDFILTER_DESC_ALL</description>
 
