@@ -27,8 +27,8 @@
         <language tag="en-GB">language/en-GB/mod_jlcontentfieldsfilter.sys.ini</language>
         <language tag="ru-RU">language/ru-RU/mod_jlcontentfieldsfilter.ini</language>
         <language tag="ru-RU">language/ru-RU/mod_jlcontentfieldsfilter.sys.ini</language>
-        <language tag="fr-FR">language/ru-RU/mod_jlcontentfieldsfilter.ini</language>
-        <language tag="fr-FR">language/ru-RU/mod_jlcontentfieldsfilter.sys.ini</language>
+        <language tag="fr-FR">language/fr-FR/mod_jlcontentfieldsfilter.ini</language>
+        <language tag="fr-FR">language/fr-FR/mod_jlcontentfieldsfilter.sys.ini</language>
     </languages>
 
     <config>
