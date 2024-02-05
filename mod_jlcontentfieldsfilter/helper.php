@@ -92,7 +92,7 @@ class ModJlContentFieldsFilterHelper
                     $field = self::setHiddenOptions($field, $category_id, $option);
                 }
 
-				$displayData = array('field' => $field, 'params' => $params, 'moduleId' => $moduleId, 'rangedata' => array(), 'articleoptions');
+				$displayData = array('field' => $field, 'params' => $params, 'moduleId' => $moduleId, 'rangedata' => array(), 'articleoptions' => array());
 
 				if (preg_match("/^range?.*?$/isu", $layout)) {
 					$displayData = self::addRangeData($displayData, $category_id, $option);
