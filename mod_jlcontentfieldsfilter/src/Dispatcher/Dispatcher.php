@@ -10,7 +10,7 @@
 
 namespace Joomla\Module\Jlcontentfieldsfilter\Site\Dispatcher;
 
-\defined('JPATH_PLATFORM') or die;
+\defined('_JEXEC') or die;
 
 use Joomla\CMS\Dispatcher\AbstractModuleDispatcher;
 use Joomla\CMS\Factory;

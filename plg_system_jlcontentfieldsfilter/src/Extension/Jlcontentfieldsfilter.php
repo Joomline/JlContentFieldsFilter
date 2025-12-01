@@ -16,7 +16,7 @@ use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Form\Form;
 use Joomla\Database\DatabaseInterface;
 
-defined('_JEXEC') or die;
+\defined('_JEXEC') or die;
 
 class Jlcontentfieldsfilter extends CMSPlugin
 {

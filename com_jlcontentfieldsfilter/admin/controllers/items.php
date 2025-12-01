@@ -13,7 +13,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ModuleHelper;
 use Joomla\Registry\Registry;
 
-defined('_JEXEC') or die;
+\defined('_JEXEC') or die;
 
 /**
  * Controller for list current element

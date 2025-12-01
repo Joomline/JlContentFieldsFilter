@@ -5,10 +5,10 @@
  * @version          @version@
  * @author           Joomline
  * @copyright    (C) 2017-2020 Arkadiy Sedelnikov, Joomline. All rights reserved.
- * @license          GNU General Public License version 2 or later; see    LICENSE.txt
+ * @license          GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-defined('_JEXEC') or die;
+\defined('_JEXEC') or die;
 
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Factory;

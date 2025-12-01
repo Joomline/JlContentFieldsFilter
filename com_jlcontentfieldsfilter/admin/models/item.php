@@ -13,7 +13,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseInterface;
 
-defined('_JEXEC') or die;
+\defined('_JEXEC') or die;
 
 /**
  * Модель редактирования текущего элемента

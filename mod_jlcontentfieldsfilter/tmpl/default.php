@@ -18,7 +18,7 @@
 
 use Joomla\CMS\Language\Text;
 
-defined('_JEXEC') or die;
+\defined('_JEXEC') or die;
 
 if(empty($fields)){
 	return '';
