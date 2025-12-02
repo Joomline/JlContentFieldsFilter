@@ -14,6 +14,7 @@ use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Form\Form;
+use Joomla\Component\Jlcontentfieldsfilter\Administrator\Helper\JlcontentfieldsfilterHelper;
 use Joomla\Database\DatabaseInterface;
 
 \defined('_JEXEC') or die;
@@ -329,12 +330,10 @@ class Jlcontentfieldsfilter extends CMSPlugin
         $params = ComponentHelper::getParams('com_jlcontentfieldsfilter');
         $autogeneration = $params->get('autogeneration', 0);
 
-	    \JLoader::register('JlcontentfieldsfilterHelper', JPATH_ADMINISTRATOR . '/components/com_jlcontentfieldsfilter/helpers/jlcontentfieldsfilter.php');
-
-        $filter = \JlcontentfieldsfilterHelper::createFilterString($filterData);
-        $unsafe_filter = \JlcontentfieldsfilterHelper::createFilterString($filterData, false);
-        $hash = \JlcontentfieldsfilterHelper::createHash($filter);
-        $unsafe_hash = \JlcontentfieldsfilterHelper::createHash($unsafe_filter);
+        $filter = JlcontentfieldsfilterHelper::createFilterString($filterData);
+        $unsafe_filter = JlcontentfieldsfilterHelper::createFilterString($filterData, false);
+        $hash = JlcontentfieldsfilterHelper::createHash($filter);
+        $unsafe_hash = JlcontentfieldsfilterHelper::createHash($unsafe_filter);
 
 	    $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
@@ -349,7 +348,7 @@ class Jlcontentfieldsfilter extends CMSPlugin
             if (!$autogeneration) {
                 return;
             } else {
-                $result = \JlcontentfieldsfilterHelper::createMeta($catid, $filterData);
+                $result = JlcontentfieldsfilterHelper::createMeta($catid, $filterData);
             }
         }
 	    $doc = $app->getDocument();
