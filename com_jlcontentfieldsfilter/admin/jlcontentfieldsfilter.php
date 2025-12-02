@@ -11,7 +11,7 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
 
-defined( '_JEXEC' ) or die; // No direct access
+\defined( '_JEXEC' ) or die; // No direct access
 /**
  * Component jlcontentfieldsfilter
  * @author Joomline

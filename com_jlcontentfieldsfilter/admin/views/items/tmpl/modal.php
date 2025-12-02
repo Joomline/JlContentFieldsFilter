@@ -15,7 +15,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 
-defined( '_JEXEC' ) or die;
+\defined( '_JEXEC' ) or die;
 
 $app = Factory::getApplication();
 if ( $app->isClient('site') ) {
