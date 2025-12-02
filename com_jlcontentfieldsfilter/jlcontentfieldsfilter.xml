@@ -30,7 +30,6 @@
         <files folder="admin">
             <filename>access.xml</filename>
             <filename>config.xml</filename>
-            <folder>forms</folder>
             <folder>language</folder>
             <folder>services</folder>
             <folder>sql</folder>
@@ -39,7 +38,7 @@
         </files>
     </administration>
 
-    <media folder="media" destination="com_jlcontentfieldsfilter">
+    <media folder="media/com_jlcontentfieldsfilter" destination="com_jlcontentfieldsfilter">
         <folder>css</folder>
         <folder>js</folder>
     </media>
