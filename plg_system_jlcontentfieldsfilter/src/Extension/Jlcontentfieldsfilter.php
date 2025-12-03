@@ -10,14 +10,17 @@
 
 namespace Joomla\Plugin\System\Jlcontentfieldsfilter\Extension;
 
+\defined('_JEXEC') or die;
+
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Form\Form;
+use Joomla\Component\Content\Site\Model\CategoryModel as ContentCategoryModel;
+use Joomla\Component\Contact\Site\Model\CategoryModel as ContactCategoryModel;
+use Joomla\Component\Tags\Site\Model\TagModel;
 use Joomla\Component\Jlcontentfieldsfilter\Administrator\Helper\JlcontentfieldsfilterHelper;
 use Joomla\Database\DatabaseInterface;
-
-\defined('_JEXEC') or die;
 
 class Jlcontentfieldsfilter extends CMSPlugin
 {
@@ -141,15 +144,16 @@ class Jlcontentfieldsfilter extends CMSPlugin
             return;
         }
 
-        if ($option == 'com_content' && !class_exists('CategoryModel')) {
-            require_once JPATH_SITE . '/plugins/system/jlcontentfieldsfilter/src/Models/com_content/CategoryModel.php';
-            $context = 'com_content.article';
-        } else if ($option == 'com_contact' && !class_exists('CategoryModel')) {
-            require_once JPATH_SITE . '/plugins/system/jlcontentfieldsfilter/src/Models/com_contact/CategoryModel.php';
-            $context = 'com_contact.contact';
-        } else if ($option == 'com_tags' && !class_exists('TagModel')) {
-            require_once JPATH_SITE . '/plugins/system/jlcontentfieldsfilter/src/Models/com_tags/TagModel.php';
-            $context = 'com_content.article';
+        switch ($option) {
+            case 'com_content':
+                $context = 'com_content.article';
+                break;
+            case 'com_contact':
+                $context = 'com_contact.contact';
+                break;
+            case 'com_tags':
+                $context = 'com_content.article';
+                break;
         }
 
         $db = Factory::getContainer()->get(DatabaseInterface::class);
