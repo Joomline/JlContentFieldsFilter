@@ -1,23 +1,28 @@
 <?php
+
 /**
- * JL Content Fields Filter
+ * @package     Joomla.Administrator
+ * @subpackage  com_jlcontentfieldsfilter
  *
- * @version 	@version@
- * @author		Joomline
- * @copyright  (C) 2017-2023 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
- * @license 	GNU General Public License version 2 or later; see	LICENSE.txt
+ * @version     @version@
+ * @author      Joomline
+ * @copyright   (C) 2017-2023 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
 namespace Joomla\Component\Jlcontentfieldsfilter\Administrator\Controller;
 
-\defined('_JEXEC') or die; // No direct access
-
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\FormController;
 
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 /**
  * Controller for edit current element
- * @author Joomline
+ *
+ * @since  1.0.0
  */
 class ItemController extends FormController
 {
@@ -39,7 +44,8 @@ class ItemController extends FormController
 	 * @param    string    $key    The name of the key for the primary key.
 	 *
 	 * @return    boolean
-	 * @since    1.6
+	 *
+	 * @since    1.0.0
 	 */
 	protected function allowEdit( $data = [], $key = 'id' )
 	{
