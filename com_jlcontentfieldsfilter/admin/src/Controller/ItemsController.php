@@ -82,8 +82,8 @@ class ItemsModel extends ListModel
 	            $lang->load('mod_jlcontentfieldsfilter' , JPATH_SITE);
 				$module_helper = $module->getHelper('JlcontentfieldsfilterHelper');
 	            /**
-	             * Поля тянутся из модуля. Методу нужны параметры конкретного модуля (на самом деле для админки - нет),
-	             * поэтому ставим тут любое число.
+	             * Fields are pulled from the module. The method needs parameters of a specific module
+	             * (actually not needed for admin), so we set any number here.
 	             */
 				$module->id = 1;
 

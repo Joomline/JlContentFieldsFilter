@@ -97,9 +97,13 @@ class Jlcontentfieldsfilter extends CMSPlugin
     }
 
     /**
-     * Подмена модели категории контента.
+     * Replaces the category content model.
      *
-     * @throws Exception
+     * @return  void
+     *
+     * @throws  Exception
+     *
+     * @since   1.0.0
      */
     public function onAfterRoute()
     {

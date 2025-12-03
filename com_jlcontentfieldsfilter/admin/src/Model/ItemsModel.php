@@ -27,8 +27,11 @@ use Joomla\CMS\MVC\Model\ListModel;
 class ItemsModel extends ListModel
 {
 	/**
-	 * Составление запроса для получения списка записей
-	 * @return JDatabaseQuery
+	 * Build the query to get the list of records.
+	 *
+	 * @return  JDatabaseQuery  The database query object.
+	 *
+	 * @since   1.0.0
 	 */
 	protected function getListQuery()
 	{

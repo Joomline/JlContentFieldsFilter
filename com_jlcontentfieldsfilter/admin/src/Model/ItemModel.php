@@ -30,10 +30,14 @@ class ItemModel extends AdminModel
 {
 
     /**
-     * загрузка текущей формы
-     * @param Array $data
-     * @param Boolean $loadData
-     * @return Object form data
+     * Load the current form.
+     *
+     * @param   array    $data      The form data.
+     * @param   boolean  $loadData  True to load the default data.
+     *
+     * @return  mixed  Form object or false on error.
+     *
+     * @since   1.0.0
      */
     public function getForm($data = [], $loadData = true)
     {

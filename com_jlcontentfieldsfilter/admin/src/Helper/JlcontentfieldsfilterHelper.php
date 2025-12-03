@@ -31,8 +31,13 @@ use Joomla\Database\DatabaseInterface;
 class JlcontentfieldsfilterHelper
 {
     /**
-     * Добавление подменю
-     * @param String $vName
+     * Add submenu.
+     *
+     * @param   string  $vName  The view name.
+     *
+     * @return  void
+     *
+     * @since   1.0.0
      */
     static function addSubmenu($vName)
     {
@@ -43,8 +48,11 @@ class JlcontentfieldsfilterHelper
     }
 
     /**
-     * Получаем доступные действия для текущего пользователя
-     * @return CMSObject
+     * Get the available actions for the current user.
+     *
+     * @return  CMSObject  An object with the available actions.
+     *
+     * @since   1.0.0
      */
     public static function getActions()
     {
