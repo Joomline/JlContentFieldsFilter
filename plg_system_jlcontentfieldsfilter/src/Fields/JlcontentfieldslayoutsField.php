@@ -1,8 +1,16 @@
 <?php
 
-namespace Joomla\Plugin\System\Jlcontentfieldsfilter\Fields;
+/**
+ * @package     Joomla.Plugin
+ * @subpackage  System.jlcontentfieldsfilter
+ *
+ * @version     @version@
+ * @author      Joomline
+ * @copyright   (C) 2017-2023 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ */
 
-\defined('_JEXEC') or die;
+namespace Joomla\Plugin\System\Jlcontentfieldsfilter\Fields;
 
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;

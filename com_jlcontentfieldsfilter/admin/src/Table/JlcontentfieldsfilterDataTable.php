@@ -8,20 +8,24 @@
  * @license 	GNU General Public License version 2 or later; see	LICENSE.txt
  */
 
-// No direct access
+namespace Joomla\Component\Jlcontentfieldsfilter\Administrator\Table;
+
 use Joomla\CMS\Access\Rules;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Table\Table;
 use Joomla\Registry\Registry;
 
+// phpcs:disable PSR1.Files.SideEffects
 \defined( '_JEXEC' ) or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 /**
- * Object Class Table
- * @author Joomline
+ * Table class for jlcontentfieldsfilter data
+ *
+ * @since  1.0.0
  */
-class TableJlcontentfieldsfilter_Data extends Table
+class JlcontentfieldsfilterDataTable extends Table
 {
 
 	/**

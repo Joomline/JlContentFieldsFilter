@@ -1,16 +1,16 @@
 <?php
+
 /**
- * JL Content Fields Filter
+ * @package     Joomla.Plugin
+ * @subpackage  System.jlcontentfieldsfilter
  *
- * @version 	@version@
- * @author		Joomline
- * @copyright  (C) 2017-2023 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
- * @license 	GNU General Public License version 2 or later; see	LICENSE.txt
+ * @version     @version@
+ * @author      Joomline
+ * @copyright   (C) 2017-2023 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
 namespace Joomla\Plugin\System\Jlcontentfieldsfilter\Fields;
-
-\defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
@@ -18,8 +18,17 @@ use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 FormHelper::loadFieldClass('list');
 
+/**
+ * Form Field class for jlcontentfieldsfilter fields
+ *
+ * @since  1.0.0
+ */
 class JlcontentfieldsfilterfieldsField extends ListField
 {
 	/**

@@ -1,16 +1,16 @@
 <?php
+
 /**
- * JL Content Fields Filter
+ * @package     Joomla.Site
+ * @subpackage  mod_jlcontentfieldsfilter
  *
- * @version          @version@
- * @author           Joomline
- * @copyright  (C) 2017-2023 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
- * @license          GNU General Public License version 2 or later; see    LICENSE.txt
+ * @version     @version@
+ * @author      Joomline
+ * @copyright   (C) 2017-2023 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
 namespace Joomla\Module\Jlcontentfieldsfilter\Site\Dispatcher;
-
-\defined('_JEXEC') or die;
 
 use Joomla\CMS\Dispatcher\AbstractModuleDispatcher;
 use Joomla\CMS\Factory;
@@ -20,8 +20,12 @@ use Joomla\CMS\Uri\Uri;
 use Joomla\Component\Content\Site\Helper\RouteHelper as ContentHelperRoute;
 use Joomla\Component\Contact\Site\Helper\RouteHelper as ContactRouteHelper;
 
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 /**
- * Dispatcher class for mod_Jlcontentfieldsfilter
+ * Dispatcher class for mod_jlcontentfieldsfilter
  *
  * @since  1.0.0
  */

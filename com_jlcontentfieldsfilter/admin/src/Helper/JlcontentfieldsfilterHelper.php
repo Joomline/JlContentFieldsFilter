@@ -1,16 +1,16 @@
 <?php
+
 /**
- * JL Content Fields Filter
+ * @package     Joomla.Administrator
+ * @subpackage  com_jlcontentfieldsfilter
  *
- * @version 	@version@
- * @author		Joomline
- * @copyright  (C) 2017-2023 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
- * @license 	GNU General Public License version 2 or later; see	LICENSE.txt
+ * @version     @version@
+ * @author      Joomline
+ * @copyright   (C) 2017-2023 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
 namespace Joomla\Component\Jlcontentfieldsfilter\Administrator\Helper;
-
-\defined('_JEXEC') or die;
 
 use Joomla\CMS\Access\Access;
 use Joomla\CMS\Factory;
@@ -19,8 +19,14 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\Database\DatabaseInterface;
 
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 /**
- * Class JlcontentfieldsfilterHelper
+ * Helper class for jlcontentfieldsfilter component
+ *
+ * @since  1.0.0
  */
 class JlcontentfieldsfilterHelper
 {

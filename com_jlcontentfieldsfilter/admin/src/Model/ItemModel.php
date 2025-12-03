@@ -1,25 +1,32 @@
 <?php
+
 /**
- * JL Content Fields Filter
+ * @package     Joomla.Administrator
+ * @subpackage  com_jlcontentfieldsfilter
  *
- * @version 	@version@
- * @author		Joomline
- * @copyright  (C) 2017-2023 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
- * @license 	GNU General Public License version 2 or later; see	LICENSE.txt
+ * @version     @version@
+ * @author      Joomline
+ * @copyright   (C) 2017-2023 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-// No direct access
+namespace Joomla\Component\Jlcontentfieldsfilter\Administrator\Model;
+
 use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseInterface;
 
+// phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 /**
- * Модель редактирования текущего элемента
- * @author Joomline
+ * Item model for jlcontentfieldsfilter component
+ *
+ * @since  1.0.0
  */
-class JlcontentfieldsfilterModelItem extends JModelAdmin
+class ItemModel extends AdminModel
 {
 
     /**

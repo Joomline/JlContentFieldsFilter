@@ -1,22 +1,30 @@
 <?php
+
 /**
- * JL Content Fields Filter
+ * @package     Joomla.Administrator
+ * @subpackage  com_jlcontentfieldsfilter
  *
- * @version 	@version@
- * @author		Joomline
- * @copyright  (C) 2017-2023 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
- * @license 	GNU General Public License version 2 or later; see	LICENSE.txt
+ * @version     @version@
+ * @author      Joomline
+ * @copyright   (C) 2017-2023 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-// No direct access
-use Joomla\CMS\HTML\HTMLHelper;
+namespace Joomla\Component\Jlcontentfieldsfilter\Administrator\Model;
 
-defined( '_JEXEC' ) or die;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\MVC\Model\ListModel;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 /**
- * @author Joomline
+ * Items model for jlcontentfieldsfilter component
+ *
+ * @since  1.0.0
  */
-class JlcontentfieldsfilterModelItems extends JModelList
+class ItemsModel extends ListModel
 {
 	/**
 	 * Составление запроса для получения списка записей

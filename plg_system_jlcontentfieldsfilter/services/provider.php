@@ -1,14 +1,14 @@
 <?php
-/**
- * JL Content Fields Filter
- *
- * @version    @version@
- * @author     Joomline
- * @copyright  (C) 2017-2023 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
- * @license    GNU General Public License version 2 or later; see    LICENSE.txt
- */
 
-\defined('_JEXEC') or die;
+/**
+ * @package     Joomla.Plugin
+ * @subpackage  System.jlcontentfieldsfilter
+ *
+ * @version     @version@
+ * @author      Joomline
+ * @copyright   (C) 2017-2023 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ */
 
 use Joomla\CMS\Extension\PluginInterface;
 use Joomla\CMS\Factory;
@@ -18,6 +18,10 @@ use Joomla\DI\Container;
 use Joomla\DI\ServiceProviderInterface;
 use Joomla\Event\DispatcherInterface;
 use Joomla\Plugin\System\Jlcontentfieldsfilter\Extension\Jlcontentfieldsfilter;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 return new class () implements ServiceProviderInterface {
     /**

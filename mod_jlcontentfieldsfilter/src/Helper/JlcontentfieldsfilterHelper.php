@@ -1,10 +1,13 @@
 <?php
+
 /**
- * @package         WT Yandex Map items
+ * @package     Joomla.Site
+ * @subpackage  mod_jlcontentfieldsfilter
  *
- * @copyright   (C) 2022 Sergey Tolkachyov
- * @link            https://web-tolk.ru
- * @license         GNU General Public License version 2 or later
+ * @version     @version@
+ * @author      Joomline
+ * @copyright   (C) 2017-2023 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
 namespace Joomla\Module\Jlcontentfieldsfilter\Site\Helper;
@@ -18,12 +21,14 @@ use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\Component\Fields\Administrator\Helper\FieldsHelper;
 use Joomla\Database\DatabaseInterface;
 
+// phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 /**
- * Helper for mod_wtyandexmapitems
+ * Helper class for mod_jlcontentfieldsfilter
  *
- * @since  1.0
+ * @since  1.0.0
  */
 class JlcontentfieldsfilterHelper
 {
