@@ -16,9 +16,6 @@ use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Form\Form;
-use Joomla\Component\Content\Site\Model\CategoryModel as ContentCategoryModel;
-use Joomla\Component\Contact\Site\Model\CategoryModel as ContactCategoryModel;
-use Joomla\Component\Tags\Site\Model\TagModel;
 use Joomla\Component\Jlcontentfieldsfilter\Administrator\Helper\JlcontentfieldsfilterHelper;
 use Joomla\Database\DatabaseInterface;
 
@@ -157,14 +154,32 @@ class Jlcontentfieldsfilter extends CMSPlugin
             return;
         }
 
+        /**
+         * Load custom models that override native Joomla models with filtering logic.
+         * 
+         * IMPORTANT: We check for the SHORT class name (without namespace) because:
+         * 1. Native Joomla classes are autoloaded with full namespace
+         * 2. class_exists() with namespace would always return true for native classes
+         * 3. We need to load our custom models BEFORE Joomla instantiates the native ones
+         * 4. Our custom models add filter.article_id support in getItems() method
+         */
         switch ($option) {
             case 'com_content':
+                if (!class_exists('CategoryModel')) {
+                    require_once JPATH_SITE . '/plugins/system/jlcontentfieldsfilter/src/Models/com_content/CategoryModel.php';
+                }
                 $context = 'com_content.article';
                 break;
             case 'com_contact':
+                if (!class_exists('CategoryModel')) {
+                    require_once JPATH_SITE . '/plugins/system/jlcontentfieldsfilter/src/Models/com_contact/CategoryModel.php';
+                }
                 $context = 'com_contact.contact';
                 break;
             case 'com_tags':
+                if (!class_exists('TagModel')) {
+                    require_once JPATH_SITE . '/plugins/system/jlcontentfieldsfilter/src/Models/com_tags/TagModel.php';
+                }
                 $context = 'com_content.article';
                 break;
         }
