@@ -116,16 +116,16 @@ class JlcontentfieldsfilterHelper
         }
         $db = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
-        $query->select('`title`')
+        $query->select($db->quoteName('title'))
             ->from('#__categories')
             ->where('id = '.(int)$catid)
         ;
         $catName = $db->setQuery($query,0,1)->loadResult();
 
 
-        $query->clear()->select('`id`, `title`, `type`, `fieldparams`')
-            ->from('`#__fields`')
-            ->where('(`context` = '.$db->quote('com_content.article').' OR `context` = '.$db->quote('com_contact.contact').')')
+        $query->clear()->select($db->quoteName(['id', 'title', 'type', 'fieldparams']))
+            ->from($db->quoteName('#__fields'))
+            ->where('(' . $db->quoteName('context') . ' = '.$db->quote('com_content.article').' OR ' . $db->quoteName('context') . ' = '.$db->quote('com_contact.contact').')')
         ;
         $result = $db->setQuery($query)->loadObjectList();
 

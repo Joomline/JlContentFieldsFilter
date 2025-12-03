@@ -257,10 +257,10 @@ class JlcontentfieldsfilterHelper
 		$field = $displayData['field'];
 		$db    = Factory::getContainer()->get(DatabaseInterface::class);
 		$query = $db->getQuery(true);
-		$query->select('MIN(CAST(`value` AS SIGNED)) AS `min`, MAX(CAST(`value` AS SIGNED)) AS `max`')
-			->from('`#__fields_values`')
-			->where('`field_id` =' . (int) $field->id)
-			->where('`field_id` =' . (int) $field->id);
+		$query->select('MIN(CAST(value AS SIGNED)) AS ' . $db->quoteName('min') . ', MAX(CAST(value AS SIGNED)) AS ' . $db->quoteName('max'))
+			->from($db->quoteName('#__fields_values'))
+			->where($db->quoteName('field_id') . ' = ' . (int) $field->id)
+			->where($db->quoteName('field_id') . ' = ' . (int) $field->id);
 		$subquery = '';
 
 		if ($option == 'com_tags')
@@ -326,20 +326,21 @@ class JlcontentfieldsfilterHelper
 					return $displayData;
 				}
 
-				$subquery = 'SELECT `id` FROM `#__content` WHERE `catid` IN(' . implode(',', $aCats) . ')';
+				$subquery = 'SELECT ' . $db->quoteName('id') . ' FROM ' . $db->quoteName('#__content') . ' WHERE ' . $db->quoteName('catid') . ' IN(' . implode(',', $aCats) . ')';
 			}
 			else
-			{//No subcategories
-				$subquery = 'SELECT `id` FROM `#__content` WHERE `catid` = ' . (int) $category_id;
+			{
+				//No subcategories
+				$subquery = 'SELECT ' . $db->quoteName('id') . ' FROM ' . $db->quoteName('#__content') . ' WHERE ' . $db->quoteName('catid') . ' = ' . (int) $category_id;
 			}
 		}
 		elseif ($option == 'com_contact')
 		{
-			$subquery = 'SELECT `id` FROM `#__contact_details` WHERE `catid` = ' . (int) $category_id;
+			$subquery = 'SELECT ' . $db->quoteName('id') . ' FROM ' . $db->quoteName('#__contact_details') . ' WHERE ' . $db->quoteName('catid') . ' = ' . (int) $category_id;
 		}
 		if (!empty($subquery))
 		{
-			$query->where('`item_id` IN (' . $subquery . ')');
+			$query->where($db->quoteName('item_id') . ' IN (' . $subquery . ')');
 		}
 		$result             = $db->setQuery($query)->loadObject();
 		$displayData['min'] = !empty($result->min) ? (int) $result->min : 0;
@@ -399,10 +400,10 @@ class JlcontentfieldsfilterHelper
 	{
 		$db    = Factory::getContainer()->get(DatabaseInterface::class);
 		$query = $db->getQuery(true);
-		$query->select('COUNT(*)')
-			->from('`#__content`')
-			->where('`catid` =' . (int) $catid)
-			->where('`state` = 1');
+		$query->select('count(*)')
+			->from($db->quoteName('#__content'))
+			->where($db->quoteName('catid') . ' = ' . (int) $catid)
+			->where($db->quoteName('state') . ' = 1');
 
 		return $db->setQuery($query)->loadResult();
 	}

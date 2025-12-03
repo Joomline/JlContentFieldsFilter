@@ -223,11 +223,11 @@ class Jlcontentfieldsfilter extends CMSPlugin
                     if (!empty($v)) {
                         if (is_array($v)) {
                             if (!empty($v['from']) && !empty($v['to'])) {
-                                $where = '(field_id = ' . (int)$k . ' AND CAST(`value` AS SIGNED) BETWEEN ' . (int)$v['from'] . ' AND ' . $v['to'] . ')';
+                                $where = '(field_id = ' . (int)$k . ' AND CAST(value AS SIGNED) BETWEEN ' . (int)$v['from'] . ' AND ' . $v['to'] . ')';
                             } else if (!empty($v['from'])) {
-                                $where = '(field_id = ' . (int)$k . ' AND CAST(`value` AS SIGNED) >= ' . (int)$v['from'] . ')';
+                                $where = '(field_id = ' . (int)$k . ' AND CAST(value AS SIGNED) >= ' . (int)$v['from'] . ')';
                             } else if (!empty($v['to'])) {
-                                $where = '(field_id = ' . (int)$k . ' AND CAST(`value` AS SIGNED) <= ' . (int)$v['to'] . ')';
+                                $where = '(field_id = ' . (int)$k . ' AND CAST(value AS SIGNED) <= ' . (int)$v['to'] . ')';
                             }
                         } else {
                             $where = '(field_id = ' . (int)$k . ' AND value LIKE ' . $db->quote('%' . $v . '%') . ')';
@@ -370,10 +370,10 @@ class Jlcontentfieldsfilter extends CMSPlugin
 	    $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select('*')
-            ->from('`#__jlcontentfieldsfilter_data`')
-            ->where('`filter_hash` = ' . $db->quote($hash), 'OR')
-            ->where('`filter_hash` = ' . $db->quote($unsafe_hash))
-            ->andWhere('`publish`  = 1');
+            ->from($db->quoteName('#__jlcontentfieldsfilter_data'))
+            ->where($db->quoteName('filter_hash') . ' = ' . $db->quote($hash), 'OR')
+            ->where($db->quoteName('filter_hash') . ' = ' . $db->quote($unsafe_hash))
+            ->andWhere($db->quoteName('publish') . ' = 1');
 
         $result = $db->setQuery($query, 0, 1)->loadObject();
         if (empty($result->filter_hash)) {
