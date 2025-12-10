@@ -19,7 +19,8 @@
 				type="jlcontentfieldslayouts"
 				label="PLG_JLCONTENTFIELDSFILTER_FILTER_LAYOUT"
 				description="PLG_JLCONTENTFIELDSFILTER_FILTER_LAYOUT_DESC"
-				class="form-control"
+				layout="joomla.form.field.list-fancy-select"
+				class="form-select"
 			/>
 			<field
 				name="disabled_categories"
