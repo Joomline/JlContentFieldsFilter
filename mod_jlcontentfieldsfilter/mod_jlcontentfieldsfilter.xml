@@ -144,7 +144,7 @@
                 <field
                     name="ajax_selector"
                     type="text"
-                    default="#content"
+                    default="main"
                     label="MOD_JLCONTENTFIELDSFILTER_AJAX_SELECTOR"
                     description="MOD_JLCONTENTFIELDSFILTER_AJAX_SELECTOR_DESC"
                 />
