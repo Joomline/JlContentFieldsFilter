@@ -9,19 +9,24 @@
  * @license 	GNU General Public License version 2 or later; see	LICENSE.txt
  */
 
-// No direct access
+namespace Joomla\Component\Jlcontentfieldsfilter\Administrator\View\Items;
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\Helpers\Sidebar;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\Component\Jlcontentfieldsfilter\Administrator\Helper\JlcontentfieldsfilterHelper;
 
-\defined( '_JEXEC' ) or die;
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 /**
  * View to display a list of items
  * @author Joomline
  */
-class JlcontentfieldsfilterViewItems extends JViewLegacy
+class HtmlView extends BaseHtmlView
 {
 	/**
 	 * @var $items stdClass[]
@@ -68,9 +73,9 @@ class JlcontentfieldsfilterViewItems extends JViewLegacy
 	protected function addToolbar()
 	{
 		ToolBarHelper::title( Text::_( 'COM_JLCONTENTFIELDSFILTER' ) );
-		$canDo = jlcontentfieldsfilterHelper::getActions( 'item' );
+		$canDo = JlcontentfieldsfilterHelper::getActions( 'item' );
 
-		if ( $canDo->get( 'core.admin' ) ) {
+		if ( $canDo->{'core.admin'} ) {
 			ToolBarHelper::preferences( 'com_jlcontentfieldsfilter' );
 			ToolBarHelper::divider();
 		}

@@ -14,6 +14,7 @@ use Joomla\CMS\Access\Rules;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Table\Table;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -30,11 +31,11 @@ class JlcontentfieldsfilterDataTable extends Table
 
 	/**
 	 * Class constructor
-	 * @param Object $db (database link object)
+	 * @param DatabaseInterface $db Database driver
 	 */
-	function __construct( &$db )
+	public function __construct(DatabaseInterface $db)
 	{
-		parent::__construct( '#__jlcontentfieldsfilter_data', 'id', $db );
+		parent::__construct('#__jlcontentfieldsfilter_data', 'id', $db);
 	}
 
 	/**

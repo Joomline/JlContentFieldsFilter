@@ -16,7 +16,6 @@ use Joomla\CMS\Access\Access;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\Helpers\Sidebar;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Object\CMSObject;
 use Joomla\Database\DatabaseInterface;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -50,21 +49,21 @@ class JlcontentfieldsfilterHelper
     /**
      * Get the available actions for the current user.
      *
-     * @return  CMSObject  An object with the available actions.
+     * @return  \stdClass  An object with the available actions.
      *
      * @since   1.0.0
      */
     public static function getActions()
     {
         $user = Factory::getApplication()->getIdentity();
-        $result = new CMSObject;
+        $result = new \stdClass();
         $assetName = 'com_jlcontentfieldsfilter';
 	    $actions = Access::getActionsFromFile(
 		    JPATH_ADMINISTRATOR . '/components/com_jlcontentfieldsfilter/access.xml',
 		    '/access/section[@name="component"]/'
 	    );
         foreach ($actions as $action) {
-            $result->set($action->name, $user->authorise($action->name, $assetName));
+            $result->{$action->name} = $user->authorise($action->name, $assetName);
         }
         return $result;
     }

@@ -15,6 +15,8 @@ namespace Joomla\Component\Jlcontentfieldsfilter\Administrator\Model;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
+use Joomla\Component\Jlcontentfieldsfilter\Administrator\Helper\JlcontentfieldsfilterHelper;
+use Joomla\Component\Jlcontentfieldsfilter\Administrator\Table\JlcontentfieldsfilterDataTable;
 use Joomla\Database\DatabaseInterface;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -49,11 +51,11 @@ class ItemModel extends AdminModel
      * @param string $type
      * @param string $prefix
      * @param array $config
-     * @return JTable|mixed
+     * @return JlcontentfieldsfilterDataTable|Table
      */
     public function getTable($type = 'jlcontentfieldsfilter_data', $prefix = 'Table', $config = [])
     {
-        return Table::getInstance($type, $prefix, $config);
+        return new JlcontentfieldsfilterDataTable($this->getDatabase());
     }
 
     function saveItem($id, $cid, $meta_title, $meta_desc, $meta_keywords, $publish, $filterData)
@@ -63,10 +65,10 @@ class ItemModel extends AdminModel
         }
 
         $table = $this->getTable();
-        $filter = \JlcontentfieldsfilterHelper::createFilterString($filterData);
-        $unsafe_filter = \JlcontentfieldsfilterHelper::createFilterString($filterData, false);
-        $hash = \JlcontentfieldsfilterHelper::createHash($filter);
-        $unsafe_hash = \JlcontentfieldsfilterHelper::createHash($unsafe_filter);
+        $filter = JlcontentfieldsfilterHelper::createFilterString($filterData);
+        $unsafe_filter = JlcontentfieldsfilterHelper::createFilterString($filterData, false);
+        $hash = JlcontentfieldsfilterHelper::createHash($filter);
+        $unsafe_hash = JlcontentfieldsfilterHelper::createHash($unsafe_filter);
         if ($id > 0) {
             $table->load($id);
         } else {
@@ -97,10 +99,10 @@ class ItemModel extends AdminModel
 
     function getRows($filterData)
     {
-        $filter = \JlcontentfieldsfilterHelper::createFilterString($filterData);
-		$unsafe_filter = \JlcontentfieldsfilterHelper::createFilterString($filterData, false);
-        $hash = \JlcontentfieldsfilterHelper::createHash($filter);
-	    $unsafe_hash = \JlcontentfieldsfilterHelper::createHash($unsafe_filter);
+        $filter = JlcontentfieldsfilterHelper::createFilterString($filterData);
+		$unsafe_filter = JlcontentfieldsfilterHelper::createFilterString($filterData, false);
+        $hash = JlcontentfieldsfilterHelper::createHash($filter);
+	    $unsafe_hash = JlcontentfieldsfilterHelper::createHash($unsafe_filter);
         $db = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select('*')
