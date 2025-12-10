@@ -6,7 +6,7 @@ var JlContentFieldsFilter = {
             autho_send: typeof data.autho_send !== 'undefined' ? data.autho_send : 0,
             ajax: typeof data.ajax !== 'undefined' ? data.ajax : 0,
             ajax_selector: typeof data.ajax_selector !== 'undefined' ? data.ajax_selector : '#content',
-            ajax_loader: typeof data.ajax_loader !== 'undefined' && data.ajax_loader != '' ? data.ajax_loader : '/modules/mod_jlcontentfieldsfilter/assets/images/ajax_loader.gif',
+            ajax_loader: typeof data.ajax_loader !== 'undefined' && data.ajax_loader != '' ? data.ajax_loader : '/media/mod_jlcontentfieldsfilter/images/ajax_loader.gif',
             ajax_loader_width: typeof data.ajax_loader_width !== 'undefined' ? data.ajax_loader_width : 32
         };
         var $this = this;

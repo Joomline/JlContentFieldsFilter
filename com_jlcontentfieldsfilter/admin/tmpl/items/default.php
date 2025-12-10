@@ -14,13 +14,16 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 
-\defined('_JEXEC') or die;// No direct access
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
 $doc = Factory::getApplication()->getDocument();
-$doc->addScript(Uri::root() . 'administrator/components/com_jlcontentfieldsfilter/assets/js/vue.js');
-$doc->addScript(Uri::root() . 'administrator/components/com_jlcontentfieldsfilter/assets/js/axios.min.js');
-$doc->addScript(Uri::root() . 'administrator/components/com_jlcontentfieldsfilter/assets/js/script.js');
+$doc->addScript(Uri::root() . 'media/com_jlcontentfieldsfilter/js/vue.js');
+$doc->addScript(Uri::root() . 'media/com_jlcontentfieldsfilter/js/axios.min.js');
+$doc->addScript(Uri::root() . 'media/com_jlcontentfieldsfilter/js/script.js');
 $doc->addStyleSheet(Uri::root() . 'media/mod_jlcontentfieldsfilter/css/jlcontentfilter.css');
-$doc->addStyleSheet(Uri::root() . 'administrator/components/com_jlcontentfieldsfilter/assets/css/style.css');
+$doc->addStyleSheet(Uri::root() . 'media/com_jlcontentfieldsfilter/css/style.css');
 ?>
 
 <div id="app">
