@@ -58,7 +58,22 @@ class ItemModel extends AdminModel
         return new JlcontentfieldsfilterDataTable($this->getDatabase());
     }
 
-    function saveItem($id, $cid, $meta_title, $meta_desc, $meta_keywords, $publish, $filterData)
+	/**
+	 * Save a filter item
+	 *
+	 * @param   int     $id            Item ID
+	 * @param   int     $cid           Category ID
+	 * @param   string  $meta_title    Meta title
+	 * @param   string  $meta_desc     Meta description
+	 * @param   string  $meta_keywords Meta keywords
+	 * @param   int     $publish       Published state
+	 * @param   array   $filterData    Filter data array
+	 *
+	 * @return  boolean  True on success, false otherwise
+	 *
+	 * @since   1.0.0
+	 */
+	public function saveItem($id, $cid, $meta_title, $meta_desc, $meta_keywords, $publish, $filterData)
     {
         if (!is_array($filterData) || !count($filterData)) {
             return false;
@@ -97,7 +112,16 @@ class ItemModel extends AdminModel
         return $table->save($data);
     }
 
-    function getRows($filterData)
+	/**
+	 * Get rows matching the filter data
+	 *
+	 * @param   array  $filterData  Filter data array
+	 *
+	 * @return  array  Array of matching rows
+	 *
+	 * @since   1.0.0
+	 */
+    public function getRows($filterData)
     {
         $filter = JlcontentfieldsfilterHelper::createFilterString($filterData);
 		$unsafe_filter = JlcontentfieldsfilterHelper::createFilterString($filterData, false);

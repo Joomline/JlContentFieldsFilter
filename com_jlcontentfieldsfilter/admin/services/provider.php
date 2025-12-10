@@ -30,10 +30,16 @@ use Joomla\DI\ServiceProviderInterface;
  */
 return new class implements ServiceProviderInterface
 {
-    /**
-     * Registers the service provider with a DI container.
-     */
-    public function register(Container $container): void
+	/**
+	 * Registers the service provider with a DI container.
+	 *
+	 * @param   Container  $container  The DI container
+	 *
+	 * @return  void
+	 *
+	 * @since   1.0.0
+	 */
+	public function register(Container $container): void
     {
         $container->registerServiceProvider(new MVCFactory('\\Joomla\\Component\\Jlcontentfieldsfilter'));
         $container->registerServiceProvider(new ComponentDispatcherFactory('\\Joomla\\Component\\Jlcontentfieldsfilter'));

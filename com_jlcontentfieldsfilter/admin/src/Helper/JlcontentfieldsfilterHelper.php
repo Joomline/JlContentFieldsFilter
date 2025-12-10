@@ -38,7 +38,7 @@ class JlcontentfieldsfilterHelper
      *
      * @since   1.0.0
      */
-    static function addSubmenu($vName)
+    public static function addSubmenu($vName)
     {
         Sidebar::addEntry(
             Text::_('ITEM_SUBMENU'),
@@ -68,6 +68,16 @@ class JlcontentfieldsfilterHelper
         return $result;
     }
 
+    /**
+     * Create a filter string from filter data array
+     *
+     * @param   array    $filter  Filter data array
+     * @param   boolean  $safe    Whether to URL encode values
+     *
+     * @return  string  Filter string
+     *
+     * @since   1.0.0
+     */
     public static function createFilterString($filter, $safe=true)
     {
         ksort($filter);
@@ -98,11 +108,30 @@ class JlcontentfieldsfilterHelper
         return $data;
     }
 
+    /**
+     * Create an MD5 hash from a string
+     *
+     * @param   string  $string  Input string
+     *
+     * @return  string  MD5 hash
+     *
+     * @since   1.0.0
+     */
     public static function createHash($string)
     {
         return md5($string);
     }
 
+    /**
+     * Create meta data object for a filter
+     *
+     * @param   int    $catid       Category ID
+     * @param   array  $filterData  Filter data array
+     *
+     * @return  \stdClass  Meta data object with title, description and keywords
+     *
+     * @since   1.0.0
+     */
     public static function createMeta($catid, $filterData)
     {
         $object = new \stdClass();

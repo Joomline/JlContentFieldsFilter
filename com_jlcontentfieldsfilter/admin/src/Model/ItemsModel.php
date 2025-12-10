@@ -42,6 +42,13 @@ class ItemsModel extends ListModel
 	}
 
 
+	/**
+	 * Get category options for select field
+	 *
+	 * @return  string  HTML options for category select
+	 *
+	 * @since   1.0.0
+	 */
 	public function getCategoryOptions()
     {
         $categoryOptions = HTMLHelper::_(

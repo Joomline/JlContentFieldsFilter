@@ -27,11 +27,11 @@ return new class () implements ServiceProviderInterface {
     /**
      * Registers the service provider with a DI container.
      *
-     * @param Container $container The DI container.
+     * @param   Container  $container  The DI container
      *
      * @return  void
      *
-     * @since   4.0.0
+     * @since   1.0.0
      */
     public function register(Container $container)
     {

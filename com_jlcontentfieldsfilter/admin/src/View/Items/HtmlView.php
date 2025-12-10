@@ -37,11 +37,11 @@ class HtmlView extends BaseHtmlView
 	 */
 	public $pagination;
 	/**
-	 * @var $state JObject
+	 * @var $state \Joomla\CMS\Object\CMSObject
 	 */
 	public $state;
 	/**
-	 * @var $user JUser
+	 * @var $user \Joomla\CMS\User\User
 	 */
 	public $user;
 	/**
@@ -51,8 +51,13 @@ class HtmlView extends BaseHtmlView
 	public $categoryOptions;
 
 	/**
-	 * Method to display the current pattern
-	 * @param string $tpl
+	 * Method to display the view
+	 *
+	 * @param   string  $tpl  The name of the template file to parse
+	 *
+	 * @return  void
+	 *
+	 * @since   1.0.0
 	 */
 	public function display( $tpl = null )
 	{
@@ -68,7 +73,11 @@ class HtmlView extends BaseHtmlView
 	}
 
 	/**
-	 * Method to display the toolbar
+	 * Method to add toolbar buttons
+	 *
+	 * @return  void
+	 *
+	 * @since   1.0.0
 	 */
 	protected function addToolbar()
 	{
@@ -81,6 +90,13 @@ class HtmlView extends BaseHtmlView
 		}
 	}
 
+	/**
+	 * Get the sort fields for the list
+	 *
+	 * @return  array  Array of sort field options
+	 *
+	 * @since   1.0.0
+	 */
 	protected function getSortFields()
 	{
 		return [

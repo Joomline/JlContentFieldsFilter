@@ -8,25 +8,31 @@
  * @license 	GNU General Public License version 2 or later; see	LICENSE.txt
  */
 
-namespace Joomla\Component\Jlcontentfieldsfilter\Administrator\Model;
+namespace Joomla\Component\Jlcontentfieldsfilter\Administrator\Controller;
 
-\defined('_JEXEC') or die; // No direct access
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ModuleHelper;
-use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\Registry\Registry;
 
 /**
- * Controller for list current element
- * @author Aleks.Denezh
+ * Controller for items list
+ *
+ * @since  1.0.0
  */
-class ItemsModel extends ListModel
+class ItemsController extends BaseController
 {
 
     /**
      * Class constructor
-     * @param array $config
+     *
+     * @param   array  $config  Configuration array
+     *
+     * @since   1.0.0
      */
     public function __construct($config = [])
     {
@@ -43,18 +49,32 @@ class ItemsModel extends ListModel
     }
 
     /**
-     * Method to get current model
-     * @param String $name (model name)
-     * @param String $prefix (model prefox)
-     * @param Array $config
-     * @return object model for current element
+     * Method to get the model
+     *
+     * @param   string  $name    Model name
+     * @param   string  $prefix  Model prefix
+     * @param   array   $config  Configuration array
+     *
+     * @return  \Joomla\CMS\MVC\Model\BaseDatabaseModel  The model instance
+     *
+     * @since   1.0.0
      */
     public function getModel($name = 'Item', $prefix = 'JlcontentfieldsfilterModel', $config = ['ignore_request' => true])
     {
         return parent::getModel($name, $prefix, $config);
     }
 
-    function get_form()
+    /**
+     * Get form fields for a specific category
+     *
+     * This method returns the fields configuration in JSON format
+     * for the specified category ID.
+     *
+     * @return  void  Outputs JSON and exits
+     *
+     * @since   1.0.0
+     */
+    public function get_form()
     {
         $fields = [];
         $error = 0;
@@ -95,7 +115,16 @@ class ItemsModel extends ListModel
         exit(json_encode(['error' => $error, 'message' => $message, 'fields' => $fields]));
     }
 
-    function get_rows()
+    /**
+     * Get filtered rows based on the provided filter data
+     *
+     * This method returns the filtered rows in JSON format.
+     *
+     * @return  void  Outputs JSON and exits
+     *
+     * @since   1.0.0
+     */
+    public function get_rows()
     {
         $fields = [];
         $error = 0;
@@ -119,6 +148,15 @@ class ItemsModel extends ListModel
         exit(json_encode(['error' => $error, 'message' => $message, 'rows' => $rows]));
     }
 
+    /**
+     * Save a filter item
+     *
+     * Saves the filter configuration including metadata and filter values.
+     *
+     * @return  void  Outputs JSON and exits
+     *
+     * @since   1.0.0
+     */
     public function save()
     {
         $error = 0;
@@ -137,6 +175,15 @@ class ItemsModel extends ListModel
         exit(json_encode(['error' => !$result, 'message' => $message]));
     }
 
+    /**
+     * Delete a filter item
+     *
+     * Deletes the filter item with the specified ID.
+     *
+     * @return  void  Outputs JSON and exits
+     *
+     * @since   1.0.0
+     */
     public function delete()
     {
         $app = Factory::getApplication();

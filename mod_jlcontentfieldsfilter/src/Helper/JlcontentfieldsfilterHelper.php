@@ -32,6 +32,19 @@ use Joomla\Database\DatabaseInterface;
  */
 class JlcontentfieldsfilterHelper
 {
+	/**
+	 * Get filter fields for the module
+	 *
+	 * @param   Registry  $params       Module parameters
+	 * @param   int       $category_id  Category ID
+	 * @param   array     $values       Current filter values
+	 * @param   int       $moduleId     Module ID
+	 * @param   string    $option       Component option
+	 *
+	 * @return  array  Array of field objects
+	 *
+	 * @since   1.0.0
+	 */
 	public function getFields($params, $category_id, $values, $moduleId, $option)
 	{
 		$app      = Factory::getApplication();
@@ -149,6 +162,17 @@ class JlcontentfieldsfilterHelper
 		return $fields;
 	}
 
+	/**
+	 * Set hidden options for a field based on category and context
+	 *
+	 * @param   object  $field        Field object
+	 * @param   int     $category_id  Category ID
+	 * @param   string  $context      Component context
+	 *
+	 * @return  void
+	 *
+	 * @since   1.0.0
+	 */
 	private function setHiddenOptions($field, $category_id, $context)
 	{
 
@@ -252,6 +276,17 @@ class JlcontentfieldsfilterHelper
 		return $field;
 	}
 
+	/**
+	 * Add range data (min/max values) to display data
+	 *
+	 * @param   array   $displayData  Display data array
+	 * @param   int     $category_id  Category ID
+	 * @param   string  $option       Component option
+	 *
+	 * @return  array  Modified display data
+	 *
+	 * @since   1.0.0
+	 */
 	private function addRangeData($displayData, $category_id, $option)
 	{
 		$field = $displayData['field'];
@@ -349,6 +384,17 @@ class JlcontentfieldsfilterHelper
 		return $displayData;
 	}
 
+	/**
+	 * Get ordering select field HTML
+	 *
+	 * @param   string  $selectedOrdering  Currently selected ordering value
+	 * @param   int     $moduleId          Module ID
+	 * @param   string  $option            Component option
+	 *
+	 * @return  string  HTML for ordering select field
+	 *
+	 * @since   1.0.0
+	 */
 	public function getOrderingSelect($selectedOrdering, $moduleId, $option)
 	{
 		$app      = Factory::getApplication();
@@ -396,6 +442,15 @@ class JlcontentfieldsfilterHelper
 		return $html;
 	}
 
+	/**
+	 * Count published articles in a category
+	 *
+	 * @param   int  $catid  Category ID
+	 *
+	 * @return  int  Number of published articles
+	 *
+	 * @since   1.0.0
+	 */
 	public function countCatArticles($catid)
 	{
 		$db    = Factory::getContainer()->get(DatabaseInterface::class);
@@ -409,6 +464,17 @@ class JlcontentfieldsfilterHelper
 	}
 }
 
+/**
+ * Polyfill for array_key_first function (PHP < 7.3)
+ *
+ * Gets the first key of an array
+ *
+ * @param   array  $array  The array
+ *
+ * @return  int|string|null  The first key of array if the array is not empty; NULL otherwise
+ *
+ * @since   1.0.0
+ */
 if (!function_exists('array_key_first'))
 {
 	function array_key_first(array $array)

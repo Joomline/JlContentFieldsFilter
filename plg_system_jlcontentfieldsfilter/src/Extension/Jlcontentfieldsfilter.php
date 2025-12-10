@@ -85,6 +85,15 @@ class Jlcontentfieldsfilter extends CMSPlugin
         return true;
     }
 
+    /**
+     * Triggered before compiling the document head
+     *
+     * Applies custom meta tags for filtered content pages.
+     *
+     * @return  void
+     *
+     * @since   1.0.0
+     */
     public function onBeforeCompileHead()
     {
         if ($this->getApplication()->isClient('administrator')) {
@@ -323,6 +332,15 @@ class Jlcontentfieldsfilter extends CMSPlugin
         }
     }
 
+    /**
+     * Apply custom meta tags to filtered pages
+     *
+     * Sets custom title, description, and keywords based on filter configuration.
+     *
+     * @return  void
+     *
+     * @since   1.0.0
+     */
     private function doMeta()
     {
         if (!ComponentHelper::isEnabled('com_jlcontentfieldsfilter')) {

@@ -10,9 +10,11 @@
 
 namespace Joomla\Component\Jlcontentfieldsfilter\Administrator\Controller;
 
-\defined('_JEXEC') or die; // No direct access
-
 use Joomla\CMS\MVC\Controller\BaseController;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 /**
  * Jlcontentfieldsfilter master display controller.

@@ -24,8 +24,6 @@ use Joomla\CMS\Language\Text;
  * @var $template object - parameters of the style settings of the current template. Joomla templates have templateDetails.xml in which you can set various template parameters: logos, fonts, custom scripts in <head> and <body> and whatever your heart desires. Now in the module you have the opportunity to access these parameters without unnecessary movements. However, it is worth remembering that many studio templates (JoomShaper Helix and others like them) do not use a standard parameter storage location, so it may be empty there.
  */
 
-\defined('_JEXEC') or die;
-
 if(empty($fields)){
 	return '';
 }

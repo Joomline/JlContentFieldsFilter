@@ -24,31 +24,67 @@ use Joomla\CMS\Language\Text;
 use \Joomla\CMS\Form\FormField;
 use Joomla\Database\DatabaseInterface;
 
-
+/**
+ * Form Field class for jlcontentfieldsfilter layouts
+ *
+ * @since  1.0.0
+ */
 class JlcontentfieldslayoutsField extends FormField
 {
-    protected $type = 'Jlcontentfieldslayouts';
+	/**
+	 * The form field type.
+	 *
+	 * @var    string
+	 * @since  1.0.0
+	 */
+	protected $type = 'Jlcontentfieldslayouts';
 
-    protected $layouts_path = '/modules/mod_jlcontentfieldsfilter/layouts/mod_jlcontentfieldsfilter';
+	/**
+	 * Path to layouts directory
+	 *
+	 * @var    string
+	 * @since  1.0.0
+	 */
+	protected $layouts_path = '/modules/mod_jlcontentfieldsfilter/layouts/mod_jlcontentfieldsfilter';
 
-    protected $layouts_overrided_path = '/mod_jlcontentfieldsfilter';
+	/**
+	 * Path to layouts override directory
+	 *
+	 * @var    string
+	 * @since  1.0.0
+	 */
+	protected $layouts_overrided_path = '/mod_jlcontentfieldsfilter';
 
-    protected function getFrontTemplate()
-    {
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+	/**
+	 * Get the front-end template name
+	 *
+	 * @return  string  The template name
+	 *
+	 * @since   1.0.0
+	 */
+	protected function getFrontTemplate()
+	{
+		$db = Factory::getContainer()->get(DatabaseInterface::class);
+		$query = $db->getQuery(true);
 
-        $query
-            ->select('template')
-            ->from('#__template_styles')
-            ->where('client_id = 0')
-            ->where('home = 1');
+		$query
+			->select('template')
+			->from('#__template_styles')
+			->where('client_id = 0')
+			->where('home = 1');
 
-        $db->setQuery($query);
-        return $db->loadResult();
-    }
+		$db->setQuery($query);
+		return $db->loadResult();
+	}
 
-    protected function getInput()
+	/**
+	 * Method to get the field input markup
+	 *
+	 * @return  string  The field input markup
+	 *
+	 * @since   1.0.0
+	 */
+	protected function getInput()
     {
         $client = ApplicationHelper::getClientInfo(0);
 

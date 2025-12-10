@@ -29,9 +29,12 @@ class ItemController extends FormController
 
 	/**
 	 * Class constructor
-	 * @param array $config
+	 *
+	 * @param   array  $config  Configuration array
+	 *
+	 * @since   1.0.0
 	 */
-	function __construct( $config = [] )
+	public function __construct( $config = [] )
 	{
 		$this->view_list = 'items';
 		parent::__construct( $config );

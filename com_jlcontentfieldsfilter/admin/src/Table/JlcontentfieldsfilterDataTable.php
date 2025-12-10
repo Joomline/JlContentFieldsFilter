@@ -31,7 +31,10 @@ class JlcontentfieldsfilterDataTable extends Table
 
 	/**
 	 * Class constructor
-	 * @param DatabaseInterface $db Database driver
+	 *
+	 * @param   DatabaseInterface  $db  Database driver
+	 *
+	 * @since   1.0.0
 	 */
 	public function __construct(DatabaseInterface $db)
 	{
@@ -40,9 +43,13 @@ class JlcontentfieldsfilterDataTable extends Table
 
 	/**
 	 * Method for loading data into the object field
-	 * @param Array $array (Featured in the field of data)
-	 * @param String $ignore
-	 * @return Boolean result
+	 *
+	 * @param   array   $array   Array of data to bind
+	 * @param   string  $ignore  Fields to ignore
+	 *
+	 * @return  boolean  True on success
+	 *
+	 * @since   1.0.0
 	 */
 	public function bind( $array, $ignore = '' )
 	{
