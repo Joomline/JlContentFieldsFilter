@@ -112,7 +112,7 @@ var JlContentFieldsFilter = {
         var fade_div = jQuery("#id_admin_forms_fade");
 
         if (fade_div.length == 0) {
-            // Создаем div
+            // Create div
             fade_div = jQuery('<div></div>')
                 .appendTo(document.body)
                 .hide()
