@@ -27,7 +27,7 @@ use Joomla\Registry\Registry;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
- * Single item model for a contact
+ * Single item model for a contact.
  *
  * @package     Joomla.Site
  * @subpackage  com_contact
@@ -36,52 +36,52 @@ use Joomla\Registry\Registry;
 class CategoryModel extends ListModel
 {
     /**
-     * Category item data
+     * Category item data.
      *
-     * @var    CategoryNode
+     * @var CategoryNode
      */
     protected $_item;
 
     /**
-     * Category left and right of this one
+     * Category left and right of this one.
      *
-     * @var    CategoryNode[]|null
+     * @var CategoryNode[]|null
      */
     protected $_siblings;
 
     /**
-     * Array of child-categories
+     * Array of child-categories.
      *
-     * @var    CategoryNode[]|null
+     * @var CategoryNode[]|null
      */
     protected $_children;
 
     /**
-     * Parent category of the current one
+     * Parent category of the current one.
      *
-     * @var    CategoryNode|null
+     * @var CategoryNode|null
      */
     protected $_parent;
 
     /**
      * The category that applies.
      *
-     * @var    object
+     * @var object
      */
     protected $_category;
 
     /**
      * The list of other contact categories.
      *
-     * @var    array
+     * @var array
      */
     protected $_categories;
 
     /**
      * Constructor.
      *
-     * @param   array                 $config   An optional associative array of configuration settings.
-     * @param   ?MVCFactoryInterface  $factory  The factory.
+     * @param array $config An optional associative array of configuration settings.
+     * @param ?MVCFactoryInterface $factory The factory.
      *
      * @since   1.6
      */
@@ -110,7 +110,7 @@ class CategoryModel extends ListModel
     /**
      * Method to get a list of items.
      *
-     * @return  mixed  An array of objects on success, false on failure.
+     * @return mixed An array of objects on success, false on failure.
      */
     public function getItems()
     {
@@ -152,7 +152,7 @@ class CategoryModel extends ListModel
     /**
      * Method to build an SQL query to load the list data.
      *
-     * @return  QueryInterface    An SQL query
+     * @return QueryInterface An SQL query
      *
      * @since   1.6
      */
@@ -258,21 +258,18 @@ class CategoryModel extends ListModel
             $query->whereIn($db->quoteName('a.language'), [Factory::getApplication()->getLanguage()->getTag(), '*'], ParameterType::STRING);
         }
 
-	    //Joomline hack start
-	    // Filter by a single or group of articles.
-	    $articleId = $this->getState('filter.article_id');
+        //Joomline hack start
+        // Filter by a single or group of articles.
+        $articleId = $this->getState('filter.article_id');
 
-	    if (is_numeric($articleId))
-	    {
-		    $query->where('a.id = ' . (int) $articleId);
-	    }
-	    elseif (is_array($articleId) && count($articleId))
-	    {
-		    $articleId = ArrayHelper::toInteger($articleId);
-		    $articleId = implode(',', $articleId);
-		    $query->where('a.id IN (' . $articleId . ')');
-	    }
-	    //Joomline hack end
+        if (is_numeric($articleId)) {
+            $query->where('a.id = ' . (int) $articleId);
+        } elseif (\is_array($articleId) && \count($articleId)) {
+            $articleId = ArrayHelper::toInteger($articleId);
+            $articleId = implode(',', $articleId);
+            $query->where('a.id IN (' . $articleId . ')');
+        }
+        //Joomline hack end
 
         // Set sortname ordering if selected
         if ($this->getState('list.ordering') === 'sortname') {
@@ -294,10 +291,10 @@ class CategoryModel extends ListModel
      *
      * Note. Calling getState in this method will result in recursion.
      *
-     * @param   string  $ordering   An optional ordering field.
-     * @param   string  $direction  An optional direction (asc|desc).
+     * @param string $ordering An optional ordering field.
+     * @param string $direction An optional direction (asc|desc).
      *
-     * @return  void
+     * @return void
      *
      * @since   1.6
      */
@@ -353,11 +350,11 @@ class CategoryModel extends ListModel
         $this->setState('category.id', $id);
         $this->setState('filter.max_category_levels', $params->get('maxLevel', 1));
 
-	    //Joomline hack start
-	    $context = 'com_contact.category.list.' . $id . ':' . $itemid;
-	    $value = $app->getUserState($context . 'filter.article_id', 'filter_article_id');
-	    $this->setState('filter.article_id', $value);
-	    //Joomline hack start
+        //Joomline hack start
+        $context = 'com_contact.category.list.' . $id . ':' . $itemid;
+        $value   = $app->getUserState($context . 'filter.article_id', 'filter_article_id');
+        $this->setState('filter.article_id', $value);
+        //Joomline hack start
 
         $user = $this->getCurrentUser();
 
@@ -373,9 +370,9 @@ class CategoryModel extends ListModel
     }
 
     /**
-     * Method to get category data for the current category
+     * Method to get category data for the current category.
      *
-     * @return  object  The category object
+     * @return object The category object
      *
      * @since   1.5
      */
@@ -419,7 +416,7 @@ class CategoryModel extends ListModel
     /**
      * Get the parent category.
      *
-     * @return  mixed  An array of categories or false if an error occurs.
+     * @return mixed An array of categories or false if an error occurs.
      */
     public function getParent()
     {
@@ -433,7 +430,7 @@ class CategoryModel extends ListModel
     /**
      * Get the sibling (adjacent) categories.
      *
-     * @return  mixed  An array of categories or false if an error occurs.
+     * @return mixed An array of categories or false if an error occurs.
      */
     public function &getLeftSibling()
     {
@@ -447,7 +444,7 @@ class CategoryModel extends ListModel
     /**
      * Get the sibling (adjacent) categories.
      *
-     * @return  mixed  An array of categories or false if an error occurs.
+     * @return mixed An array of categories or false if an error occurs.
      */
     public function &getRightSibling()
     {
@@ -461,7 +458,7 @@ class CategoryModel extends ListModel
     /**
      * Get the child categories.
      *
-     * @return  mixed  An array of categories or false if an error occurs.
+     * @return mixed An array of categories or false if an error occurs.
      */
     public function &getChildren()
     {
@@ -475,11 +472,11 @@ class CategoryModel extends ListModel
     /**
      * Generate column expression for slug or catslug.
      *
-     * @param   \Joomla\Database\DatabaseQuery  $query  Current query instance.
-     * @param   string                          $id     Column id name.
-     * @param   string                          $alias  Column alias name.
+     * @param \Joomla\Database\DatabaseQuery $query Current query instance.
+     * @param string $id Column id name.
+     * @param string $alias Column alias name.
      *
-     * @return  string
+     * @return string
      *
      * @since   4.0.0
      */
@@ -496,9 +493,9 @@ class CategoryModel extends ListModel
     /**
      * Increment the hit counter for the category.
      *
-     * @param   integer  $pk  Optional primary key of the category to increment.
+     * @param int $pk Optional primary key of the category to increment.
      *
-     * @return  boolean  True if successful; false otherwise and internal error set.
+     * @return bool True if successful; false otherwise and internal error set.
      *
      * @since   3.2
      */

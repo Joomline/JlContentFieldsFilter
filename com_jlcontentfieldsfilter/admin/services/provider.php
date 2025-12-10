@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package     Joomla.Administrator
  * @subpackage  com_jlcontentfieldsfilter
@@ -28,18 +29,17 @@ use Joomla\DI\ServiceProviderInterface;
  *
  * @since  1.0.0
  */
-return new class implements ServiceProviderInterface
-{
-	/**
-	 * Registers the service provider with a DI container.
-	 *
-	 * @param   Container  $container  The DI container
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0.0
-	 */
-	public function register(Container $container): void
+return new class () implements ServiceProviderInterface {
+    /**
+     * Registers the service provider with a DI container.
+     *
+     * @param Container $container The DI container
+     *
+     * @return void
+     *
+     * @since   1.0.0
+     */
+    public function register(Container $container): void
     {
         $container->registerServiceProvider(new MVCFactory('\\Joomla\\Component\\Jlcontentfieldsfilter'));
         $container->registerServiceProvider(new ComponentDispatcherFactory('\\Joomla\\Component\\Jlcontentfieldsfilter'));

@@ -14,7 +14,6 @@ namespace Joomla\Module\Jlcontentfieldsfilter\Site\Helper;
 
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Helper\ModuleHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
@@ -26,165 +25,151 @@ use Joomla\Database\DatabaseInterface;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
- * Helper class for mod_jlcontentfieldsfilter
+ * Helper class for mod_jlcontentfieldsfilter.
  *
  * @since  1.0.0
  */
 class JlcontentfieldsfilterHelper
 {
-	/**
-	 * Get filter fields for the module
-	 *
-	 * @param   Registry  $params       Module parameters
-	 * @param   int       $category_id  Category ID
-	 * @param   array     $values       Current filter values
-	 * @param   int       $moduleId     Module ID
-	 * @param   string    $option       Component option
-	 *
-	 * @return  array  Array of field objects
-	 *
-	 * @since   1.0.0
-	 */
-	public function getFields($params, $category_id, $values, $moduleId, $option)
-	{
-		$app      = Factory::getApplication();
-		$template = $app->getTemplate();
+    /**
+     * Get filter fields for the module.
+     *
+     * @param Registry $params Module parameters
+     * @param int $category_id Category ID
+     * @param array $values Current filter values
+     * @param int $moduleId Module ID
+     * @param string $option Component option
+     *
+     * @return array Array of field objects
+     *
+     * @since   1.0.0
+     */
+    public function getFields($params, $category_id, $values, $moduleId, $option)
+    {
+        $app      = Factory::getApplication();
+        $template = $app->getTemplate();
 
-		$context = '';
+        $context = '';
 
-		if ($option == 'com_content')
-		{
-			$context = 'com_content.article';
-		}
-		elseif ($option == 'com_contact')
-		{
-			$context = 'com_contact.contact';
-		}
+        if ($option == 'com_content') {
+            $context = 'com_content.article';
+        } elseif ($option == 'com_contact') {
+            $context = 'com_contact.contact';
+        }
 
+        $item           = new \stdClass();
+        $item->language = $app->getLanguage()->getTag();
+        $item->catid    = $category_id;
 
-		$item           = new \stdClass();
-		$item->language = $app->getLanguage()->getTag();
-		$item->catid    = $category_id;
+        $fields = FieldsHelper::getFields($context, $item);
+        if (\count($fields)) {
+            $fieldIds = array_map(
+                function ($f) {
+                    return $f->id;
+                },
+                $fields
+            );
 
-		$fields = FieldsHelper::getFields($context, $item);
-		if (count($fields))
-		{
-			$fieldIds = array_map(
-				function ($f) {
-					return $f->id;
-				},
-				$fields
-			);
+            $new          = [];
+            $usedFieldIds = [];
 
-			$new          = [];
-			$usedFieldIds = [];
+            foreach ($fields as $key => $original) {
+                if (\in_array($original->id, $usedFieldIds)) {
+                    continue;
+                }
+                $usedFieldIds[]  = $original->id;
+                $field           = clone $original;
+                $field->value    = isset($values[$field->id]) ? $values[$field->id] : '';
+                $field->rawvalue = $field->value;
 
-			foreach ($fields as $key => $original)
-			{
-				if (in_array($original->id, $usedFieldIds))
-				{
-					continue;
-				}
-				$usedFieldIds[]  = $original->id;
-				$field           = clone $original;
-				$field->value    = isset($values[$field->id]) ? $values[$field->id] : '';
-				$field->rawvalue = $field->value;
+                $content_filter = $original->params->get('content_filter', '');
 
-				$content_filter = $original->params->get('content_filter', '');
+                $disabled_categories = $original->params->get('disabled_categories', []);
+                if (\in_array($category_id, $disabled_categories)) {
+                    continue;
+                }
 
-				$disabled_categories = $original->params->get('disabled_categories', []);
-				if (in_array($category_id, $disabled_categories))
-				{
-					continue;
-				}
+                if (empty($content_filter)) {
+                    unset($fieldIds[$key]);
+                    continue;
+                }
 
-				if (empty($content_filter))
-				{
-					unset($fieldIds[$key]);
-					continue;
-				}
+                $filter_layout = $original->params->get('filter_layout', '');
+                if (!empty($filter_layout)) {
+                    $filter_layout = explode(':', $filter_layout);
+                    $src           = $filter_layout[0];
+                    $layout        = $filter_layout[1];
+                } else {
+                    $layout = $content_filter;
+                    $src    = '_';
+                }
 
-				$filter_layout = $original->params->get('filter_layout', '');
-				if (!empty($filter_layout))
-				{
-					$filter_layout = explode(':', $filter_layout);
-					$src           = $filter_layout[0];
-					$layout        = $filter_layout[1];
-				}
-				else
-				{
-					$layout = $content_filter;
-					$src    = '_';
-				}
+                $basePath = $src === '_'
+                    ? (
+                        is_file(JPATH_ROOT . '/templates/' . $template . '/html/layouts/mod_jlcontentfieldsfilter/' . $layout . '.php')
+                        ? JPATH_ROOT . '/templates/' . $template . '/html/layouts'
+                        : JPATH_ROOT . '/modules/mod_jlcontentfieldsfilter/layouts'
+                    )
+                    : (
+                        is_file(JPATH_ROOT . '/templates/' . $src . '/html/layouts/mod_jlcontentfieldsfilter/' . $layout . '.php')
+                        ? JPATH_ROOT . '/templates/' . $src . '/html/layouts'
+                        : JPATH_ROOT . '/modules/mod_jlcontentfieldsfilter/layouts'
+                    );
 
-				$basePath = $src === '_'
-					? (
-					is_file(JPATH_ROOT . '/templates/' . $template . '/html/layouts/mod_jlcontentfieldsfilter/' . $layout . '.php')
-						? JPATH_ROOT . '/templates/' . $template . '/html/layouts'
-						: JPATH_ROOT . '/modules/mod_jlcontentfieldsfilter/layouts'
-					)
-					: (
-					is_file(JPATH_ROOT . '/templates/' . $src . '/html/layouts/mod_jlcontentfieldsfilter/' . $layout . '.php')
-						? JPATH_ROOT . '/templates/' . $src . '/html/layouts'
-						: JPATH_ROOT . '/modules/mod_jlcontentfieldsfilter/layouts'
-					);
+                if ($field->params->get('field_hidden', false) || $field->params->get('options_hidden', false)) {
+                    $field = $this->setHiddenOptions($field, $category_id, $option);
+                }
 
-				if ($field->params->get('field_hidden', false) || $field->params->get('options_hidden', false))
-				{
-					$field = $this->setHiddenOptions($field, $category_id, $option);
-				}
+                $displayData = [
+                    'field'     => $field,
+                    'params'    => $params,
+                    'moduleId'  => $moduleId,
+                    'rangedata' => [],
+                ];
 
-				$displayData = [
-					'field' => $field,
-					'params' => $params,
-					'moduleId' => $moduleId,
-					'rangedata' => []
-				];
+                if (preg_match("/^range?.*?$/isu", $layout)) {
+                    $displayData = $this->addRangeData($displayData, $category_id, $option);
+                }
 
-				if (preg_match("/^range?.*?$/isu", $layout))
-				{
-					$displayData = $this->addRangeData($displayData, $category_id, $option);
-				}
+                $new[$key] = LayoutHelper::render(
+                    'mod_jlcontentfieldsfilter.' . $layout,
+                    $displayData,
+                    $basePath,
+                    [
+                        'component' => 'auto',
+                        'client'    => 0,
+                        'suffixes'  => []]
+                );
+            }
+            $fields = $new;
+        }
 
-				$new[$key] = LayoutHelper::render(
-					'mod_jlcontentfieldsfilter.' . $layout,
-					$displayData,
-					$basePath,
-					[
-						'component' => 'auto',
-						'client' => 0,
-						'suffixes' => []]
-				);
-			}
-			$fields = $new;
-		}
+        return $fields;
+    }
 
-		return $fields;
-	}
+    /**
+     * Set hidden options for a field based on category and context.
+     *
+     * @param object $field Field object
+     * @param int $category_id Category ID
+     * @param string $context Component context
+     *
+     * @return void
+     *
+     * @since   1.0.0
+     */
+    private function setHiddenOptions($field, $category_id, $context)
+    {
 
-	/**
-	 * Set hidden options for a field based on category and context
-	 *
-	 * @param   object  $field        Field object
-	 * @param   int     $category_id  Category ID
-	 * @param   string  $context      Component context
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0.0
-	 */
-	private function setHiddenOptions($field, $category_id, $context)
-	{
+        $user   = Factory::getApplication()->getIdentity();
+        $groups = implode(',', $user->getAuthorisedViewLevels());
 
-		$user   = Factory::getApplication()->getIdentity();
-		$groups = implode(',', $user->getAuthorisedViewLevels());
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-		$db = Factory::getContainer()->get(DatabaseInterface::class);
+        $nullDate = $db->quote($db->getNullDate());
+        $nowDate  = $db->quote(Factory::getDate()->toSql());
 
-		$nullDate = $db->quote($db->getNullDate());
-		$nowDate  = $db->quote(Factory::getDate()->toSql());
-
-		$articlesQuery = '
+        $articlesQuery = '
 			select a.id
 			from #__content AS a
 			left join #__categories AS c ON c.id = a.catid
@@ -197,7 +182,7 @@ class JlcontentfieldsfilterHelper
 				and ((a.publish_down = ' . $nullDate . ' OR a.publish_down >= ' . $nowDate . '))
 			';
 
-		$contactsQuery = '
+        $contactsQuery = '
 			select a.id
 			from #__contact_details AS a
 			left join #__categories AS c ON c.id = a.catid
@@ -210,7 +195,7 @@ class JlcontentfieldsfilterHelper
 				and ((a.publish_down = ' . $nullDate . ' OR a.publish_down >= ' . $nowDate . '))
 			';
 
-		$tagsQuery = '
+        $tagsQuery = '
 			select a.id
 			from #__tags AS a
 			where (a.access in (' . $groups . '))
@@ -220,270 +205,243 @@ class JlcontentfieldsfilterHelper
 				and ((a.publish_down = ' . $nullDate . ' OR a.publish_down >= ' . $nowDate . '))
 			';
 
-		switch ($context)
-		{
-			case 'com_content':
-				$subQuery = $articlesQuery;
-				break;
-			case 'com_contact':
-				$subQuery = $contactsQuery;
-				break;
-			case 'com_tags':
-				$subQuery = $tagsQuery;
-				break;
-		}
+        switch ($context) {
+            case 'com_content':
+                $subQuery = $articlesQuery;
+                break;
+            case 'com_contact':
+                $subQuery = $contactsQuery;
+                break;
+            case 'com_tags':
+                $subQuery = $tagsQuery;
+                break;
+        }
 
-		$query = '
+        $query = '
 			select %s
 			from #__fields_values
 			where (field_id = ' . (int) $field->id . ')
 				and (item_id in (' . $subQuery . '))
 				%s
 			';
-		if (in_array($field->type, ['checkboxes', 'list', 'radio']))
-		{
-			$options        = (array) $field->fieldparams->get('options', []);
-			$hidden         = false;
-			$q              = '';
-			$firstKeyOption = '';
-			foreach ($options as $key => $option)
-			{
-				if ($key == array_key_first($options))
-				{
-					$firstKeyOption = $key;
-					continue;
-				}
-				$tmp = sprintf($query, 'count(field_id)', 'and (value = ' . $db->quote($option->value) . ')');
-				$q   .= ', (' . $tmp . ') as `' . $key . '`';
-			}
-			$q   = sprintf($query, 'count(field_id) as `' . $firstKeyOption . '`' . $q, 'and (value = ' . $db->quote($options[$firstKeyOption]->value) . ')');
-			$cnt = $db->setQuery($q)->loadObject();
-			foreach ($options as $key => $option)
-			{
-				$options[$key]->hidden = $cnt->$key == 0;
-				$hidden                = !$hidden ? false : $cnt->$key == 0;
-			}
-			$field->fieldparams->set('options', $options);
-			$field->hidden = $hidden;
-		}
-		else
-		{
-			$query         = sprintf($query, 'count(field_id)', '');
-			$cnt           = $db->setQuery($query)->loadResult();
-			$field->hidden = $cnt == 0;
-		}
+        if (\in_array($field->type, ['checkboxes', 'list', 'radio'])) {
+            $options        = (array) $field->fieldparams->get('options', []);
+            $hidden         = false;
+            $q              = '';
+            $firstKeyOption = '';
+            foreach ($options as $key => $option) {
+                if ($key == array_key_first($options)) {
+                    $firstKeyOption = $key;
+                    continue;
+                }
+                $tmp = \sprintf($query, 'count(field_id)', 'and (value = ' . $db->quote($option->value) . ')');
+                $q .= ', (' . $tmp . ') as `' . $key . '`';
+            }
+            $q   = \sprintf($query, 'count(field_id) as `' . $firstKeyOption . '`' . $q, 'and (value = ' . $db->quote($options[$firstKeyOption]->value) . ')');
+            $cnt = $db->setQuery($q)->loadObject();
+            foreach ($options as $key => $option) {
+                $options[$key]->hidden = $cnt->$key == 0;
+                $hidden                = !$hidden ? false : $cnt->$key == 0;
+            }
+            $field->fieldparams->set('options', $options);
+            $field->hidden = $hidden;
+        } else {
+            $query         = \sprintf($query, 'count(field_id)', '');
+            $cnt           = $db->setQuery($query)->loadResult();
+            $field->hidden = $cnt == 0;
+        }
 
-		return $field;
-	}
+        return $field;
+    }
 
-	/**
-	 * Add range data (min/max values) to display data
-	 *
-	 * @param   array   $displayData  Display data array
-	 * @param   int     $category_id  Category ID
-	 * @param   string  $option       Component option
-	 *
-	 * @return  array  Modified display data
-	 *
-	 * @since   1.0.0
-	 */
-	private function addRangeData($displayData, $category_id, $option)
-	{
-		$field = $displayData['field'];
-		$db    = Factory::getContainer()->get(DatabaseInterface::class);
-		$query = $db->getQuery(true);
-		$query->select('MIN(CAST(value AS SIGNED)) AS ' . $db->quoteName('min') . ', MAX(CAST(value AS SIGNED)) AS ' . $db->quoteName('max'))
-			->from($db->quoteName('#__fields_values'))
-			->where($db->quoteName('field_id') . ' = ' . (int) $field->id)
-			->where($db->quoteName('field_id') . ' = ' . (int) $field->id);
-		$subquery = '';
+    /**
+     * Add range data (min/max values) to display data.
+     *
+     * @param array $displayData Display data array
+     * @param int $category_id Category ID
+     * @param string $option Component option
+     *
+     * @return array Modified display data
+     *
+     * @since   1.0.0
+     */
+    private function addRangeData($displayData, $category_id, $option)
+    {
+        $field = $displayData['field'];
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true);
+        $query->select('MIN(CAST(value AS SIGNED)) AS ' . $db->quoteName('min') . ', MAX(CAST(value AS SIGNED)) AS ' . $db->quoteName('max'))
+            ->from($db->quoteName('#__fields_values'))
+            ->where($db->quoteName('field_id') . ' = ' . (int) $field->id)
+            ->where($db->quoteName('field_id') . ' = ' . (int) $field->id);
+        $subquery = '';
 
-		if ($option == 'com_tags')
-		{
-			$tagIds = Factory::getApplication()->getInput()->get('id', [], 'array');
-			// tags in tags array can be like {tag_id}:{tag_alias} - 2:tag-alias
-			if (!empty($tagIds))
-			{
-				foreach ($tagIds as $key => $tag)
-				{
-					if(!is_numeric($tag) && strpos($tag,':')){
-						$tag = explode(':', $tag);
-						$tagIds[$key] = $tag[0];
-					}
-				}
-			}
+        if ($option == 'com_tags') {
+            $tagIds = Factory::getApplication()->getInput()->get('id', [], 'array');
+            // tags in tags array can be like {tag_id}:{tag_alias} - 2:tag-alias
+            if (!empty($tagIds)) {
+                foreach ($tagIds as $key => $tag) {
+                    if (!is_numeric($tag) && strpos($tag, ':')) {
+                        $tag          = explode(':', $tag);
+                        $tagIds[$key] = $tag[0];
+                    }
+                }
+            }
 
-			if (!is_array($tagIds))
-			{
-				$tagIds = array((int) $tagIds);
-			}
-			$tagIds = implode(', ', $tagIds);
-			$q      = $db->getQuery(true);
-			$q->select('content_item_id')
-				->from('#__contentitem_tag_map')
-				->where('type_alias = ' . $db->quote('com_content.article'))
-				->where('tag_id IN(' . $tagIds . ')');
-			$subquery = (string) $q;
-		}
-		elseif ($option == 'com_content')
-		{
-			$params            = ComponentHelper::getParams('com_content');
-			$showSubcategories = $params->get('show_subcategory_content', '0');
+            if (!\is_array($tagIds)) {
+                $tagIds = [(int) $tagIds];
+            }
+            $tagIds = implode(', ', $tagIds);
+            $q      = $db->getQuery(true);
+            $q->select('content_item_id')
+                ->from('#__contentitem_tag_map')
+                ->where('type_alias = ' . $db->quote('com_content.article'))
+                ->where('tag_id IN(' . $tagIds . ')');
+            $subquery = (string) $q;
+        } elseif ($option == 'com_content') {
+            $params            = ComponentHelper::getParams('com_content');
+            $showSubcategories = $params->get('show_subcategory_content', '0');
 
-			if ($showSubcategories != 0)
-			{
-				$q = $db->getQuery(true);
-				$q->select('id, lft, rgt, level')
-					->from('#__categories')
-					->where('id = ' . (int) $category_id);
-				$oCat = $db->setQuery($q, 0, 1)->loadObject();
+            if ($showSubcategories != 0) {
+                $q = $db->getQuery(true);
+                $q->select('id, lft, rgt, level')
+                    ->from('#__categories')
+                    ->where('id = ' . (int) $category_id);
+                $oCat = $db->setQuery($q, 0, 1)->loadObject();
 
-				if (empty($oCat->id))
-				{
-					return $displayData;
-				}
+                if (empty($oCat->id)) {
+                    return $displayData;
+                }
 
-				$q->clear()->select('id')
-					->from('#__categories')
-					->where('lft >= ' . (int) $oCat->lft)
-					->where('rgt <= ' . (int) $oCat->rgt);
+                $q->clear()->select('id')
+                    ->from('#__categories')
+                    ->where('lft >= ' . (int) $oCat->lft)
+                    ->where('rgt <= ' . (int) $oCat->rgt);
 
-				if ($showSubcategories > 0)
-				{
-					$maxLevel = $oCat->level + $showSubcategories;
-					$q->where('level <= ' . (int) $maxLevel);
-				}
+                if ($showSubcategories > 0) {
+                    $maxLevel = $oCat->level + $showSubcategories;
+                    $q->where('level <= ' . (int) $maxLevel);
+                }
 
-				$aCats = $db->setQuery($q)->loadColumn();
+                $aCats = $db->setQuery($q)->loadColumn();
 
-				if (!is_array($aCats) || !count($aCats))
-				{
-					return $displayData;
-				}
+                if (!\is_array($aCats) || !\count($aCats)) {
+                    return $displayData;
+                }
 
-				$subquery = 'SELECT ' . $db->quoteName('id') . ' FROM ' . $db->quoteName('#__content') . ' WHERE ' . $db->quoteName('catid') . ' IN(' . implode(',', $aCats) . ')';
-			}
-			else
-			{
-				//No subcategories
-				$subquery = 'SELECT ' . $db->quoteName('id') . ' FROM ' . $db->quoteName('#__content') . ' WHERE ' . $db->quoteName('catid') . ' = ' . (int) $category_id;
-			}
-		}
-		elseif ($option == 'com_contact')
-		{
-			$subquery = 'SELECT ' . $db->quoteName('id') . ' FROM ' . $db->quoteName('#__contact_details') . ' WHERE ' . $db->quoteName('catid') . ' = ' . (int) $category_id;
-		}
-		if (!empty($subquery))
-		{
-			$query->where($db->quoteName('item_id') . ' IN (' . $subquery . ')');
-		}
-		$result             = $db->setQuery($query)->loadObject();
-		$displayData['min'] = !empty($result->min) ? (int) $result->min : 0;
-		$displayData['max'] = !empty($result->max) ? (int) $result->max : 0;
+                $subquery = 'SELECT ' . $db->quoteName('id') . ' FROM ' . $db->quoteName('#__content') . ' WHERE ' . $db->quoteName('catid') . ' IN(' . implode(',', $aCats) . ')';
+            } else {
+                //No subcategories
+                $subquery = 'SELECT ' . $db->quoteName('id') . ' FROM ' . $db->quoteName('#__content') . ' WHERE ' . $db->quoteName('catid') . ' = ' . (int) $category_id;
+            }
+        } elseif ($option == 'com_contact') {
+            $subquery = 'SELECT ' . $db->quoteName('id') . ' FROM ' . $db->quoteName('#__contact_details') . ' WHERE ' . $db->quoteName('catid') . ' = ' . (int) $category_id;
+        }
+        if (!empty($subquery)) {
+            $query->where($db->quoteName('item_id') . ' IN (' . $subquery . ')');
+        }
+        $result             = $db->setQuery($query)->loadObject();
+        $displayData['min'] = !empty($result->min) ? (int) $result->min : 0;
+        $displayData['max'] = !empty($result->max) ? (int) $result->max : 0;
 
-		return $displayData;
-	}
+        return $displayData;
+    }
 
-	/**
-	 * Get ordering select field HTML
-	 *
-	 * @param   string  $selectedOrdering  Currently selected ordering value
-	 * @param   int     $moduleId          Module ID
-	 * @param   string  $option            Component option
-	 *
-	 * @return  string  HTML for ordering select field
-	 *
-	 * @since   1.0.0
-	 */
-	public function getOrderingSelect($selectedOrdering, $moduleId, $option)
-	{
-		$app      = Factory::getApplication();
-		$template = $app->getTemplate();
+    /**
+     * Get ordering select field HTML.
+     *
+     * @param string $selectedOrdering Currently selected ordering value
+     * @param int $moduleId Module ID
+     * @param string $option Component option
+     *
+     * @return string HTML for ordering select field
+     *
+     * @since   1.0.0
+     */
+    public function getOrderingSelect($selectedOrdering, $moduleId, $option)
+    {
+        $app      = Factory::getApplication();
+        $template = $app->getTemplate();
 
-		$options = [];
-		if ($option == 'com_content')
-		{
-			$options[] = HTMLHelper::_('select.option', '', Text::_('MOD_JLCONTENTFIELDSFILTER_ORDERING_DEFAULT'));
-			$options[] = HTMLHelper::_('select.option', 'ordering.asc', Text::_('MOD_JLCONTENTFIELDSFILTER_ORDERING_ASC'));
-			$options[] = HTMLHelper::_('select.option', 'ordering.desc', Text::_('MOD_JLCONTENTFIELDSFILTER_ORDERING_DESC'));
-			$options[] = HTMLHelper::_('select.option', 'title.asc', Text::_('MOD_JLCONTENTFIELDSFILTER_TITLE_ASC'));
-			$options[] = HTMLHelper::_('select.option', 'title.desc', Text::_('MOD_JLCONTENTFIELDSFILTER_TITLE_DESC'));
-			$options[] = HTMLHelper::_('select.option', 'created.asc', Text::_('MOD_JLCONTENTFIELDSFILTER_CREATED_ASC'));
-			$options[] = HTMLHelper::_('select.option', 'created.desc', Text::_('MOD_JLCONTENTFIELDSFILTER_CREATED_DESC'));
-			$options[] = HTMLHelper::_('select.option', 'created_by.asc', Text::_('MOD_JLCONTENTFIELDSFILTER_CREATED_BY_ASC'));
-			$options[] = HTMLHelper::_('select.option', 'created_by.desc', Text::_('MOD_JLCONTENTFIELDSFILTER_CREATED_BY_DESC'));
-			$options[] = HTMLHelper::_('select.option', 'hits.asc', Text::_('MOD_JLCONTENTFIELDSFILTER_HITS_ASC'));
-			$options[] = HTMLHelper::_('select.option', 'hits.desc', Text::_('MOD_JLCONTENTFIELDSFILTER_HITS_DESC'));
-		}
-		elseif ($option == 'com_contact')
-		{
-			$options[] = HTMLHelper::_('select.option', '', Text::_('MOD_JLCONTENTFIELDSFILTER_ORDERING_DEFAULT'));
-			$options[] = HTMLHelper::_('select.option', 'ordering.asc', Text::_('MOD_JLCONTENTFIELDSFILTER_ORDERING_ASC'));
-			$options[] = HTMLHelper::_('select.option', 'ordering.desc', Text::_('MOD_JLCONTENTFIELDSFILTER_ORDERING_DESC'));
-			$options[] = HTMLHelper::_('select.option', 'name.asc', Text::_('MOD_JLCONTENTFIELDSFILTER_NAME_ASC'));
-			$options[] = HTMLHelper::_('select.option', 'name.desc', Text::_('MOD_JLCONTENTFIELDSFILTER_NAME_DESC'));
-			$options[] = HTMLHelper::_('select.option', 'position.asc', Text::_('MOD_JLCONTENTFIELDSFILTER_POSITION_ASC'));
-			$options[] = HTMLHelper::_('select.option', 'position.desc', Text::_('MOD_JLCONTENTFIELDSFILTER_POSITION_DESC'));
-			$options[] = HTMLHelper::_('select.option', 'hits.asc', Text::_('MOD_JLCONTENTFIELDSFILTER_HITS_ASC'));
-			$options[] = HTMLHelper::_('select.option', 'hits.desc', Text::_('MOD_JLCONTENTFIELDSFILTER_HITS_DESC'));
-		}
+        $options = [];
+        if ($option == 'com_content') {
+            $options[] = HTMLHelper::_('select.option', '', Text::_('MOD_JLCONTENTFIELDSFILTER_ORDERING_DEFAULT'));
+            $options[] = HTMLHelper::_('select.option', 'ordering.asc', Text::_('MOD_JLCONTENTFIELDSFILTER_ORDERING_ASC'));
+            $options[] = HTMLHelper::_('select.option', 'ordering.desc', Text::_('MOD_JLCONTENTFIELDSFILTER_ORDERING_DESC'));
+            $options[] = HTMLHelper::_('select.option', 'title.asc', Text::_('MOD_JLCONTENTFIELDSFILTER_TITLE_ASC'));
+            $options[] = HTMLHelper::_('select.option', 'title.desc', Text::_('MOD_JLCONTENTFIELDSFILTER_TITLE_DESC'));
+            $options[] = HTMLHelper::_('select.option', 'created.asc', Text::_('MOD_JLCONTENTFIELDSFILTER_CREATED_ASC'));
+            $options[] = HTMLHelper::_('select.option', 'created.desc', Text::_('MOD_JLCONTENTFIELDSFILTER_CREATED_DESC'));
+            $options[] = HTMLHelper::_('select.option', 'created_by.asc', Text::_('MOD_JLCONTENTFIELDSFILTER_CREATED_BY_ASC'));
+            $options[] = HTMLHelper::_('select.option', 'created_by.desc', Text::_('MOD_JLCONTENTFIELDSFILTER_CREATED_BY_DESC'));
+            $options[] = HTMLHelper::_('select.option', 'hits.asc', Text::_('MOD_JLCONTENTFIELDSFILTER_HITS_ASC'));
+            $options[] = HTMLHelper::_('select.option', 'hits.desc', Text::_('MOD_JLCONTENTFIELDSFILTER_HITS_DESC'));
+        } elseif ($option == 'com_contact') {
+            $options[] = HTMLHelper::_('select.option', '', Text::_('MOD_JLCONTENTFIELDSFILTER_ORDERING_DEFAULT'));
+            $options[] = HTMLHelper::_('select.option', 'ordering.asc', Text::_('MOD_JLCONTENTFIELDSFILTER_ORDERING_ASC'));
+            $options[] = HTMLHelper::_('select.option', 'ordering.desc', Text::_('MOD_JLCONTENTFIELDSFILTER_ORDERING_DESC'));
+            $options[] = HTMLHelper::_('select.option', 'name.asc', Text::_('MOD_JLCONTENTFIELDSFILTER_NAME_ASC'));
+            $options[] = HTMLHelper::_('select.option', 'name.desc', Text::_('MOD_JLCONTENTFIELDSFILTER_NAME_DESC'));
+            $options[] = HTMLHelper::_('select.option', 'position.asc', Text::_('MOD_JLCONTENTFIELDSFILTER_POSITION_ASC'));
+            $options[] = HTMLHelper::_('select.option', 'position.desc', Text::_('MOD_JLCONTENTFIELDSFILTER_POSITION_DESC'));
+            $options[] = HTMLHelper::_('select.option', 'hits.asc', Text::_('MOD_JLCONTENTFIELDSFILTER_HITS_ASC'));
+            $options[] = HTMLHelper::_('select.option', 'hits.desc', Text::_('MOD_JLCONTENTFIELDSFILTER_HITS_DESC'));
+        }
 
-		$basePath = is_file(JPATH_ROOT . '/templates/' . $template . '/html/layouts/mod_jlcontentfieldsfilter/ordering.php')
-			? JPATH_ROOT . '/templates/' . $template . '/html/layouts'
-			: JPATH_ROOT . '/modules/mod_jlcontentfieldsfilter/layouts';
+        $basePath = is_file(JPATH_ROOT . '/templates/' . $template . '/html/layouts/mod_jlcontentfieldsfilter/ordering.php')
+            ? JPATH_ROOT . '/templates/' . $template . '/html/layouts'
+            : JPATH_ROOT . '/modules/mod_jlcontentfieldsfilter/layouts';
 
-		$html = LayoutHelper::render(
-			'mod_jlcontentfieldsfilter.ordering',
-			['options' => $options, 'selected' => $selectedOrdering, 'moduleId' => $moduleId],
-			$basePath,
-			['component' => 'auto', 'client' => 0]
-		);
+        $html = LayoutHelper::render(
+            'mod_jlcontentfieldsfilter.ordering',
+            ['options' => $options, 'selected' => $selectedOrdering, 'moduleId' => $moduleId],
+            $basePath,
+            ['component' => 'auto', 'client' => 0]
+        );
 
-		return $html;
-	}
+        return $html;
+    }
 
-	/**
-	 * Count published articles in a category
-	 *
-	 * @param   int  $catid  Category ID
-	 *
-	 * @return  int  Number of published articles
-	 *
-	 * @since   1.0.0
-	 */
-	public function countCatArticles($catid)
-	{
-		$db    = Factory::getContainer()->get(DatabaseInterface::class);
-		$query = $db->getQuery(true);
-		$query->select('count(*)')
-			->from($db->quoteName('#__content'))
-			->where($db->quoteName('catid') . ' = ' . (int) $catid)
-			->where($db->quoteName('state') . ' = 1');
+    /**
+     * Count published articles in a category.
+     *
+     * @param int $catid Category ID
+     *
+     * @return int Number of published articles
+     *
+     * @since   1.0.0
+     */
+    public function countCatArticles($catid)
+    {
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true);
+        $query->select('count(*)')
+            ->from($db->quoteName('#__content'))
+            ->where($db->quoteName('catid') . ' = ' . (int) $catid)
+            ->where($db->quoteName('state') . ' = 1');
 
-		return $db->setQuery($query)->loadResult();
-	}
+        return $db->setQuery($query)->loadResult();
+    }
 }
 
 /**
- * Polyfill for array_key_first function (PHP < 7.3)
+ * Polyfill for array_key_first function (PHP < 7.3).
  *
  * Gets the first key of an array
  *
- * @param   array  $array  The array
+ * @param array $array The array
  *
- * @return  int|string|null  The first key of array if the array is not empty; NULL otherwise
+ * @return int|string|null The first key of array if the array is not empty; NULL otherwise
  *
  * @since   1.0.0
  */
-if (!function_exists('array_key_first'))
-{
-	function array_key_first(array $array)
-	{
-		foreach ($array as $key => $unused)
-		{
-			return $key;
-		}
+if (!\function_exists('array_key_first')) {
+    function array_key_first(array $array)
+    {
+        foreach ($array as $key => $unused) {
+            return $key;
+        }
 
-		return null;
-	}
+        return null;
+    }
 }

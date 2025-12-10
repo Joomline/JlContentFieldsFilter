@@ -25,7 +25,7 @@ use Joomla\Utilities\ArrayHelper;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
- * Tags Component Tag Model
+ * Tags Component Tag Model.
  *
  * @since  3.1
  */
@@ -34,15 +34,15 @@ class TagModel extends ListModel
     /**
      * The list of items associated with the tags.
      *
-     * @var    array
+     * @var array
      * @since  3.1
      */
     protected $items = null;
 
     /**
-     * Array of tags
+     * Array of tags.
      *
-     * @var    array
+     * @var array
      * @since  4.3.0
      */
     protected $item = [];
@@ -50,8 +50,8 @@ class TagModel extends ListModel
     /**
      * Constructor.
      *
-     * @param   array                 $config   An optional associative array of configuration settings.
-     * @param   ?MVCFactoryInterface  $factory  The factory.
+     * @param array $config An optional associative array of configuration settings.
+     * @param ?MVCFactoryInterface $factory The factory.
      *
      * @since   1.6
      */
@@ -88,7 +88,7 @@ class TagModel extends ListModel
     /**
      * Method to get a list of items for a list of tags.
      *
-     * @return  mixed  An array of objects on success, false on failure.
+     * @return mixed An array of objects on success, false on failure.
      *
      * @since   3.1
      */
@@ -129,7 +129,7 @@ class TagModel extends ListModel
     /**
      * Method to build an SQL query to load the list data of all items with a given tag.
      *
-     * @return  QueryInterface  An SQL query
+     * @return QueryInterface An SQL query
      *
      * @since   3.1
      */
@@ -157,18 +157,18 @@ class TagModel extends ListModel
             $query->where($db->quoteName('c.core_title') . ' LIKE ' . $db->quote('%' . $this->state->get('list.filter') . '%'));
         }
 
-	    //Joomline hack start
-	    $app = Factory::getApplication();
-	    $itemid = implode(',', $app->getInput()->get('id', 0, 'int')) . ':' . $app->getInput()->get('Itemid', 0, 'int');
-	    $context = 'com_tags.category.list.' . $itemid;
-		$article_id_include = $app->getUserState($context . 'filter.article_id_include', false);
-	    $filterArticles = $app->getUserState($context . 'filter.article_id', []);
+        //Joomline hack start
+        $app                = Factory::getApplication();
+        $itemid             = implode(',', $app->getInput()->get('id', 0, 'int')) . ':' . $app->getInput()->get('Itemid', 0, 'int');
+        $context            = 'com_tags.category.list.' . $itemid;
+        $article_id_include = $app->getUserState($context . 'filter.article_id_include', false);
+        $filterArticles     = $app->getUserState($context . 'filter.article_id', []);
 
-	    if($article_id_include && is_array($filterArticles) && count($filterArticles)){
-		    $query->where($this->_db->quoteName('m.type_alias') . ' = ' . $this->_db->quote('com_content.article'));
-		    $query->where($this->_db->quoteName('m.content_item_id') . ' IN ("'.implode('","', $filterArticles).'")');
-	    }
-	    //Joomline hack end
+        if ($article_id_include && \is_array($filterArticles) && \count($filterArticles)) {
+            $query->where($this->_db->quoteName('m.type_alias') . ' = ' . $this->_db->quote('com_content.article'));
+            $query->where($this->_db->quoteName('m.content_item_id') . ' IN ("'.implode('","', $filterArticles).'")');
+        }
+        //Joomline hack end
 
         return $query;
     }
@@ -178,10 +178,10 @@ class TagModel extends ListModel
      *
      * Note. Calling getState in this method will result in recursion.
      *
-     * @param   string  $ordering   An optional ordering field.
-     * @param   string  $direction  An optional direction (asc|desc).
+     * @param string $ordering An optional ordering field.
+     * @param string $direction An optional direction (asc|desc).
      *
-     * @return  void
+     * @return void
      *
      * @since   3.1
      */
@@ -267,20 +267,20 @@ class TagModel extends ListModel
         $filterSearch = $app->getUserStateFromRequest('com_tags.tag.list.' . $itemid . '.filter_search', 'filter-search', '', 'string');
         $this->setState('list.filter', $filterSearch);
 
-	    //Joomline hack start
-	    $value = $this->getUserStateFromRequest('com_content.category.list.' . $itemid . 'filter.article_id_include', 'filter_article_id_include', false, 'boolen');
-	    $this->setState('filter.article_id.include', $value);
-	    $value = $this->getUserStateFromRequest('com_content.category.list.' . $itemid . 'filter.article_id', 'filter_article_id', null, 'array');
-	    $this->setState('filter.article_id', $value);
-	    //Joomline hack end
+        //Joomline hack start
+        $value = $this->getUserStateFromRequest('com_content.category.list.' . $itemid . 'filter.article_id_include', 'filter_article_id_include', false, 'boolen');
+        $this->setState('filter.article_id.include', $value);
+        $value = $this->getUserStateFromRequest('com_content.category.list.' . $itemid . 'filter.article_id', 'filter_article_id', null, 'array');
+        $this->setState('filter.article_id', $value);
+        //Joomline hack end
     }
 
     /**
-     * Method to get tag data for the current tag or tags
+     * Method to get tag data for the current tag or tags.
      *
-     * @param   integer  $pk  An optional ID
+     * @param int $pk An optional ID
      *
-     * @return  \stdClass|false
+     * @return \stdClass|false
      *
      * @since   3.1
      */
@@ -323,7 +323,7 @@ class TagModel extends ListModel
                 }
             }
 
-            if (count($this->item) != count($idsArray)) {
+            if (\count($this->item) != \count($idsArray)) {
                 throw new \Exception(Text::_('COM_TAGS_TAG_NOT_FOUND'), 404);
             }
         }
@@ -333,9 +333,9 @@ class TagModel extends ListModel
     /**
      * Increment the hit counter.
      *
-     * @param   integer  $pk  Optional primary key of the article to increment.
+     * @param int $pk Optional primary key of the article to increment.
      *
-     * @return  boolean  True if successful; false otherwise and internal error set.
+     * @return bool True if successful; false otherwise and internal error set.
      *
      * @since   3.2
      */

@@ -25,21 +25,20 @@ use Joomla\DI\ServiceProviderInterface;
  *
  * @since  1.0.0
  */
-return new class () implements ServiceProviderInterface
-{
-	/**
-	 * Registers the service provider with a DI container.
-	 *
-	 * @param   Container  $container  The DI container.
-	 *
-	 * @return  void
-	 *
-	 * @since   4.0.0
-	 */
-	public function register(Container $container)
-	{
-		$container->registerServiceProvider(new ModuleDispatcherFactory('\\Joomla\\Module\\Jlcontentfieldsfilter'));
-		$container->registerServiceProvider(new HelperFactory('\\Joomla\\Module\\Jlcontentfieldsfilter\\Site\\Helper'));
-		$container->registerServiceProvider(new Module);
-	}
+return new class () implements ServiceProviderInterface {
+    /**
+     * Registers the service provider with a DI container.
+     *
+     * @param Container $container The DI container.
+     *
+     * @return void
+     *
+     * @since   4.0.0
+     */
+    public function register(Container $container)
+    {
+        $container->registerServiceProvider(new ModuleDispatcherFactory('\\Joomla\\Module\\Jlcontentfieldsfilter'));
+        $container->registerServiceProvider(new HelperFactory('\\Joomla\\Module\\Jlcontentfieldsfilter\\Site\\Helper'));
+        $container->registerServiceProvider(new Module());
+    }
 };

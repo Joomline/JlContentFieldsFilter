@@ -23,7 +23,7 @@ use Joomla\Database\DatabaseInterface;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
- * Helper class for jlcontentfieldsfilter component
+ * Helper class for jlcontentfieldsfilter component.
  *
  * @since  1.0.0
  */
@@ -32,9 +32,9 @@ class JlcontentfieldsfilterHelper
     /**
      * Add submenu.
      *
-     * @param   string  $vName  The view name.
+     * @param string $vName The view name.
      *
-     * @return  void
+     * @return void
      *
      * @since   1.0.0
      */
@@ -43,25 +43,26 @@ class JlcontentfieldsfilterHelper
         Sidebar::addEntry(
             Text::_('ITEM_SUBMENU'),
             'index.php?option=com_jlcontentfieldsfilter&view=items',
-            $vName == 'items');
+            $vName == 'items'
+        );
     }
 
     /**
      * Get the available actions for the current user.
      *
-     * @return  \stdClass  An object with the available actions.
+     * @return \stdClass An object with the available actions.
      *
      * @since   1.0.0
      */
     public static function getActions()
     {
-        $user = Factory::getApplication()->getIdentity();
-        $result = new \stdClass();
+        $user      = Factory::getApplication()->getIdentity();
+        $result    = new \stdClass();
         $assetName = 'com_jlcontentfieldsfilter';
-	    $actions = Access::getActionsFromFile(
-		    JPATH_ADMINISTRATOR . '/components/com_jlcontentfieldsfilter/access.xml',
-		    '/access/section[@name="component"]/'
-	    );
+        $actions   = Access::getActionsFromFile(
+            JPATH_ADMINISTRATOR . '/components/com_jlcontentfieldsfilter/access.xml',
+            '/access/section[@name="component"]/'
+        );
         foreach ($actions as $action) {
             $result->{$action->name} = $user->authorise($action->name, $assetName);
         }
@@ -69,12 +70,12 @@ class JlcontentfieldsfilterHelper
     }
 
     /**
-     * Create a filter string from filter data array
+     * Create a filter string from filter data array.
      *
-     * @param   array    $filter  Filter data array
-     * @param   boolean  $safe    Whether to URL encode values
+     * @param array $filter Filter data array
+     * @param bool $safe Whether to URL encode values
      *
-     * @return  string  Filter string
+     * @return string Filter string
      *
      * @since   1.0.0
      */
@@ -83,12 +84,12 @@ class JlcontentfieldsfilterHelper
         ksort($filter);
         $data = [];
         foreach ($filter as $key => $item) {
-            if (is_array($item)) {
+            if (\is_array($item)) {
                 $val = [];
                 ksort($item);
                 foreach ($item as $k => $v) {
 
-                    if($k === 'from' || $k === 'to'){
+                    if ($k === 'from' || $k === 'to') {
                         continue;
                     }
 
@@ -96,11 +97,12 @@ class JlcontentfieldsfilterHelper
                         $val[] = $safe ? urlencode($v) : $v;
                     }
                 }
-                if (count($val)) {
+                if (\count($val)) {
                     $data[] = $key . '=' . implode(',', $val);
                 }
             } else {
-                $data[] = $key . '=' . $safe ? urlencode($item) : $item;;
+                $data[] = $key . '=' . $safe ? urlencode($item) : $item;
+                ;
             }
         }
 
@@ -109,11 +111,11 @@ class JlcontentfieldsfilterHelper
     }
 
     /**
-     * Create an MD5 hash from a string
+     * Create an MD5 hash from a string.
      *
-     * @param   string  $string  Input string
+     * @param string $string Input string
      *
-     * @return  string  MD5 hash
+     * @return string MD5 hash
      *
      * @since   1.0.0
      */
@@ -123,33 +125,32 @@ class JlcontentfieldsfilterHelper
     }
 
     /**
-     * Create meta data object for a filter
+     * Create meta data object for a filter.
      *
-     * @param   int    $catid       Category ID
-     * @param   array  $filterData  Filter data array
+     * @param int $catid Category ID
+     * @param array $filterData Filter data array
      *
-     * @return  \stdClass  Meta data object with title, description and keywords
+     * @return \stdClass Meta data object with title, description and keywords
      *
      * @since   1.0.0
      */
     public static function createMeta($catid, $filterData)
     {
-        $object = new \stdClass();
-        $object->meta_title = '';
-        $object->meta_desc = '';
+        $object                = new \stdClass();
+        $object->meta_title    = '';
+        $object->meta_desc     = '';
         $object->meta_keywords = '';
 
-        if(!$catid){
+        if (!$catid) {
             return $object;
         }
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select($db->quoteName('title'))
             ->from('#__categories')
             ->where('id = '.(int)$catid)
         ;
-        $catName = $db->setQuery($query,0,1)->loadResult();
-
+        $catName = $db->setQuery($query, 0, 1)->loadResult();
 
         $query->clear()->select($db->quoteName(['id', 'title', 'type', 'fieldparams']))
             ->from($db->quoteName('#__fields'))
@@ -157,94 +158,87 @@ class JlcontentfieldsfilterHelper
         ;
         $result = $db->setQuery($query)->loadObjectList();
 
-        if(!count($result)){
+        if (!\count($result)) {
             return $object;
         }
 
         $fields = [];
 
-        foreach ($result as $field)
-        {
+        foreach ($result as $field) {
             $values = false;
 
             $fieldparams = json_decode($field->fieldparams, true);
-            if(isset($fieldparams['options']) && is_array($fieldparams['options']) && count($fieldparams['options'])){
+            if (isset($fieldparams['options']) && \is_array($fieldparams['options']) && \count($fieldparams['options'])) {
                 $values = [];
                 foreach ($fieldparams['options'] as $option) {
                     $key = $option['value'];
-                    if(is_numeric($key)){
+                    if (is_numeric($key)) {
                         $key = (int)$key;
                     }
                     $values[$key] = Text::_($option['name']);
-               }
+                }
             }
 
             $fields[$field->id] = [
-                'id' => $field->id,
-                'name' => Text::_($field->title),
+                'id'     => $field->id,
+                'name'   => Text::_($field->title),
                 'values' => $values,
             ];
         }
 
         $titles = $desc = $keyvords = [];
         foreach ($filterData as $key => $f) {
-            if(!isset($fields[$key]) || empty($f)){
+            if (!isset($fields[$key]) || empty($f)) {
                 continue;
             }
             $fname = $fields[$key]['name'];
-            if(is_array($f)){
+            if (\is_array($f)) {
                 $fValues = [];
                 foreach ($f as $fk => $fv) {
-                    if(in_array($fk, ['from', 'to'])){
+                    if (\in_array($fk, ['from', 'to'])) {
                         continue;
                     }
-                    if(empty($fv)){
+                    if (empty($fv)) {
                         continue;
                     }
-                    if(is_numeric($fv)){
+                    if (is_numeric($fv)) {
                         $fv = (int)$fv;
                     }
-                    if($fields[$key]['values'] === false){
+                    if ($fields[$key]['values'] === false) {
                         $fValues[] = $fv;
-                    }
-                    else if(isset($fields[$key]['values'][$fv])){
+                    } elseif (isset($fields[$key]['values'][$fv])) {
                         $fValues[] = $fields[$key]['values'][$fv];
-                    }
-                    else{
+                    } else {
                         $fValues[] = $fv;
                     }
                 }
                 $fValue = implode(', ', $fValues);
-            }
-            else{
-                if(is_numeric($f)){
+            } else {
+                if (is_numeric($f)) {
                     $f = (int)$f;
                 }
-                if($fields[$key]['values'] === false){
+                if ($fields[$key]['values'] === false) {
                     $fValue = $f;
-                }
-                else if(isset($fields[$key]['values'][$f])){
+                } elseif (isset($fields[$key]['values'][$f])) {
                     $fValue = $fields[$key]['values'][$f];
-                }
-                else{
+                } else {
                     $fValue = $f;
                 }
             }
 
-            if(empty($fValue)){
+            if (empty($fValue)) {
                 continue;
             }
-            $titles[] = $desc[] = $fname.': '.$fValue;
+            $titles[]   = $desc[] = $fname.': '.$fValue;
             $keyvords[] = $fValue;
         }
-        $object->catid = $catid;
-        $object->filter = JlcontentfieldsfilterHelper::createFilterString($filterData);
-        $object->filter_hash = JlcontentfieldsfilterHelper::createHash($object->filter);
-        $object->meta_title = $catName.'. '.implode('; ', $titles);
-        $object->meta_desc = $catName.'. '.implode('; ', $desc);
+        $object->catid         = $catid;
+        $object->filter        = JlcontentfieldsfilterHelper::createFilterString($filterData);
+        $object->filter_hash   = JlcontentfieldsfilterHelper::createHash($object->filter);
+        $object->meta_title    = $catName.'. '.implode('; ', $titles);
+        $object->meta_desc     = $catName.'. '.implode('; ', $desc);
         $object->meta_keywords = implode(', ', $keyvords);
-        $object->publish = 1;
-
+        $object->publish       = 1;
 
         $db->insertObject('#__jlcontentfieldsfilter_data', $object, 'id');
 

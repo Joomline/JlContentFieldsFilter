@@ -1,6 +1,7 @@
 <?php
+
 /**
- * JL Content Fields Filter
+ * JL Content Fields Filter.
  *
  * @version 	@version@
  * @author		Joomline
@@ -29,6 +30,8 @@ class DisplayController extends BaseController
 
     /**
      * Method to display a view.
+     * @param mixed $cachable
+     * @param mixed $urlparams
      */
     public function display($cachable = false, $urlparams = [])
     {

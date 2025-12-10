@@ -13,7 +13,6 @@
 use Joomla\CMS\Extension\PluginInterface;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\PluginHelper;
-use Joomla\Database\DatabaseInterface;
 use Joomla\DI\Container;
 use Joomla\DI\ServiceProviderInterface;
 use Joomla\Event\DispatcherInterface;
@@ -27,9 +26,9 @@ return new class () implements ServiceProviderInterface {
     /**
      * Registers the service provider with a DI container.
      *
-     * @param   Container  $container  The DI container
+     * @param Container $container The DI container
      *
-     * @return  void
+     * @return void
      *
      * @since   1.0.0
      */
@@ -39,8 +38,8 @@ return new class () implements ServiceProviderInterface {
             PluginInterface::class,
             function (Container $container) {
                 $subject = $container->get(DispatcherInterface::class);
-                $config = (array)PluginHelper::getPlugin('system', 'Jlcontentfieldsfilter');
-                $plugin = new Jlcontentfieldsfilter($subject, $config);
+                $config  = (array)PluginHelper::getPlugin('system', 'Jlcontentfieldsfilter');
+                $plugin  = new Jlcontentfieldsfilter($subject, $config);
                 $plugin->setApplication(Factory::getApplication());
                 return $plugin;
             }

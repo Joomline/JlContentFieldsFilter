@@ -14,8 +14,8 @@ namespace Joomla\Plugin\System\Jlcontentfieldsfilter\Extension;
 
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Form\Form;
+use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\Component\Jlcontentfieldsfilter\Administrator\Helper\JlcontentfieldsfilterHelper;
 use Joomla\Database\DatabaseInterface;
 
@@ -24,7 +24,7 @@ use Joomla\Database\DatabaseInterface;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
- * Plugin class for jlcontentfieldsfilter
+ * Plugin class for jlcontentfieldsfilter.
  *
  * @since  1.0.0
  */
@@ -33,7 +33,7 @@ class Jlcontentfieldsfilter extends CMSPlugin
     /**
      * Affects constructor behavior. If true, language files will be loaded automatically.
      *
-     * @var    boolean
+     * @var bool
      * @since  1.0.0
      */
     protected $autoloadLanguage = true;
@@ -43,9 +43,9 @@ class Jlcontentfieldsfilter extends CMSPlugin
      * @param $form
      * @param $data
      *
-     * @return bool
      *
      * @throws Exception
+     * @return bool
      * @since 1.0.0
      */
     public function onContentPrepareForm($form, $data)
@@ -58,22 +58,21 @@ class Jlcontentfieldsfilter extends CMSPlugin
 
         $app = $this->getApplication();
 
-        if (!in_array($name, ['com_fields.fieldcom_content.article', 'com_fields.field.com_content.article', 'com_fields.fieldcom_contact.contact', 'com_fields.field.com_contact.contact'])
+        if (!\in_array($name, ['com_fields.fieldcom_content.article', 'com_fields.field.com_content.article', 'com_fields.fieldcom_contact.contact', 'com_fields.field.com_contact.contact'])
             || !$app->isClient('administrator')) {
             return true;
-        } else {
-            $category_extension = explode('.', str_replace(['com_fields.field.', 'com_fields.field'], '', $name))[0];
         }
+        $category_extension = explode('.', str_replace(['com_fields.field.', 'com_fields.field'], '', $name))[0];
 
         Form::addFormPath(JPATH_SITE . '/plugins/system/jlcontentfieldsfilter/src/Params');
         $plugin = 'plg_system_jlcontentfieldsfilter';
-        $lang = $app->getLanguage();
-        $lang->load($plugin , JPATH_ADMINISTRATOR);
+        $lang   = $app->getLanguage();
+        $lang->load($plugin, JPATH_ADMINISTRATOR);
         $form->loadFile('params', false);
 
-        if (is_object($data) && !empty($data->type)) {
+        if (\is_object($data) && !empty($data->type)) {
             $dataType = $data->type;
-        } else if (is_array($data) && !empty($data['type'])) {
+        } elseif (\is_array($data) && !empty($data['type'])) {
             $dataType = $data['type'];
         } else {
             $dataType = $form->getFieldAttribute('type', 'default');
@@ -86,11 +85,11 @@ class Jlcontentfieldsfilter extends CMSPlugin
     }
 
     /**
-     * Triggered before compiling the document head
+     * Triggered before compiling the document head.
      *
      * Applies custom meta tags for filtered content pages.
      *
-     * @return  void
+     * @return void
      *
      * @since   1.0.0
      */
@@ -105,9 +104,9 @@ class Jlcontentfieldsfilter extends CMSPlugin
     /**
      * Replaces the category content model.
      *
-     * @return  void
      *
-     * @throws  Exception
+     * @throws Exception
+     * @return void
      *
      * @since   1.0.0
      */
@@ -117,34 +116,31 @@ class Jlcontentfieldsfilter extends CMSPlugin
             return;
         }
 
-        $app = $this->getApplication();
+        $app    = $this->getApplication();
         $option = $app->getInput()->getString('option', '');
-        $view = $app->getInput()->getString('view', '');
-        $catid = $app->getInput()->getInt('id', 0);
+        $view   = $app->getInput()->getString('view', '');
+        $catid  = $app->getInput()->getInt('id', 0);
 
         if ($option == 'com_tags') {
             if ($view != 'tag') {
                 return;
             }
-            $catid = $app->getUserStateFromRequest($option . '.jlcontentfieldsfilter.tag_category_id', 'tag_category_id', 0, 'int');
+            $catid  = $app->getUserStateFromRequest($option . '.jlcontentfieldsfilter.tag_category_id', 'tag_category_id', 0, 'int');
             $tagids = $app->getUserStateFromRequest($option . '.jlcontentfieldsfilter.tag_ids', 'id', [], 'array');
 
-
-	        if (!empty($tagids))
-	        {
-		        foreach ($tagids as $key => $tag)
-		        {
-			        if(!is_numeric($tag) && strpos($tag,':')){
-				        $tag = explode(':', $tag);
-				        $tagids[$key] = $tag[0];
-			        }
-		        }
-	        }
+            if (!empty($tagids)) {
+                foreach ($tagids as $key => $tag) {
+                    if (!is_numeric($tag) && strpos($tag, ':')) {
+                        $tag          = explode(':', $tag);
+                        $tagids[$key] = $tag[0];
+                    }
+                }
+            }
 
             $itemid = implode(',', $tagids) . ':' . $app->getInput()->get('Itemid', 0, 'int');
 
-        } else if (
-            !in_array($option, ['com_content', 'com_contact']) || $view != 'category' || $catid == 0) {
+        } elseif (
+            !\in_array($option, ['com_content', 'com_contact']) || $view != 'category' || $catid == 0) {
             return;
         } else {
             $itemid = $app->getInput()->get('id', 0, 'int') . ':' . $app->getInput()->get('Itemid', 0, 'int');
@@ -158,14 +154,13 @@ class Jlcontentfieldsfilter extends CMSPlugin
 
         $filterData = $app->getUserStateFromRequest($context, 'jlcontentfieldsfilter', [], 'array');
 
-
-        if (!count($filterData)) {
+        if (!\count($filterData)) {
             return;
         }
 
         /**
          * Load custom models that override native Joomla models with filtering logic.
-         * 
+         *
          * IMPORTANT: We check for the SHORT class name (without namespace) because:
          * 1. Native Joomla classes are autoloaded with full namespace
          * 2. class_exists() with namespace would always return true for native classes
@@ -193,7 +188,7 @@ class Jlcontentfieldsfilter extends CMSPlugin
                 break;
         }
 
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
 
         $query->select('id, type');
@@ -201,7 +196,7 @@ class Jlcontentfieldsfilter extends CMSPlugin
         $query->where('context = ' . $db->quote($context));
         $fieldsTypes = $db->setQuery($query)->loadObjectList('id');
 
-        $count = 0;
+        $count          = 0;
         $filterArticles = [];
 
         foreach ($filterData as $k => $v) {
@@ -215,27 +210,28 @@ class Jlcontentfieldsfilter extends CMSPlugin
                 case 'radio':
                 case 'checkboxes':
                 case 'list':
-                    if (is_array($v) && count($v)) {
+                    if (\is_array($v) && \count($v)) {
                         $newVal = [];
                         foreach ($v as $val) {
-                            if ($val !== '')
+                            if ($val !== '') {
                                 $newVal[] = $val;
+                            }
                         }
-                        if (count($newVal)) {
+                        if (\count($newVal)) {
                             $where = '(field_id = ' . (int)$k . ' AND value IN(\'' . implode("', '", $newVal) . '\'))';
                         }
-                    } else if (!empty($v)) {
+                    } elseif (!empty($v)) {
                         $where = '(field_id = ' . (int)$k . ' AND value = ' . $db->quote($v) . ')';
                     }
                     break;
                 case 'text':
                     if (!empty($v)) {
-                        if (is_array($v)) {
+                        if (\is_array($v)) {
                             if (!empty($v['from']) && !empty($v['to'])) {
                                 $where = '(field_id = ' . (int)$k . ' AND CAST(value AS SIGNED) BETWEEN ' . (int)$v['from'] . ' AND ' . $v['to'] . ')';
-                            } else if (!empty($v['from'])) {
+                            } elseif (!empty($v['from'])) {
                                 $where = '(field_id = ' . (int)$k . ' AND CAST(value AS SIGNED) >= ' . (int)$v['from'] . ')';
-                            } else if (!empty($v['to'])) {
+                            } elseif (!empty($v['to'])) {
                                 $where = '(field_id = ' . (int)$k . ' AND CAST(value AS SIGNED) <= ' . (int)$v['to'] . ')';
                             }
                         } else {
@@ -254,7 +250,7 @@ class Jlcontentfieldsfilter extends CMSPlugin
                 $query->where($where);
                 $query->group('item_id');
                 $aIds = $db->setQuery($query)->loadColumn();
-                $aIds = !is_array($aIds) ? [] : $aIds;
+                $aIds = !\is_array($aIds) ? [] : $aIds;
                 if ($count == 0) {
                     $filterArticles = $aIds;
                 } else {
@@ -263,7 +259,7 @@ class Jlcontentfieldsfilter extends CMSPlugin
 
                 $count++;
 
-                if (!count($filterArticles)) {
+                if (!\count($filterArticles)) {
                     break;
                 }
             }
@@ -272,7 +268,7 @@ class Jlcontentfieldsfilter extends CMSPlugin
         $context = $option . '.category.list.' . $itemid;
 
         if ($count > 0) {
-            if (!count($filterArticles)) {
+            if (!\count($filterArticles)) {
                 $filterArticles = [0];
             }
 
@@ -285,7 +281,7 @@ class Jlcontentfieldsfilter extends CMSPlugin
 
         if (!empty($filterData['ordering'])) {
             list($ordering, $dirn) = explode('.', $filterData['ordering']);
-            $dirn = !empty($dirn) ? strtoupper($dirn) : 'ASC';
+            $dirn                  = !empty($dirn) ? strtoupper($dirn) : 'ASC';
 
             switch ($option) {
                 case 'com_content':
@@ -333,11 +329,11 @@ class Jlcontentfieldsfilter extends CMSPlugin
     }
 
     /**
-     * Apply custom meta tags to filtered pages
+     * Apply custom meta tags to filtered pages.
      *
      * Sets custom title, description, and keywords based on filter configuration.
      *
-     * @return  void
+     * @return void
      *
      * @since   1.0.0
      */
@@ -347,24 +343,23 @@ class Jlcontentfieldsfilter extends CMSPlugin
             return;
         }
 
-        $app = $this->getApplication();
+        $app    = $this->getApplication();
         $option = $app->getInput()->getString('option', '');
-        $view = $app->getInput()->getString('view', '');
-        $catid = $app->getInput()->getInt('id', 0);
+        $view   = $app->getInput()->getString('view', '');
+        $catid  = $app->getInput()->getInt('id', 0);
 
-        if (!in_array($option, ['com_content']) || $view != 'category' || $catid == 0) {
+        if (!\in_array($option, ['com_content']) || $view != 'category' || $catid == 0) {
             return;
         }
 
         if ($option == 'com_tags') {
-            $tagIds = $app->getUserStateFromRequest($option . '.jlcontentfieldsfilter.tag_ids', 'id', [], 'array');
+            $tagIds  = $app->getUserStateFromRequest($option . '.jlcontentfieldsfilter.tag_ids', 'id', [], 'array');
             $context = $option . '.cat_' . implode('_', $tagIds) . '.jlcontentfieldsfilter';
         } else {
             $context = $option . '.cat_' . $catid . '.jlcontentfieldsfilter';
         }
 
         $filterData = $app->getUserStateFromRequest($context, 'jlcontentfieldsfilter', [], 'array');
-
 
         if (isset($filterData['ordering'])) {
             unset($filterData['ordering']);
@@ -373,19 +368,19 @@ class Jlcontentfieldsfilter extends CMSPlugin
             unset($filterData['is_filter']);
         }
 
-        if (!is_array($filterData) || !count($filterData)) {
+        if (!\is_array($filterData) || !\count($filterData)) {
             return;
         }
 
-        $params = ComponentHelper::getParams('com_jlcontentfieldsfilter');
+        $params         = ComponentHelper::getParams('com_jlcontentfieldsfilter');
         $autogeneration = $params->get('autogeneration', 0);
 
-        $filter = JlcontentfieldsfilterHelper::createFilterString($filterData);
+        $filter        = JlcontentfieldsfilterHelper::createFilterString($filterData);
         $unsafe_filter = JlcontentfieldsfilterHelper::createFilterString($filterData, false);
-        $hash = JlcontentfieldsfilterHelper::createHash($filter);
-        $unsafe_hash = JlcontentfieldsfilterHelper::createHash($unsafe_filter);
+        $hash          = JlcontentfieldsfilterHelper::createHash($filter);
+        $unsafe_hash   = JlcontentfieldsfilterHelper::createHash($unsafe_filter);
 
-	    $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select('*')
             ->from($db->quoteName('#__jlcontentfieldsfilter_data'))
@@ -397,11 +392,11 @@ class Jlcontentfieldsfilter extends CMSPlugin
         if (empty($result->filter_hash)) {
             if (!$autogeneration) {
                 return;
-            } else {
-                $result = JlcontentfieldsfilterHelper::createMeta($catid, $filterData);
             }
+            $result = JlcontentfieldsfilterHelper::createMeta($catid, $filterData);
+
         }
-	    $doc = $app->getDocument();
+        $doc = $app->getDocument();
         if (!empty($result->meta_title)) {
             $doc->setTitle($result->meta_title);
         }

@@ -20,43 +20,42 @@ use Joomla\CMS\MVC\Model\ListModel;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
- * Items model for jlcontentfieldsfilter component
+ * Items model for jlcontentfieldsfilter component.
  *
  * @since  1.0.0
  */
 class ItemsModel extends ListModel
 {
-	/**
-	 * Build the query to get the list of records.
-	 *
-	 * @return  JDatabaseQuery  The database query object.
-	 *
-	 * @since   1.0.0
-	 */
-	protected function getListQuery()
-	{
-		$query = $this->getDbo()->getQuery( true );
-		$query->select( '*' );
-		$query->from( '#__jlcontentfieldsfilter_data' );
-		return $query;
-	}
+    /**
+     * Build the query to get the list of records.
+     *
+     * @return JDatabaseQuery The database query object.
+     *
+     * @since   1.0.0
+     */
+    protected function getListQuery()
+    {
+        $query = $this->getDbo()->getQuery(true);
+        $query->select('*');
+        $query->from('#__jlcontentfieldsfilter_data');
+        return $query;
+    }
 
-
-	/**
-	 * Get category options for select field
-	 *
-	 * @return  string  HTML options for category select
-	 *
-	 * @since   1.0.0
-	 */
-	public function getCategoryOptions()
+    /**
+     * Get category options for select field.
+     *
+     * @return string HTML options for category select
+     *
+     * @since   1.0.0
+     */
+    public function getCategoryOptions()
     {
         $categoryOptions = HTMLHelper::_(
             'select.options',
             HTMLHelper::_('category.options', 'com_content'),
             'value',
             'text',
-			['class'=>'form-select'],
+            ['class' => 'form-select'],
             0
         );
         return $categoryOptions;

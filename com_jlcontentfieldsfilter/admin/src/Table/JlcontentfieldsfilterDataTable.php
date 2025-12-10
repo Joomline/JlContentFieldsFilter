@@ -1,6 +1,7 @@
 <?php
+
 /**
- * JL Content Fields Filter
+ * JL Content Fields Filter.
  *
  * @version 	@version@
  * @author		Joomline
@@ -18,81 +19,75 @@ use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 // phpcs:disable PSR1.Files.SideEffects
-\defined( '_JEXEC' ) or die;
+\defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
- * Table class for jlcontentfieldsfilter data
+ * Table class for jlcontentfieldsfilter data.
  *
  * @since  1.0.0
  */
 class JlcontentfieldsfilterDataTable extends Table
 {
+    /**
+     * Class constructor.
+     *
+     * @param DatabaseInterface $db Database driver
+     *
+     * @since   1.0.0
+     */
+    public function __construct(DatabaseInterface $db)
+    {
+        parent::__construct('#__jlcontentfieldsfilter_data', 'id', $db);
+    }
 
-	/**
-	 * Class constructor
-	 *
-	 * @param   DatabaseInterface  $db  Database driver
-	 *
-	 * @since   1.0.0
-	 */
-	public function __construct(DatabaseInterface $db)
-	{
-		parent::__construct('#__jlcontentfieldsfilter_data', 'id', $db);
-	}
+    /**
+     * Method for loading data into the object field.
+     *
+     * @param array $array Array of data to bind
+     * @param string $ignore Fields to ignore
+     *
+     * @return bool True on success
+     *
+     * @since   1.0.0
+     */
+    public function bind($array, $ignore = '')
+    {
+        if (empty($array['created_by'])) {
+            $user                = Factory::getApplication()->getIdentity();
+            $array['created_by'] = $user->id;
+        }
+        if (empty($array['created'])) {
+            $array['created'] = date('Y-m-d H:i:s');
+        }
+        if (isset($array['rules']) && \is_array($array['rules'])) {
+            $rules = new Rules($array['rules']);
+            $this->setRules($rules);
+        }
+        $array['alias'] = ApplicationHelper::stringURLSafe($array['alias']);
+        if (trim(str_replace('-', '', $array['alias'])) == '') {
+            $array['alias'] = ApplicationHelper::stringURLSafe($array['title']);
+        }
 
-	/**
-	 * Method for loading data into the object field
-	 *
-	 * @param   array   $array   Array of data to bind
-	 * @param   string  $ignore  Fields to ignore
-	 *
-	 * @return  boolean  True on success
-	 *
-	 * @since   1.0.0
-	 */
-	public function bind( $array, $ignore = '' )
-	{
-		if ( empty( $array['created_by'] ) ) {
-			$user = Factory::getApplication()->getIdentity();
-			$array['created_by'] = $user->id;
-		}
-		if ( empty( $array['created'] ) ) {
-			$array['created'] = date( 'Y-m-d H:i:s' );
-		}
-		if ( isset( $array['rules'] ) && is_array( $array['rules'] ) ) {
-			$rules = new Rules( $array['rules'] );
-			$this->setRules( $rules );
-		}
-		$array['alias'] = ApplicationHelper::stringURLSafe( $array['alias'] );
-		if ( trim( str_replace( '-', '', $array['alias'] ) ) == '' ) {
-			$array['alias'] = ApplicationHelper::stringURLSafe( $array['title'] );
-		}
+        if (isset($array['text'])) {
+            $pattern = '#<hr\s+id=("|\')system-readmore("|\')\s*\/*>#i';
+            $tagPos  = preg_match($pattern, $array['text']);
 
-		if ( isset( $array['text'] ) )
-		{
-			$pattern = '#<hr\s+id=("|\')system-readmore("|\')\s*\/*>#i';
-			$tagPos = preg_match($pattern, $array['text'] );
+            if ($tagPos == 0) {
+                $this->introtext = $array['text'];
+                $this->fulltext  = '';
+            } else {
+                list($this->introtext, $this->fulltext) = preg_split($pattern, $array['text'], 2);
+            }
+        }
 
-			if ($tagPos == 0)
-			{
-				$this->introtext = $array['text'];
-				$this->fulltext = '';
-			}
-			else
-			{
-				list ($this->introtext, $this->fulltext) = preg_split( $pattern, $array['text'], 2 );
-			}
-		}
+        if (isset($array['params']) && \is_array($array['params'])) {
+            $registry = new Registry();
+            $registry->loadArray($array['params']);
+            $array['params'] = (string) $registry;
+        }
 
-		if ( isset( $array['params'] ) && is_array( $array['params'] ) )
-		{
-			$registry = new Registry;
-			$registry->loadArray( $array['params'] );
-			$array['params'] = (string) $registry;
-		}
-
-		return parent::bind( $array, $ignore );
-	}
+        return parent::bind($array, $ignore);
+    }
 
 }

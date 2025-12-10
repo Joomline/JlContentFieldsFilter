@@ -15,7 +15,7 @@
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
- * Script file of jlcontentfieldsfilter plugin
+ * Script file of jlcontentfieldsfilter plugin.
  *
  * @since  1.0.0
  */
@@ -24,9 +24,9 @@ class plgSystemJlcontentfieldsfilterInstallerScript
     /**
      * Method to update the component.
      *
-     * @param   object  $parent  The class calling this method.
+     * @param object $parent The class calling this method.
      *
-     * @return  void
+     * @return void
      *
      * @since   1.0.0
      */
@@ -38,9 +38,9 @@ class plgSystemJlcontentfieldsfilterInstallerScript
     /**
      * Method to install the component.
      *
-     * @param   object  $parent  The class calling this method.
+     * @param object $parent The class calling this method.
      *
-     * @return  void
+     * @return void
      *
      * @since   1.0.0
      */
@@ -52,9 +52,9 @@ class plgSystemJlcontentfieldsfilterInstallerScript
     /**
      * Method to uninstall the component.
      *
-     * @param   object  $parent  The class calling this method.
+     * @param object $parent The class calling this method.
      *
-     * @return  void
+     * @return void
      *
      * @since   1.0.0
      */
@@ -66,10 +66,10 @@ class plgSystemJlcontentfieldsfilterInstallerScript
     /**
      * Method executed before install/update/uninstall.
      *
-     * @param   string  $type    The type of change: install, update or discover_install.
-     * @param   object  $parent  The class calling this method.
+     * @param string $type The type of change: install, update or discover_install.
+     * @param object $parent The class calling this method.
      *
-     * @return  void
+     * @return void
      *
      * @since   1.0.0
      */
@@ -81,23 +81,23 @@ class plgSystemJlcontentfieldsfilterInstallerScript
     /**
      * Method executed after install/update/uninstall.
      *
-     * @param   string  $type    The type of change: install, update or discover_install.
-     * @param   object  $parent  The class calling this method.
+     * @param string $type The type of change: install, update or discover_install.
+     * @param object $parent The class calling this method.
      *
-     * @return  void
+     * @return void
      *
      * @since   1.0.0
      */
     public function postflight($type, $parent)
     {
-    	$db = \Joomla\CMS\Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
-    	$query = $db->getQuery(true);
-    	$query->update('#__extensions')
-	          ->set('enabled = 1')
-	          ->where('element = '.$db->quote('jlcontentfieldsfilter'))
-	          ->where('type = '.$db->quote('plugin'))
-	          ->where('folder = '.$db->quote('system'))
-	    ;
+        $db    = \Joomla\CMS\Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
+        $query = $db->getQuery(true);
+        $query->update('#__extensions')
+              ->set('enabled = 1')
+              ->where('element = '.$db->quote('jlcontentfieldsfilter'))
+              ->where('type = '.$db->quote('plugin'))
+              ->where('folder = '.$db->quote('system'))
+        ;
         $db->setQuery($query)->execute();
     }
 }
