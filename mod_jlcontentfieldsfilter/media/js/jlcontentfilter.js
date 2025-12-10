@@ -43,13 +43,33 @@ var JlContentFieldsFilter = {
             .not('[type="button"], [type="submit"], [type="reset"], [type="hidden"]')
             .removeAttr('checked')
             .removeAttr('selected');
-        form.find('input[type="text"]').val('');
+        
+        // Clear text inputs that are NOT part of range sliders
+        form.find('input[type="text"]').not('.range-sliders input[type="text"]').val('');
         form.find('select').prop('selectedIndex', 0);
+        
+        // Reset noUiSlider ranges to min/max values and update their inputs
+        form.find('.jlmf-range').each(function() {
+            var slider = this.noUiSlider;
+            if (slider) {
+                var container = jQuery(this).closest('.range-sliders');
+                var inputMin = container.find('.input-min');
+                var inputMax = container.find('.input-max');
+                var min = parseInt(jQuery(this).attr('data-min'));
+                var max = parseInt(jQuery(this).attr('data-max'));
+                if (!isNaN(min) && !isNaN(max)) {
+                    inputMin.val(min);
+                    inputMax.val(max);
+                    slider.set([min, max]);
+                }
+            }
+        });
+        
         if (params.ajax === 1 && params.autho_send === 1) {
             this.loadData(id);
         }
         else if (params.autho_send === 1) {
-            jQuery(id).submit();
+            form.submit();
         }
         return false;
     },

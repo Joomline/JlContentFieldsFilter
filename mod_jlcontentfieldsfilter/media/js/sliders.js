@@ -86,24 +86,4 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
 
-    links.addEventListener("click", function () {
-        for (let i=0;i<range.length;i++) {
-            let container = range[i].closest('.range-sliders'),
-            inputMin = container.querySelector(".input-min"),
-            inputMax = container.querySelector(".input-max"),
-            min = parseInt(range[i].getAttribute('data-min')),
-            max = parseInt(range[i].getAttribute('data-max'));
-
-            if(!isNaN(min) && !isNaN(max)) {
-                inputMin.value = min;
-                inputMax.value = max;
-
-                sliders[i].updateOptions({
-                    start: [min, max]
-                });
-            }
-
-        }
-    });
-
 });
