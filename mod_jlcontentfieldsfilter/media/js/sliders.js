@@ -34,6 +34,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 inputMax.value = Math.round(values[1]);
             });
 
+            sliders[i].on('change', function (values, handle, unencoded, tap, positions) {
+                inputMin.value = Math.round(values[0]);
+                inputMax.value = Math.round(values[1]);
+                // Trigger keyup event for auto-send functionality (text inputs use keyup in jlcontentfilter.js)
+                inputMin.dispatchEvent(new Event('keyup', { bubbles: true }));
+            });
+
             inputMin.addEventListener('change', function () {
                 let currentLeft = parseInt(this.value),
                 currentRight = parseInt(inputMax.value);
