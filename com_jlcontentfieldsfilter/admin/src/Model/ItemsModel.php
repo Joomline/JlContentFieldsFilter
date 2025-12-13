@@ -29,13 +29,13 @@ class ItemsModel extends ListModel
     /**
      * Build the query to get the list of records.
      *
-     * @return JDatabaseQuery The database query object.
+     * @return \Joomla\Database\QueryInterface The database query object.
      *
      * @since   1.0.0
      */
     protected function getListQuery()
     {
-        $query = $this->getDbo()->getQuery(true);
+        $query = $this->getDatabase()->getQuery(true);
         $query->select('*');
         $query->from('#__jlcontentfieldsfilter_data');
         return $query;

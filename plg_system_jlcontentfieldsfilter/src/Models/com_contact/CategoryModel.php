@@ -162,7 +162,7 @@ class CategoryModel extends ListModel
         $groups = $user->getAuthorisedViewLevels();
 
         // Create a new query object.
-        $query = $db->createQuery();
+        $db = $this->getDatabase();
 
         /** @var \Joomla\Database\DatabaseQuery $query */
         $query = $db->getQuery(true);
@@ -265,9 +265,13 @@ class CategoryModel extends ListModel
         if (is_numeric($articleId)) {
             $query->where('a.id = ' . (int) $articleId);
         } elseif (\is_array($articleId) && \count($articleId)) {
+            // Security: Sanitize array and remove zeros to prevent SQL injection
             $articleId = ArrayHelper::toInteger($articleId);
-            $articleId = implode(',', $articleId);
-            $query->where('a.id IN (' . $articleId . ')');
+            $articleId = array_filter($articleId); // Remove zeros
+
+            if (!empty($articleId)) {
+                $query->where('a.id IN (' . implode(',', $articleId) . ')');
+            }
         }
         //Joomline hack end
 

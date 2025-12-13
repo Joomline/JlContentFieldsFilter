@@ -76,6 +76,10 @@ class ItemsController extends BaseController
      */
     public function get_form()
     {
+        // Suppress warnings/notices to ensure clean JSON output
+        $old_error_reporting = error_reporting();
+        error_reporting(E_ERROR | E_PARSE);
+
         $fields  = [];
         $error   = 0;
         $message = '';
@@ -97,18 +101,28 @@ class ItemsController extends BaseController
                 $module = ModuleHelper::getModule('mod_jlcontentfieldsfilter');
                 $params = new Registry();
                 $params->loadString($module->params);
-                $module = $app->bootModule('mod_jlcontentfieldsfilter', 'Site');
+                $bootedModule = $app->bootModule('mod_jlcontentfieldsfilter', 'Site');
                 $lang   = $app->getLanguage();
                 $lang->load('mod_jlcontentfieldsfilter', JPATH_SITE);
-                $module_helper = $module->getHelper('JlcontentfieldsfilterHelper');
+                $module_helper = $bootedModule->getHelper('JlcontentfieldsfilterHelper');
+
                 /**
                  * Fields are pulled from the module. The method needs parameters of a specific module
                  * (actually not needed for admin), so we set any number here.
+                 * Use 1 as module ID - it's only used for layout rendering context.
                  */
-                $module->id = 1;
+                $moduleId = 1;
 
-                $fields = $module_helper->getFields($params, $cid, [], $module->id, 'com_content');
+                $fields = $module_helper->getFields($params, $cid, [], $moduleId, 'com_content');
             }
+        }
+
+        // Restore error reporting
+        error_reporting($old_error_reporting);
+
+        // Clean output buffer to remove any warnings/notices
+        if (ob_get_level()) {
+            ob_clean();
         }
 
         exit(json_encode(['error' => $error, 'message' => $message, 'fields' => $fields]));
@@ -187,7 +201,8 @@ class ItemsController extends BaseController
         $app     = Factory::getApplication();
         $id      = $app->getInput()->getInt('id', 0);
         $model   = $this->getModel();
-        $result  = $model->delete($id);
+        $pks     = [$id];
+        $result  = $model->delete($pks);
         $message = $result ? '' : 'Error delete item';
         exit(json_encode(['error' => !$result, 'message' => $message]));
     }
