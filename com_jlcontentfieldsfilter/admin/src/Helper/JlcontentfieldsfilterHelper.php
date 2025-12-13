@@ -101,8 +101,8 @@ class JlcontentfieldsfilterHelper
                     $data[] = $key . '=' . implode(',', $val);
                 }
             } else {
-                $data[] = $key . '=' . $safe ? urlencode($item) : $item;
-                ;
+                // Security: Fix operator precedence - parentheses needed for ternary operator
+                $data[] = $key . '=' . ($safe ? urlencode($item) : $item);
             }
         }
 

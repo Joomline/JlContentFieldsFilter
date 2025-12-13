@@ -218,7 +218,11 @@ class Jlcontentfieldsfilter extends CMSPlugin
                             }
                         }
                         if (\count($newVal)) {
-                            $where = '(field_id = ' . (int)$k . ' AND value IN(\'' . implode("', '", $newVal) . '\'))';
+                            // Security: Quote each value to prevent SQL injection
+                            $quotedValues = array_map(function($val) use ($db) {
+                                return $db->quote($val);
+                            }, $newVal);
+                            $where = '(field_id = ' . (int)$k . ' AND value IN(' . implode(', ', $quotedValues) . '))';
                         }
                     } elseif (!empty($v)) {
                         $where = '(field_id = ' . (int)$k . ' AND value = ' . $db->quote($v) . ')';
@@ -228,14 +232,17 @@ class Jlcontentfieldsfilter extends CMSPlugin
                     if (!empty($v)) {
                         if (\is_array($v)) {
                             if (!empty($v['from']) && !empty($v['to'])) {
-                                $where = '(field_id = ' . (int)$k . ' AND CAST(value AS SIGNED) BETWEEN ' . (int)$v['from'] . ' AND ' . $v['to'] . ')';
+                                // Security: Cast BOTH values to int to prevent SQL injection
+                                $where = '(field_id = ' . (int)$k . ' AND CAST(value AS SIGNED) BETWEEN ' . (int)$v['from'] . ' AND ' . (int)$v['to'] . ')';
                             } elseif (!empty($v['from'])) {
                                 $where = '(field_id = ' . (int)$k . ' AND CAST(value AS SIGNED) >= ' . (int)$v['from'] . ')';
                             } elseif (!empty($v['to'])) {
                                 $where = '(field_id = ' . (int)$k . ' AND CAST(value AS SIGNED) <= ' . (int)$v['to'] . ')';
                             }
                         } else {
-                            $where = '(field_id = ' . (int)$k . ' AND value LIKE ' . $db->quote('%' . $v . '%') . ')';
+                            // Security: Escape value before using in LIKE to prevent SQL injection
+                            $escapedValue = $db->escape($v);
+                            $where = '(field_id = ' . (int)$k . ' AND value LIKE ' . $db->quote('%' . $escapedValue . '%') . ')';
                         }
                     }
                     break;
