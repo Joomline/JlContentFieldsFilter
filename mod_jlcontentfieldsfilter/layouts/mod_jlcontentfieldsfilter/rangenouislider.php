@@ -1,18 +1,22 @@
 <?php
+
 /**
- * JL Content Fields Filter
+ * @package     Joomla.Site
+ * @subpackage  mod_jlcontentfieldsfilter
  *
- * @version          @version@
- * @author           Joomline
- * @copyright    (C) 2017-2020 Arkadiy Sedelnikov, Joomline. All rights reserved.
- * @license          GNU General Public License version 2 or later; see    LICENSE.txt
+ * @version     @version@
+ * @author      Joomline
+ * @copyright   (C) 2017-2023 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-defined('_JEXEC') or die;
-
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 if (!key_exists('field', $displayData))
 {

@@ -76,7 +76,7 @@ window.addEventListener("load", function(event) {
                         }
                         else{
                             $this.fields = response.data.fields;
-                            $this.button = '<br><button class="btn btn-primary btn-sm">Отобрать</button>';
+                            $this.button = '<br><button class="btn btn-primary btn-sm">Apply</button>';
                         }
                     })
                     .catch(function (error) {

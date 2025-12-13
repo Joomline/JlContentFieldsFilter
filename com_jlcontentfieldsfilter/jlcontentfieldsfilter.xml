@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="3.8.0" method="upgrade">
     <name>com_jlcontentfieldsfilter</name>
     <author>Joomline</author>
@@ -9,33 +9,44 @@
     <version>@version@</version>
     <description>COM_JLCONTENTFIELDSFILTER_DESC</description>
     <creationDate>@date@</creationDate>
+
+    <namespace path="src">Joomla\Component\Jlcontentfieldsfilter</namespace>
+
     <install>
         <sql>
             <file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
         </sql>
     </install>
+
     <uninstall>
         <sql>
             <file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
         </sql>
     </uninstall>
+
     <administration>
         <menu>COM_JLCONTENTFIELDSFILTER</menu>
+
         <files folder="admin">
-            <folder>assets</folder>
-            <folder>controllers</folder>
-            <folder>helpers</folder>
-            <folder>language</folder>
-            <folder>models</folder>
-            <folder>sql</folder>
-            <folder>tables</folder>
-            <folder>views</folder>
             <filename>access.xml</filename>
             <filename>config.xml</filename>
-            <filename>controller.php</filename>
-            <filename>index.html</filename>
-            <filename>jlcontentfieldsfilter.php</filename>
+            <folder>language</folder>
+            <folder>services</folder>
+            <folder>sql</folder>
+            <folder>src</folder>
+            <folder>tmpl</folder>
         </files>
     </administration>
-	<updateservers><server type="extension" priority="1" name="JL Content Fields Filter">https://joomline.net/update.html?extension_id=78.xml</server></updateservers>
+
+    <media folder="media/com_jlcontentfieldsfilter" destination="com_jlcontentfieldsfilter">
+        <folder>css</folder>
+        <folder>js</folder>
+    </media>
+
+	<updateservers>
+        <server type="extension" priority="1" name="JL Content Fields Filter">
+            https://joomline.net/update.html?extension_id=78.xml
+        </server>
+    </updateservers>
+
 </extension>

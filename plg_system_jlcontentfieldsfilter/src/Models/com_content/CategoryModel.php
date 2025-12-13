@@ -14,8 +14,9 @@ use Joomla\CMS\Categories\Categories;
 use Joomla\CMS\Categories\CategoryNode;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
+use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\MVC\Model\ListModel;
-use Joomla\CMS\Table\Table;
+use Joomla\CMS\Table\Category;
 use Joomla\Component\Content\Site\Helper\QueryHelper;
 use Joomla\Utilities\ArrayHelper;
 
@@ -32,67 +33,68 @@ use Joomla\Utilities\ArrayHelper;
 class CategoryModel extends ListModel
 {
     /**
-     * Category items data
+     * Category items data.
      *
-     * @var  array
+     * @var array
      */
     protected $_item = null;
 
     /**
-     * Array of articles in the category
+     * Array of articles in the category.
      *
      * @var \stdClass[]
      */
     protected $_articles = null;
 
     /**
-     * Category left and right of this one
+     * Category left and right of this one.
      *
-     * @var  CategoryNode[]|null
+     * @var CategoryNode[]|null
      */
     protected $_siblings = null;
 
     /**
-     * Array of child-categories
+     * Array of child-categories.
      *
-     * @var  CategoryNode[]|null
+     * @var CategoryNode[]|null
      */
     protected $_children = null;
 
     /**
-     * Parent category of the current one
+     * Parent category of the current one.
      *
-     * @var  CategoryNode|null
+     * @var CategoryNode|null
      */
     protected $_parent = null;
 
     /**
      * Model context string.
      *
-     * @var  string
+     * @var string
      */
     protected $_context = 'com_content.category';
 
     /**
      * The category that applies.
      *
-     * @var  object
+     * @var object
      */
     protected $_category = null;
 
     /**
      * The list of categories.
      *
-     * @var  array
+     * @var array
      */
     protected $_categories = null;
 
     /**
-     * @param   array  $config  An optional associative array of configuration settings.
+     * @param array $config An optional associative array of configuration settings.
+     * @param ?MVCFactoryInterface $factory The factory.
      *
      * @since   1.6
      */
-    public function __construct($config = [])
+    public function __construct($config = [], ?MVCFactoryInterface $factory = null)
     {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = [
@@ -118,7 +120,7 @@ class CategoryModel extends ListModel
             ];
         }
 
-        parent::__construct($config);
+        parent::__construct($config, $factory);
     }
 
     /**
@@ -126,10 +128,10 @@ class CategoryModel extends ListModel
      *
      * Note. Calling getState in this method will result in recursion.
      *
-     * @param   string  $ordering   The field to order on.
-     * @param   string  $direction  The direction to order on.
+     * @param string $ordering The field to order on.
+     * @param string $direction The direction to order on.
      *
-     * @return  void
+     * @return void
      *
      * @since   1.6
      */
@@ -177,7 +179,7 @@ class CategoryModel extends ListModel
         // Filter.order
         $orderCol = $app->getUserStateFromRequest('com_content.category.list.' . $itemid . '.filter_order', 'filter_order', '', 'string');
 
-        if (!in_array($orderCol, $this->filter_fields)) {
+        if (!\in_array($orderCol, $this->filter_fields)) {
             $orderCol = 'a.ordering';
         }
 
@@ -185,7 +187,7 @@ class CategoryModel extends ListModel
 
         $listOrder = $app->getUserStateFromRequest('com_content.category.list.' . $itemid . '.filter_order_Dir', 'filter_order_Dir', '', 'cmd');
 
-        if (!in_array(strtoupper($listOrder), ['ASC', 'DESC', ''])) {
+        if (!\in_array(strtoupper($listOrder), ['ASC', 'DESC', ''])) {
             $listOrder = 'ASC';
         }
 
@@ -218,18 +220,18 @@ class CategoryModel extends ListModel
         // Set the featured articles state
         $this->setState('filter.featured', $params->get('show_featured'));
 
-	    //Joomline hack start
-	    $value = $this->getUserStateFromRequest('com_content.category.list.' . $itemid . 'filter.article_id_include', 'filter_article_id_include', false, 'boolen');
-	    $this->setState('filter.article_id.include', $value);
-	    $value = $this->getUserStateFromRequest('com_content.category.list.' . $itemid . 'filter.article_id', 'filter_article_id', null, 'array');
-	    $this->setState('filter.article_id', $value);
-	    //Joomline hack end
+        //Joomline hack start
+        $value = $this->getUserStateFromRequest('com_content.category.list.' . $itemid . 'filter.article_id_include', 'filter_article_id_include', false, 'boolen');
+        $this->setState('filter.article_id.include', $value);
+        $value = $this->getUserStateFromRequest('com_content.category.list.' . $itemid . 'filter.article_id', 'filter_article_id', null, 'array');
+        $this->setState('filter.article_id', $value);
+        //Joomline hack end
     }
 
     /**
-     * Get the articles in the category
+     * Get the articles in the category.
      *
-     * @return  array|bool  An array of articles or false if an error occurs.
+     * @return array|bool An array of articles or false if an error occurs.
      *
      * @since   1.5
      */
@@ -258,10 +260,10 @@ class CategoryModel extends ListModel
             $model->setState('filter.max_category_levels', $this->getState('filter.max_category_levels'));
             $model->setState('list.links', $this->getState('list.links'));
 
-	        //Joomline hack start
-	        $model->setState('filter.article_id.include', $this->getState('filter.article_id.include'));
-	        $model->setState('filter.article_id', $this->getState('filter.article_id'));
-	        //Joomline hack end
+            //Joomline hack start
+            $model->setState('filter.article_id.include', $this->getState('filter.article_id.include'));
+            $model->setState('filter.article_id', $this->getState('filter.article_id'));
+            //Joomline hack end
 
             if ($limit >= 0) {
                 $this->_articles = $model->getItems();
@@ -280,9 +282,9 @@ class CategoryModel extends ListModel
     }
 
     /**
-     * Build the orderby for the query
+     * Build the orderby for the query.
      *
-     * @return  string  $orderby portion of query
+     * @return string $orderby portion of query
      *
      * @since   1.5
      */
@@ -290,17 +292,17 @@ class CategoryModel extends ListModel
     {
         $app       = Factory::getApplication();
         $db        = $this->getDatabase();
-        $params    = $this->state->params;
+        $params    = $this->state->get('params');
         $itemid    = $app->getInput()->get('id', 0, 'int') . ':' . $app->getInput()->get('Itemid', 0, 'int');
         $orderCol  = $app->getUserStateFromRequest('com_content.category.list.' . $itemid . '.filter_order', 'filter_order', '', 'string');
         $orderDirn = $app->getUserStateFromRequest('com_content.category.list.' . $itemid . '.filter_order_Dir', 'filter_order_Dir', '', 'cmd');
         $orderby   = ' ';
 
-        if (!in_array($orderCol, $this->filter_fields)) {
+        if (!\in_array($orderCol, $this->filter_fields)) {
             $orderCol = null;
         }
 
-        if (!in_array(strtoupper($orderDirn), ['ASC', 'DESC', ''])) {
+        if (!\in_array(strtoupper($orderDirn), ['ASC', 'DESC', ''])) {
             $orderDirn = 'ASC';
         }
 
@@ -322,7 +324,7 @@ class CategoryModel extends ListModel
     /**
      * Method to get a JPagination object for the data set.
      *
-     * @return  \Joomla\CMS\Pagination\Pagination  A JPagination object for the data set.
+     * @return \Joomla\CMS\Pagination\Pagination A JPagination object for the data set.
      *
      * @since   3.0.1
      */
@@ -336,17 +338,17 @@ class CategoryModel extends ListModel
     }
 
     /**
-     * Method to get category data for the current category
+     * Method to get category data for the current category.
      *
-     * @return  object
+     * @return object
      *
      * @since   1.5
      */
     public function getCategory()
     {
-        if (!is_object($this->_item)) {
-            if (isset($this->state->params)) {
-                $params                = $this->state->params;
+        if (!\is_object($this->_item)) {
+            if (isset($this->state) && !empty($this->state->get('params'))) {
+                $params                = $this->state->get('params');
                 $options               = [];
                 $options['countItems'] = $params->get('show_cat_num_articles', 1) || !$params->get('show_empty_categories_cat', 0);
                 $options['access']     = $params->get('check_access_rights', 1);
@@ -358,7 +360,7 @@ class CategoryModel extends ListModel
             $this->_item = $categories->get($this->getState('category.id', 'root'));
 
             // Compute selected asset permissions.
-            if (is_object($this->_item)) {
+            if (\is_object($this->_item)) {
                 $user  = $this->getCurrentUser();
                 $asset = 'com_content.category.' . $this->_item->id;
 
@@ -389,13 +391,13 @@ class CategoryModel extends ListModel
     /**
      * Get the parent category.
      *
-     * @return  mixed  An array of categories or false if an error occurs.
+     * @return mixed An array of categories or false if an error occurs.
      *
      * @since   1.6
      */
     public function getParent()
     {
-        if (!is_object($this->_item)) {
+        if (!\is_object($this->_item)) {
             $this->getCategory();
         }
 
@@ -405,13 +407,13 @@ class CategoryModel extends ListModel
     /**
      * Get the left sibling (adjacent) categories.
      *
-     * @return  mixed  An array of categories or false if an error occurs.
+     * @return mixed An array of categories or false if an error occurs.
      *
      * @since   1.6
      */
     public function &getLeftSibling()
     {
-        if (!is_object($this->_item)) {
+        if (!\is_object($this->_item)) {
             $this->getCategory();
         }
 
@@ -421,13 +423,13 @@ class CategoryModel extends ListModel
     /**
      * Get the right sibling (adjacent) categories.
      *
-     * @return  mixed  An array of categories or false if an error occurs.
+     * @return mixed An array of categories or false if an error occurs.
      *
      * @since   1.6
      */
     public function &getRightSibling()
     {
-        if (!is_object($this->_item)) {
+        if (!\is_object($this->_item)) {
             $this->getCategory();
         }
 
@@ -437,13 +439,13 @@ class CategoryModel extends ListModel
     /**
      * Get the child categories.
      *
-     * @return  mixed  An array of categories or false if an error occurs.
+     * @return mixed An array of categories or false if an error occurs.
      *
      * @since   1.6
      */
     public function &getChildren()
     {
-        if (!is_object($this->_item)) {
+        if (!\is_object($this->_item)) {
             $this->getCategory();
         }
 
@@ -464,9 +466,9 @@ class CategoryModel extends ListModel
     /**
      * Increment the hit counter for the category.
      *
-     * @param   int  $pk  Optional primary key of the category to increment.
+     * @param int $pk Optional primary key of the category to increment.
      *
-     * @return  boolean True if successful; false otherwise and internal error set.
+     * @return bool True if successful; false otherwise and internal error set.
      */
     public function hit($pk = 0)
     {
@@ -476,7 +478,7 @@ class CategoryModel extends ListModel
         if ($hitcount) {
             $pk = (!empty($pk)) ? $pk : (int) $this->getState('category.id');
 
-            $table = Table::getInstance('Category', 'JTable');
+            $table = new Category($this->getDatabase());
             $table->hit($pk);
         }
 

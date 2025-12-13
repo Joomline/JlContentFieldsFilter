@@ -1,12 +1,20 @@
 <?php
+
 /**
- * JL Content Fields Filter
+ * @package     Joomla.Site
+ * @subpackage  mod_jlcontentfieldsfilter
  *
- * @version          @version@
- * @author           Joomline
- * @copyright  (C) 2017-2023 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
- * @license          GNU General Public License version 2 or later; see    LICENSE.txt
+ * @version     @version@
+ * @author      Joomline
+ * @copyright   (C) 2017-2023 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
+
+use Joomla\CMS\Language\Text;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 /**
  * @var $module object. From there you can take the module id ($module->id), the module title, its position, etc.
@@ -15,10 +23,6 @@
  * @var $params object - module parameters. We get them as before: $params->get('param_name' , 'default_value_if_value_is_empty'). We collect these parameters using various types of Joomla fields in the module's xml manifest.
  * @var $template object - parameters of the style settings of the current template. Joomla templates have templateDetails.xml in which you can set various template parameters: logos, fonts, custom scripts in <head> and <body> and whatever your heart desires. Now in the module you have the opportunity to access these parameters without unnecessary movements. However, it is worth remembering that many studio templates (JoomShaper Helix and others like them) do not use a standard parameter storage location, so it may be empty there.
  */
-
-use Joomla\CMS\Language\Text;
-
-defined('_JEXEC') or die;
 
 if(empty($fields)){
 	return '';

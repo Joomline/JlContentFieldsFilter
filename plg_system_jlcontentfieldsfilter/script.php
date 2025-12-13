@@ -1,23 +1,34 @@
 <?php
-/**
- * JL Content Fields Filter
- *
- * @version 	@version@
- * @author		Joomline
- * @copyright  (C) 2017-2023 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
- * @license 	GNU General Public License version 2 or later; see	LICENSE.txt
- */
-// Запрет прямого доступа.
-defined('_JEXEC') or die;
 
+/**
+ * @package     Joomla.Plugin
+ * @subpackage  System.jlcontentfieldsfilter
+ *
+ * @version     @version@
+ * @author      Joomline
+ * @copyright   (C) 2017-2023 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ */
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
+/**
+ * Script file of jlcontentfieldsfilter plugin.
+ *
+ * @since  1.0.0
+ */
 class plgSystemJlcontentfieldsfilterInstallerScript
 {
     /**
-     * Метод для обновления компонента.
+     * Method to update the component.
      *
-     * @param   object  $parent  Класс, который вызывает этом метод.
+     * @param object $parent The class calling this method.
      *
-     * @return  void
+     * @return void
+     *
+     * @since   1.0.0
      */
     public function update($parent)
     {
@@ -25,11 +36,13 @@ class plgSystemJlcontentfieldsfilterInstallerScript
     }
 
     /**
-     * Метод для установки компонента.
+     * Method to install the component.
      *
-     * @param   object  $parent  Класс, который вызывает этом метод.
+     * @param object $parent The class calling this method.
      *
-     * @return  void
+     * @return void
+     *
+     * @since   1.0.0
      */
     public function install($parent)
     {
@@ -37,11 +50,13 @@ class plgSystemJlcontentfieldsfilterInstallerScript
     }
 
     /**
-     * Метод для удаления компонента.
+     * Method to uninstall the component.
      *
-     * @param   object  $parent  Класс, который вызывает этом метод.
+     * @param object $parent The class calling this method.
      *
-     * @return  void
+     * @return void
+     *
+     * @since   1.0.0
      */
     public function uninstall($parent)
     {
@@ -49,12 +64,14 @@ class plgSystemJlcontentfieldsfilterInstallerScript
     }
 
     /**
-     * Метод, который исполняется до install/update/uninstall.
+     * Method executed before install/update/uninstall.
      *
-     * @param   object  $type    Тип изменений: install, update или discover_install
-     * @param   object  $parent  Класс, который вызывает этом метод. Класс, который вызывает этом метод.
+     * @param string $type The type of change: install, update or discover_install.
+     * @param object $parent The class calling this method.
      *
-     * @return  void
+     * @return void
+     *
+     * @since   1.0.0
      */
     public function preflight($type, $parent)
     {
@@ -62,23 +79,25 @@ class plgSystemJlcontentfieldsfilterInstallerScript
     }
 
     /**
-     * Метод, который исполняется после install/update/uninstall.
+     * Method executed after install/update/uninstall.
      *
-     * @param   object  $type    Тип изменений: install, update или discover_install
-     * @param   object  $parent  Класс, который вызывает этом метод. Класс, который вызывает этом метод.
+     * @param string $type The type of change: install, update or discover_install.
+     * @param object $parent The class calling this method.
      *
-     * @return  void
+     * @return void
+     *
+     * @since   1.0.0
      */
     public function postflight($type, $parent)
     {
-    	$db = \Joomla\CMS\Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
-    	$query = $db->getQuery(true);
-    	$query->update('#__extensions')
-	          ->set('enabled = 1')
-	          ->where('element = '.$db->quote('jlcontentfieldsfilter'))
-	          ->where('type = '.$db->quote('plugin'))
-	          ->where('folder = '.$db->quote('system'))
-	    ;
+        $db    = \Joomla\CMS\Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
+        $query = $db->getQuery(true);
+        $query->update('#__extensions')
+              ->set('enabled = 1')
+              ->where('element = '.$db->quote('jlcontentfieldsfilter'))
+              ->where('type = '.$db->quote('plugin'))
+              ->where('folder = '.$db->quote('system'))
+        ;
         $db->setQuery($query)->execute();
     }
 }

@@ -34,6 +34,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 inputMax.value = Math.round(values[1]);
             });
 
+            sliders[i].on('change', function (values, handle, unencoded, tap, positions) {
+                inputMin.value = Math.round(values[0]);
+                inputMax.value = Math.round(values[1]);
+                // Trigger keyup event for auto-send functionality (text inputs use keyup in jlcontentfilter.js)
+                inputMin.dispatchEvent(new Event('keyup', { bubbles: true }));
+            });
+
             inputMin.addEventListener('change', function () {
                 let currentLeft = parseInt(this.value),
                 currentRight = parseInt(inputMax.value);
@@ -78,25 +85,5 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
     }
-
-    links.addEventListener("click", function () {
-        for (let i=0;i<range.length;i++) {
-            let container = range[i].closest('.range-sliders'),
-            inputMin = container.querySelector(".input-min"),
-            inputMax = container.querySelector(".input-max"),
-            min = parseInt(range[i].getAttribute('data-min')),
-            max = parseInt(range[i].getAttribute('data-max'));
-
-            if(!isNaN(min) && !isNaN(max)) {
-                inputMin.value = min;
-                inputMax.value = max;
-
-                sliders[i].updateOptions({
-                    start: [min, max]
-                });
-            }
-
-        }
-    });
 
 });

@@ -6,7 +6,7 @@ var JlContentFieldsFilter = {
             autho_send: typeof data.autho_send !== 'undefined' ? data.autho_send : 0,
             ajax: typeof data.ajax !== 'undefined' ? data.ajax : 0,
             ajax_selector: typeof data.ajax_selector !== 'undefined' ? data.ajax_selector : '#content',
-            ajax_loader: typeof data.ajax_loader !== 'undefined' && data.ajax_loader != '' ? data.ajax_loader : '/modules/mod_jlcontentfieldsfilter/assets/images/ajax_loader.gif',
+            ajax_loader: typeof data.ajax_loader !== 'undefined' && data.ajax_loader != '' ? data.ajax_loader : '/media/mod_jlcontentfieldsfilter/images/ajax_loader.gif',
             ajax_loader_width: typeof data.ajax_loader_width !== 'undefined' ? data.ajax_loader_width : 32
         };
         var $this = this;
@@ -43,13 +43,33 @@ var JlContentFieldsFilter = {
             .not('[type="button"], [type="submit"], [type="reset"], [type="hidden"]')
             .removeAttr('checked')
             .removeAttr('selected');
-        form.find('input[type="text"]').val('');
+        
+        // Clear text inputs that are NOT part of range sliders
+        form.find('input[type="text"]').not('.range-sliders input[type="text"]').val('');
         form.find('select').prop('selectedIndex', 0);
+        
+        // Reset noUiSlider ranges to min/max values and update their inputs
+        form.find('.jlmf-range').each(function() {
+            var slider = this.noUiSlider;
+            if (slider) {
+                var container = jQuery(this).closest('.range-sliders');
+                var inputMin = container.find('.input-min');
+                var inputMax = container.find('.input-max');
+                var min = parseInt(jQuery(this).attr('data-min'));
+                var max = parseInt(jQuery(this).attr('data-max'));
+                if (!isNaN(min) && !isNaN(max)) {
+                    inputMin.val(min);
+                    inputMax.val(max);
+                    slider.set([min, max]);
+                }
+            }
+        });
+        
         if (params.ajax === 1 && params.autho_send === 1) {
             this.loadData(id);
         }
         else if (params.autho_send === 1) {
-            jQuery(id).submit();
+            form.submit();
         }
         return false;
     },
@@ -92,7 +112,7 @@ var JlContentFieldsFilter = {
         var fade_div = jQuery("#id_admin_forms_fade");
 
         if (fade_div.length == 0) {
-            // Создаем div
+            // Create div
             fade_div = jQuery('<div></div>')
                 .appendTo(document.body)
                 .hide()
