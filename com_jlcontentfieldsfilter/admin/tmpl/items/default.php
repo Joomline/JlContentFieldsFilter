@@ -45,8 +45,8 @@ $doc->addStyleSheet(Uri::root() . 'media/com_jlcontentfieldsfilter/css/style.css
                                 <span v-html="field"></span>
                             </li>
 
-                            <li>
-                                <span v-html="button"></span>
+                            <li v-if="cid">
+                                <br><button type="submit" class="btn btn-primary btn-sm">Apply</button>
                             </li>
                         </ul>
                     </div>
@@ -67,7 +67,7 @@ $doc->addStyleSheet(Uri::root() . 'media/com_jlcontentfieldsfilter/css/style.css
             <h3 slot="header">Edit item</h3>
             <div slot="body">
                 <input type="hidden" name="id" v-bind:value="id">
-                <!--            <input type="hidden" name="cid" v-bind:value="cid">-->
+                <input type="hidden" name="cid" v-bind:value="cid">
                 <div class="mb-3">
                     <label class="form-label" for="meta_title">Title</label>
                     <input type="text" name="meta_title" id="meta_title" class="form-control" v-bind:value="title">

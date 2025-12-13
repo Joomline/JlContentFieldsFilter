@@ -61,6 +61,7 @@ window.addEventListener("load", function(event) {
         },
         methods: {
             loadFilter: function () {
+                console.log('loadFilter called, cid:', this.cid);
                 var $this = this;
                 if(this.cid == ''){
                     this.form = '';
@@ -68,19 +69,22 @@ window.addEventListener("load", function(event) {
                     return;
                 }
 
+                console.log('Fetching filters from:', this.getFormUrl+this.cid);
                 axios.get(this.getFormUrl+this.cid)
                     .then(function (response) {
+                        console.log('get_form response:', response.data);
                         if(response.data.error){
                             alert(response.data.message);
                             $this.button = '';
                         }
                         else{
+                            console.log('Setting fields:', response.data.fields);
                             $this.fields = response.data.fields;
                             $this.button = '<br><button class="btn btn-primary btn-sm">Apply</button>';
                         }
                     })
                     .catch(function (error) {
-                        console.log(error);
+                        console.log('get_form error:', error);
                     })
                     .then(function () {
                         // always executed

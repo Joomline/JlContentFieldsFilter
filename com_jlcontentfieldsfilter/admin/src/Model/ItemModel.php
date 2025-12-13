@@ -138,4 +138,28 @@ class ItemModel extends AdminModel
         }
         return $result;
     }
+
+    /**
+     * Delete a filter item.
+     *
+     * @param array &$pks An array of record primary keys
+     *
+     * @return bool True on success, false otherwise
+     *
+     * @since   1.0.0
+     */
+    public function delete(&$pks)
+    {
+        $pks = (array) $pks;
+        $table = $this->getTable();
+
+        foreach ($pks as $i => $pk) {
+            if (!$table->delete($pk)) {
+                $this->setError($table->getError());
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

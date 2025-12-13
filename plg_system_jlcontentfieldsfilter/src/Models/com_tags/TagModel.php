@@ -165,8 +165,9 @@ class TagModel extends ListModel
         $filterArticles     = $app->getUserState($context . 'filter.article_id', []);
 
         if ($article_id_include && \is_array($filterArticles) && \count($filterArticles)) {
-            $query->where($this->_db->quoteName('m.type_alias') . ' = ' . $this->_db->quote('com_content.article'));
-            $query->where($this->_db->quoteName('m.content_item_id') . ' IN ("'.implode('","', $filterArticles).'")');
+            $db = $this->getDatabase();
+            $query->where($db->quoteName('m.type_alias') . ' = ' . $db->quote('com_content.article'));
+            $query->where($db->quoteName('m.content_item_id') . ' IN ("'.implode('","', $filterArticles).'")');
         }
         //Joomline hack end
 
