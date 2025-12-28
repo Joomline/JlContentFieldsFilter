@@ -3,7 +3,7 @@
  *
  * @version 	@version@
  * @author		Joomline
- * @copyright	(C) 2017-2020 Aleksey Morozov, Joomline. All rights reserved.
+ * @copyright	(C) 2017-2025 Aleksey Morozov, Joomline. All rights reserved.
  * @license 	GNU General Public License version 2 or later; see	LICENSE.txt
  */
 
@@ -11,7 +11,7 @@
     margin-top: 30px;
 }
 
-label.jlmf-label {
+label.jlmf-field-title {
     display: inline-block;
     padding-bottom: 5px;
     font-family: inherit;
@@ -26,7 +26,7 @@ label.jlmf-sublabel {
 	margin: 0;
 }
 
-.jlmf-label[for], .jlmf-sublabel[for] {
+.jlmf-field-title[for], .jlmf-sublabel[for] {
     cursor: pointer;
 }
 
