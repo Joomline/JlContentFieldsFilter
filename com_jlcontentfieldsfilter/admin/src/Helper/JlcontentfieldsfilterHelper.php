@@ -238,7 +238,7 @@ class JlcontentfieldsfilterHelper
         $object->meta_title    = $catName.'. '.implode('; ', $titles);
         $object->meta_desc     = $catName.'. '.implode('; ', $desc);
         $object->meta_keywords = implode(', ', $keyvords);
-        $object->publish       = 1;
+        $object->state         = 1;
 
         $db->insertObject('#__jlcontentfieldsfilter_data', $object, 'id');
 

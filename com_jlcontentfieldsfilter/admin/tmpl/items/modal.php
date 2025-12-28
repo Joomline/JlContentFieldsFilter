@@ -47,9 +47,9 @@ $listDirn = $this->escape( $this->state->get( 'list.direction' ) );
 		</div>
 		<hr class="hr-condensed" />
 		<div class="filters">
-			<select name="filter_published" class="input-medium" onchange="this.form.submit()">
+			<select name="filter_state" class="input-medium" onchange="this.form.submit()">
 				<option value=""><?php echo Text::_( 'JOPTION_SELECT_PUBLISHED' ); ?></option>
-				<?php echo HTMLHelper::_( 'select.options', HTMLHelper::_( 'jgrid.publishedOptions' ), 'value', 'text', $this->state->get( 'filter.published' ), true ); ?>
+				<?php echo HTMLHelper::_( 'select.options', HTMLHelper::_( 'jgrid.publishedOptions' ), 'value', 'text', $this->state->get( 'filter.state' ), true ); ?>
 			</select>
 		</div>
 	</fieldset>

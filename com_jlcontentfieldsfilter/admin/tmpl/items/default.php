@@ -81,9 +81,9 @@ $doc->addStyleSheet(Uri::root() . 'media/com_jlcontentfieldsfilter/css/style.css
                     <textarea name="meta_keywords" id="meta_keywords" class="form-control">{{meta_keywords}}</textarea>
                 </div>
                 <div class="mb-3 form-check form-switch">
-                    <input type="checkbox" name="publish" id="publish" class="form-check-input" value="1"
-                           v-bind:checked="publish == 1">
-                    <label class="form-check-label" for="publish">Publish</label>
+                    <input type="checkbox" name="state" id="state" class="form-check-input" value="1"
+                           v-bind:checked="state == 1">
+                    <label class="form-check-label" for="state">Published</label>
                 </div>
             </div>
             <div slot="footer">

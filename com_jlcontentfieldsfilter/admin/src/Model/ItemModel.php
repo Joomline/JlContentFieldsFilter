@@ -64,14 +64,14 @@ class ItemModel extends AdminModel
      * @param string $meta_title Meta title
      * @param string $meta_desc Meta description
      * @param string $meta_keywords Meta keywords
-     * @param int $publish Published state
+     * @param int $state Item state
      * @param array $filterData Filter data array
      *
      * @return bool True on success, false otherwise
      *
      * @since   1.0.0
      */
-    public function saveItem($id, $cid, $meta_title, $meta_desc, $meta_keywords, $publish, $filterData)
+    public function saveItem($id, $cid, $meta_title, $meta_desc, $meta_keywords, $state, $filterData)
     {
         if (!\is_array($filterData) || !\count($filterData)) {
             return false;
@@ -100,7 +100,7 @@ class ItemModel extends AdminModel
             'meta_title'    => $meta_title,
             'meta_desc'     => $meta_desc,
             'meta_keywords' => $meta_keywords,
-            'publish'       => $publish,
+            'state'         => $state,
         ];
 
         if ($id == 0) {

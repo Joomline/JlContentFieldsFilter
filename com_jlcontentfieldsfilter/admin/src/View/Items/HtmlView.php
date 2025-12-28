@@ -101,7 +101,7 @@ class HtmlView extends BaseHtmlView
     {
         return [
             'ordering'   => Text::_('JGRID_HEADING_ORDERING'),
-            'published'  => Text::_('JSTATUS'),
+            'state'      => Text::_('JSTATUS'),
             'title'      => Text::_('JGLOBAL_TITLE'),
             'created_by' => Text::_('JAUTHOR'),
             'created'    => Text::_('JDATE'),

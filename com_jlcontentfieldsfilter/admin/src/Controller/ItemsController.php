@@ -40,7 +40,7 @@ class ItemsController extends BaseController
             $config['filter_fields'] = [
                 'id', 'a.id',
                 'title', 'a.title',
-                'published', 'a.published',
+                'state', 'a.state',
                 'created', 'a.created',
             ];
         }
@@ -179,11 +179,11 @@ class ItemsController extends BaseController
         $meta_title    = $app->getInput()->getString('meta_title', '');
         $meta_desc     = $app->getInput()->getString('meta_desc', '');
         $meta_keywords = $app->getInput()->getString('meta_keywords', '');
-        $publish       = $app->getInput()->getInt('publish', 0);
+        $state         = $app->getInput()->getInt('state', 0);
         $filterData    = $app->getInput()->get('jlcontentfieldsfilter', [], 'array');
 
         $model  = $this->getModel();
-        $result = $model->saveItem($id, $cid, $meta_title, $meta_desc, $meta_keywords, $publish, $filterData);
+        $result = $model->saveItem($id, $cid, $meta_title, $meta_desc, $meta_keywords, $state, $filterData);
         exit(json_encode(['error' => !$result, 'message' => $message]));
     }
 
