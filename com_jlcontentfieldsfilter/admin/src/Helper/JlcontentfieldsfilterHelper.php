@@ -85,20 +85,29 @@ class JlcontentfieldsfilterHelper
         $data = [];
         foreach ($filter as $key => $item) {
             if (\is_array($item)) {
-                $val = [];
-                ksort($item);
-                foreach ($item as $k => $v) {
-
-                    if ($k === 'from' || $k === 'to') {
-                        continue;
+                // Special handling for range fields (from/to)
+                if (isset($item['from']) || isset($item['to'])) {
+                    // Range field: fieldid[from]=val1&fieldid[to]=val2
+                    if (!empty($item['from'])) {
+                        $val = $safe ? urlencode($item['from']) : $item['from'];
+                        $data[] = $key . '[from]=' . $val;
                     }
-
-                    if (!empty($v)) {
-                        $val[] = $safe ? urlencode($v) : $v;
+                    if (!empty($item['to'])) {
+                        $val = $safe ? urlencode($item['to']) : $item['to'];
+                        $data[] = $key . '[to]=' . $val;
                     }
-                }
-                if (\count($val)) {
-                    $data[] = $key . '=' . implode(',', $val);
+                } else {
+                    // Regular multi-value field: fieldid=val1,val2,val3
+                    $val = [];
+                    ksort($item);
+                    foreach ($item as $k => $v) {
+                        if (!empty($v)) {
+                            $val[] = $safe ? urlencode($v) : $v;
+                        }
+                    }
+                    if (\count($val)) {
+                        $data[] = $key . '=' . implode(',', $val);
+                    }
                 }
             } else {
                 // Security: Fix operator precedence - parentheses needed for ternary operator
