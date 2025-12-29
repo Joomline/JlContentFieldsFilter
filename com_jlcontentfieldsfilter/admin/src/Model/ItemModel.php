@@ -42,7 +42,29 @@ class ItemModel extends AdminModel
      */
     public function getForm($data = [], $loadData = true)
     {
+        // For now, return false as we don't use XML forms
+        // This allows the FormController to work without XML form validation
         return false;
+    }
+
+    /**
+     * Method to get the data that should be injected in the form.
+     *
+     * @return mixed The data for the form
+     *
+     * @since   1.0.0
+     */
+    protected function loadFormData()
+    {
+        // Check the session for previously entered form data
+        $app = Factory::getApplication();
+        $data = $app->getUserState('com_jlcontentfieldsfilter.edit.item.data', []);
+
+        if (empty($data)) {
+            $data = $this->getItem();
+        }
+
+        return $data;
     }
 
     /**
@@ -161,5 +183,40 @@ class ItemModel extends AdminModel
         }
 
         return true;
+    }
+
+    /**
+     * Method to get a single record.
+     *
+     * @param integer $pk The id of the primary key
+     *
+     * @return mixed Object on success, false on failure
+     *
+     * @since   1.0.0
+     */
+    public function getItem($pk = null)
+    {
+        if ($pk === null) {
+            $pk = $this->getState('item.id', 0);
+        }
+
+        $table = $this->getTable();
+
+        if ($pk > 0 && $table->load($pk)) {
+            return $table;
+        }
+
+        // Return empty object for new items
+        $item = new \stdClass();
+        $item->id = 0;
+        $item->catid = 0;
+        $item->meta_title = '';
+        $item->meta_desc = '';
+        $item->meta_keywords = '';
+        $item->filter = '';
+        $item->state = 1;
+        $item->created = '';
+
+        return $item;
     }
 }

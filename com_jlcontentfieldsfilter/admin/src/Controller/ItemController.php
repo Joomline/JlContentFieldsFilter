@@ -13,7 +13,7 @@
 namespace Joomla\Component\Jlcontentfieldsfilter\Administrator\Controller;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\MVC\Controller\BaseController;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -24,19 +24,124 @@ use Joomla\CMS\MVC\Controller\FormController;
  *
  * @since  1.0.0
  */
-class ItemController extends FormController
+class ItemController extends BaseController
 {
     /**
-     * Class constructor.
+     * The prefix to use with controller messages.
      *
-     * @param array $config Configuration array
+     * @var    string
+     * @since  1.0.0
+     */
+    protected $text_prefix = 'COM_JLCONTENTFIELDSFILTER_ITEM';
+
+    /**
+     * Method to display the view.
+     *
+     * @param boolean $cachable  If true, the view output will be cached
+     * @param array   $urlparams An array of safe URL parameters
+     *
+     * @return  BaseController  This object to support chaining
      *
      * @since   1.0.0
      */
-    public function __construct($config = [])
+    public function display($cachable = false, $urlparams = [])
     {
-        $this->view_list = 'items';
-        parent::__construct($config);
+        return parent::display($cachable, $urlparams);
+    }
+
+    /**
+     * Method to cancel an edit.
+     *
+     * @param string $key The name of the primary key of the URL variable
+     *
+     * @return boolean True if access level checks pass, false otherwise
+     *
+     * @since   1.0.0
+     */
+    public function cancel($key = null)
+    {
+        $this->checkToken();
+
+        $app = Factory::getApplication();
+        $app->setUserState('com_jlcontentfieldsfilter.edit.item.data', null);
+
+        $this->setRedirect(
+            \Joomla\CMS\Router\Route::_('index.php?option=com_jlcontentfieldsfilter&view=items', false)
+        );
+
+        return true;
+    }
+
+    /**
+     * Method to save a record.
+     *
+     * @param string $key    The name of the primary key of the URL variable
+     * @param string $urlVar The name of the URL variable if different from the primary key
+     *
+     * @return boolean True if successful, false otherwise
+     *
+     * @since   1.0.0
+     */
+    public function save($key = null, $urlVar = null)
+    {
+        $this->checkToken();
+
+        $app   = Factory::getApplication();
+        $data  = $this->input->post->get('jform', [], 'array');
+        $task  = $this->getTask();
+
+        // Validate data
+        if (empty($data['catid'])) {
+            $app->enqueueMessage('Category is required', 'error');
+            $this->setRedirect(
+                \Joomla\CMS\Router\Route::_('index.php?option=com_jlcontentfieldsfilter&view=items', false)
+            );
+            return false;
+        }
+
+        // Get the ID from the data or input
+        $id = isset($data['id']) ? (int) $data['id'] : $this->input->getInt('id', 0);
+
+        // Use direct table access instead of model
+        $db = Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
+        $table = new \Joomla\Component\Jlcontentfieldsfilter\Administrator\Table\JlcontentfieldsfilterDataTable($db);
+
+        if ($id > 0) {
+            $table->load($id);
+        }
+
+        // Update table data
+        $table->catid = (int) $data['catid'];
+        $table->meta_title = $data['meta_title'] ?? '';
+        $table->meta_desc = $data['meta_desc'] ?? '';
+        $table->meta_keywords = $data['meta_keywords'] ?? '';
+        $table->state = (int) ($data['state'] ?? 1);
+
+        // Save the table
+        if ($table->store()) {
+            $app->enqueueMessage('Item saved successfully', 'message');
+
+            // Get the saved ID
+            $savedId = $table->id;
+
+            // Determine where to redirect based on task
+            if ($task === 'save') {
+                // Save and close: redirect to items list
+                $this->setRedirect(
+                    \Joomla\CMS\Router\Route::_('index.php?option=com_jlcontentfieldsfilter&view=items', false)
+                );
+            } else {
+                // Apply: redirect back to edit form
+                $this->setRedirect(
+                    \Joomla\CMS\Router\Route::_('index.php?option=com_jlcontentfieldsfilter&view=item&layout=edit&id=' . $savedId, false)
+                );
+            }
+
+            return true;
+        } else {
+            $app->enqueueMessage('Error saving item: ' . $table->getError(), 'error');
+            return false;
+        }
     }
 
     /**

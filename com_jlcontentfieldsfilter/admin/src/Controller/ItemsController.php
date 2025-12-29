@@ -161,6 +161,59 @@ class ItemsController extends BaseController
     }
 
     /**
+     * Get items for a specific category.
+     *
+     * This method returns all filter items for the specified category in JSON format.
+     *
+     * @return void Outputs JSON and exits
+     *
+     * @since   1.0.0
+     */
+    public function getItems()
+    {
+        $app = Factory::getApplication();
+        $cid = $app->getInput()->getInt('cid', 0);
+
+        $error   = 0;
+        $message = '';
+        $items   = [];
+
+        if ($cid == 0) {
+            $error   = 1;
+            $message = 'CID = 0';
+        } else {
+            try {
+                $model = $this->getModel('Items', 'Administrator');
+                
+                // Get all items for this category
+                $db = Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
+                $query = $db->getQuery(true);
+                
+                $query->select('*')
+                    ->from($db->quoteName('#__jlcontentfieldsfilter_data'))
+                    ->where($db->quoteName('catid') . ' = ' . (int) $cid)
+                    ->order($db->quoteName('id') . ' DESC');
+                
+                $db->setQuery($query);
+                $items = $db->loadObjectList();
+            } catch (\Exception $e) {
+                $error = 1;
+                $message = $e->getMessage();
+            }
+        }
+
+        // Send JSON response
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => !$error,
+            'message' => $message,
+            'data' => $items
+        ]);
+        
+        exit();
+    }
+
+    /**
      * Save a filter item.
      *
      * Saves the filter configuration including metadata and filter values.

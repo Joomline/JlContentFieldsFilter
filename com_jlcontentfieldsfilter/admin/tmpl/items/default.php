@@ -89,17 +89,17 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function displayItems(items) {
         if (!items || items.length === 0) {
-            itemsContainer.innerHTML = '<div class="alert alert-info"><?php echo Text::_('COM_JLCONTENTFIELDSFILTER_NO_ITEMS_FOUND'); ?></div>';
+            itemsContainer.innerHTML = '<div class="alert alert-info"><?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?></div>';
             return;
         }
         
         let html = '<table class="table table-striped">';
         html += '<thead><tr>';
-        html += '<th><?php echo Text::_('COM_JLCONTENTFIELDSFILTER_HEAD_ID'); ?></th>';
-        html += '<th><?php echo Text::_('COM_JLCONTENTFIELDSFILTER_HEAD_META_TITLE'); ?></th>';
+        html += '<th><?php echo Text::_('JGLOBAL_FIELD_ID_LABEL'); ?></th>';
+        html += '<th><?php echo Text::_('JGLOBAL_TITLE'); ?></th>';
         html += '<th><?php echo Text::_('COM_JLCONTENTFIELDSFILTER_HEAD_FILTER'); ?></th>';
         html += '<th><?php echo Text::_('JSTATUS'); ?></th>';
-        html += '<th><?php echo Text::_('JACTION'); ?></th>';
+        html += '<th><?php echo Text::_('COM_JLCONTENTFIELDSFILTER_ACTIONS'); ?></th>';
         html += '</tr></thead><tbody>';
         
         items.forEach(function(item) {
@@ -125,14 +125,34 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function editItem(itemId) {
-    // TODO: Implement edit functionality
-    alert('Edit item ' + itemId);
+    window.location.href = 'index.php?option=com_jlcontentfieldsfilter&view=item&layout=edit&id=' + itemId;
 }
 
 function deleteItem(itemId) {
     if (confirm('<?php echo Text::_('COM_JLCONTENTFIELDSFILTER_CONFIRM_DELETE'); ?>')) {
-        // TODO: Implement delete functionality
-        alert('Delete item ' + itemId);
+        // Send delete request
+        fetch('index.php?option=com_jlcontentfieldsfilter&task=items.delete&id=' + itemId + '&<?php echo \Joomla\CMS\Session\Session::getFormToken(); ?>=1', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.error) {
+                // Reload the current category items
+                const categorySelect = document.getElementById('filter-category');
+                if (categorySelect && categorySelect.value) {
+                    categorySelect.dispatchEvent(new Event('change'));
+                }
+            } else {
+                alert('Error deleting item: ' + (data.message || 'Unknown error'));
+            }
+        })
+        .catch(error => {
+            console.error('Error deleting item:', error);
+            alert('Error deleting item');
+        });
     }
 }
 </script>
