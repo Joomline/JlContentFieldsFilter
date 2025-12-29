@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <field
+        name="id"
+        type="hidden"
+        label="JGLOBAL_FIELD_ID_LABEL"
+        class="readonly"
+        readonly="true"
+        filter="unset"
+    />
+
+    <field
+        name="meta_title"
+        type="text"
+        label="JGLOBAL_TITLE"
+        required="true"
+        maxlength="255"
+    />
+
+    <field
+        name="meta_desc"
+        type="textarea"
+        label="JFIELD_META_DESCRIPTION_LABEL"
+        rows="3"
+    />
+
+    <field
+        name="meta_keywords"
+        type="textarea"
+        label="JFIELD_META_KEYWORDS_LABEL"
+        rows="3"
+        maxlength="300"
+        charcounter="true"
+    />
+
+    <field
+        name="filter"
+        type="textarea"
+        label="COM_JLCONTENTFIELDSFILTER_FIELD_FILTER_LABEL"
+        description="COM_JLCONTENTFIELDSFILTER_FIELD_FILTER_DESC"
+        rows="2"
+        disabled="true"
+    />
+
+    <field
+        name="state"
+        type="list"
+        label="JSTATUS"
+        class="form-select-color-state"
+        default="1"
+        validate="options"
+    >
+        <option value="1">JPUBLISHED</option>
+        <option value="0">JUNPUBLISHED</option>
+    </field>
+
+    <field
+        name="catid"
+        type="hidden"
+    />
+</form>

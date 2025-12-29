@@ -42,9 +42,22 @@ class ItemModel extends AdminModel
      */
     public function getForm($data = [], $loadData = true)
     {
-        // For now, return false as we don't use XML forms
-        // This allows the FormController to work without XML form validation
-        return false;
+        // Load the form from XML
+        $form = $this->loadForm(
+            'com_jlcontentfieldsfilter.item',
+            'item',
+            [
+                'control'   => 'jform',
+                'load_data' => $loadData
+            ]
+        );
+
+        if (empty($form))
+        {
+            return false;
+        }
+
+        return $form;
     }
 
     /**
@@ -133,6 +146,57 @@ class ItemModel extends AdminModel
     }
 
     /**
+     * Method to save the form data.
+     *
+     * @param   array  $data  The form data.
+     *
+     * @return  boolean  True on success, False on error.
+     *
+     * @since   1.0.0
+     */
+    public function save($data)
+    {
+        $db = $this->getDatabase();
+        $pk = !empty($data['id']) ? (int) $data['id'] : 0;
+        
+        try {
+            // For existing items, use direct UPDATE query to avoid issues with required fields
+            if ($pk > 0) {
+                $query = $db->getQuery(true)
+                    ->update($db->quoteName('#__jlcontentfieldsfilter_data'))
+                    ->set($db->quoteName('meta_title') . ' = ' . $db->quote($data['meta_title'] ?? ''))
+                    ->set($db->quoteName('meta_desc') . ' = ' . $db->quote($data['meta_desc'] ?? ''))
+                    ->set($db->quoteName('meta_keywords') . ' = ' . $db->quote($data['meta_keywords'] ?? ''))
+                    ->set($db->quoteName('state') . ' = ' . (int) ($data['state'] ?? 1))
+                    ->where($db->quoteName('id') . ' = ' . $pk);
+                
+                $db->setQuery($query);
+                
+                if (!$db->execute()) {
+                    $this->setError('Failed to update item');
+                    return false;
+                }
+                
+                // Clean the cache
+                $this->cleanCache();
+                
+                // Set the ID in state
+                $this->setState('item.id', $pk);
+                $this->setState('item.new', false);
+                
+                return true;
+            } else {
+                // For new items, we need all required fields including catid
+                $this->setError('Cannot create new items through edit form');
+                return false;
+            }
+        } catch (\Exception $e) {
+            $this->setError($e->getMessage());
+            return false;
+        }
+    }
+
+    /**
      * Get rows matching the filter data.
      *
      * @param array $filterData Filter data array
@@ -218,5 +282,32 @@ class ItemModel extends AdminModel
         $item->created = '';
 
         return $item;
+    }
+
+    /**
+     * Method to change the published state of one or more records.
+     *
+     * @param   array    &$pks   A list of the primary keys to change.
+     * @param   integer  $value  The value of the published state.
+     *
+     * @return  boolean  True on success.
+     *
+     * @since   1.0.0
+     */
+    public function publish(&$pks, $value = 1)
+    {
+        $pks = (array) $pks;
+        $db = $this->getDatabase();
+
+        foreach ($pks as $pk) {
+            $query = $db->getQuery(true)
+                ->update($db->quoteName('#__jlcontentfieldsfilter_data'))
+                ->set($db->quoteName('state') . ' = ' . (int) $value)
+                ->where($db->quoteName('id') . ' = ' . (int) $pk);
+            $db->setQuery($query);
+            $db->execute();
+        }
+
+        return true;
     }
 }

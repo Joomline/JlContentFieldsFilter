@@ -24,12 +24,19 @@
         </sql>
     </uninstall>
 
+    <update>
+        <schemas>
+            <schemapath type="mysql">sql/updates/mysql</schemapath>
+        </schemas>
+    </update>
+
     <administration>
         <menu>COM_JLCONTENTFIELDSFILTER</menu>
 
         <files folder="admin">
             <filename>access.xml</filename>
             <filename>config.xml</filename>
+            <folder>forms</folder>
             <folder>language</folder>
             <folder>services</folder>
             <folder>sql</folder>

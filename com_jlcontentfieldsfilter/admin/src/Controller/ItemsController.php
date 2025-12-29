@@ -17,7 +17,10 @@ namespace Joomla\Component\Jlcontentfieldsfilter\Administrator\Controller;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ModuleHelper;
-use Joomla\CMS\MVC\Controller\BaseController;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Controller\AdminController;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
 use Joomla\Registry\Registry;
 
 /**
@@ -25,10 +28,10 @@ use Joomla\Registry\Registry;
  *
  * @since  1.0.0
  */
-class ItemsController extends BaseController
+class ItemsController extends AdminController
 {
     /**
-     * Class constructor.
+     * Constructor.
      *
      * @param array $config Configuration array
      *
@@ -36,20 +39,11 @@ class ItemsController extends BaseController
      */
     public function __construct($config = [])
     {
-        if (empty($config['filter_fields'])) {
-            $config['filter_fields'] = [
-                'id', 'a.id',
-                'title', 'a.title',
-                'state', 'a.state',
-                'created', 'a.created',
-            ];
-        }
-
         parent::__construct($config);
     }
 
     /**
-     * Method to get the model.
+     * Proxy for getModel.
      *
      * @param string $name Model name
      * @param string $prefix Model prefix
@@ -59,9 +53,93 @@ class ItemsController extends BaseController
      *
      * @since   1.0.0
      */
-    public function getModel($name = 'Item', $prefix = 'JlcontentfieldsfilterModel', $config = ['ignore_request' => true])
+    public function getModel($name = 'Item', $prefix = '', $config = ['ignore_request' => true])
     {
         return parent::getModel($name, $prefix, $config);
+    }
+
+    /**
+     * Method to delete one or more records.
+     *
+     * @return void
+     *
+     * @since   1.0.0
+     */
+    public function delete()
+    {
+        // Check for request forgeries
+        Session::checkToken() or die(Text::_('JINVALID_TOKEN'));
+
+        $app = Factory::getApplication();
+        $cid = $app->getInput()->get('cid', [], 'array');
+
+        if (empty($cid)) {
+            $app->enqueueMessage(Text::_('JERROR_NO_ITEMS_SELECTED'), 'warning');
+        } else {
+            try {
+                // Get model using MVC Factory (getModel() returns false due to configuration)
+                $mvcFactory = $app->bootComponent('com_jlcontentfieldsfilter')->getMVCFactory();
+                $model = $mvcFactory->createModel('Item', 'Administrator');
+                $model->delete($cid);
+                $app->enqueueMessage(Text::plural('COM_JLCONTENTFIELDSFILTER_N_ITEMS_DELETED', count($cid)), 'success');
+            } catch (\Exception $e) {
+                $app->enqueueMessage($e->getMessage(), 'error');
+            }
+        }
+
+        $this->setRedirect(Route::_('index.php?option=com_jlcontentfieldsfilter&view=items', false));
+    }
+
+    /**
+     * Method to publish a list of items.
+     *
+     * @return void
+     *
+     * @since   1.0.0
+     */
+    public function publish()
+    {
+        // Check for request forgeries
+        Session::checkToken() or die(Text::_('JINVALID_TOKEN'));
+
+        $app = Factory::getApplication();
+        $cid = $app->getInput()->get('cid', [], 'array');
+        $task = $this->getTask();
+        $value = ($task == 'publish') ? 1 : 0;
+
+        if (empty($cid)) {
+            $app->enqueueMessage(Text::_('JERROR_NO_ITEMS_SELECTED'), 'warning');
+        } else {
+            try {
+                // Get model using MVC Factory (getModel() returns false due to configuration)
+                $mvcFactory = $app->bootComponent('com_jlcontentfieldsfilter')->getMVCFactory();
+                $model = $mvcFactory->createModel('Item', 'Administrator');
+                $model->publish($cid, $value);
+                
+                if ($value == 1) {
+                    $message = Text::plural('COM_JLCONTENTFIELDSFILTER_N_ITEMS_PUBLISHED', count($cid));
+                } else {
+                    $message = Text::plural('COM_JLCONTENTFIELDSFILTER_N_ITEMS_UNPUBLISHED', count($cid));
+                }
+                $app->enqueueMessage($message, 'success');
+            } catch (\Exception $e) {
+                $app->enqueueMessage($e->getMessage(), 'error');
+            }
+        }
+
+        $this->setRedirect(Route::_('index.php?option=com_jlcontentfieldsfilter&view=items', false));
+    }
+
+    /**
+     * Method to unpublish a list of items.
+     *
+     * @return void
+     *
+     * @since   1.0.0
+     */
+    public function unpublish()
+    {
+        $this->publish();
     }
 
     /**
@@ -241,15 +319,15 @@ class ItemsController extends BaseController
     }
 
     /**
-     * Delete a filter item.
+     * Delete a filter item (JSON endpoint).
      *
-     * Deletes the filter item with the specified ID.
+     * Deletes the filter item with the specified ID and returns JSON response.
      *
      * @return void Outputs JSON and exits
      *
      * @since   1.0.0
      */
-    public function delete()
+    public function deleteJson()
     {
         $app     = Factory::getApplication();
         $id      = $app->getInput()->getInt('id', 0);

@@ -14,8 +14,6 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\Component\Fields\Administrator\Helper\FieldsHelper;
-use Joomla\Component\Jlcontentfieldsfilter\Administrator\Helper\JlcontentfieldsfilterHelper;
-
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -23,23 +21,60 @@ use Joomla\Component\Jlcontentfieldsfilter\Administrator\Helper\Jlcontentfieldsf
 
 $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')
-    ->useScript('form.validate');
+    ->useScript('form.validate')
+    ->useScript('webcomponent.field-fancy-select');
 
 ?>
 
 <form action="<?php echo Route::_('index.php?option=com_jlcontentfieldsfilter&view=item&layout=edit&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="item-form" class="form-validate">
     
-    <div class="row">
-        <div class="col-lg-9">
-            <div class="card">
-                <div class="card-body">
-                    <h3><?php echo Text::_('COM_JLCONTENTFIELDSFILTER_ITEM_DETAILS'); ?></h3>
+    <!-- Title Section -->
+    <div class="row title-alias form-vertical mb-3">
+        <div class="col-12 col-md-6">
+            <?php echo $this->form->renderField('meta_title'); ?>
+        </div>
+    </div>
+
+    <!-- Main Card with Tabs -->
+    <div class="main-card">
+        <?php echo HTMLHelper::_('uitab.startTabSet', 'myTab', ['active' => 'general', 'recall' => true, 'breakpoint' => 768]); ?>
+        
+        <!-- General Tab -->
+        <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'general', Text::_('COM_JLCONTENTFIELDSFILTER_FIELDSET_GENERAL')); ?>
+        <div class="row">
+            <!-- Left Column -->
+            <div class="col-lg-9">
+                <?php echo $this->form->renderField('meta_desc'); ?>
+                
+                <?php echo $this->form->renderField('meta_keywords'); ?>
+                
+                <?php echo $this->form->renderField('filter'); ?>
+            </div>
+            
+            <!-- Right Column -->
+            <div class="col-lg-3">
+                <fieldset class="form-vertical">
+                    <legend class="visually-hidden"><?php echo Text::_('JGLOBAL_FIELDSET_GLOBAL'); ?></legend>
+                    
+                    <?php echo $this->form->renderField('state'); ?>
                     
                     <div class="mb-3">
-                        <label class="form-label" for="jform_id">
-                            <?php echo Text::_('JGLOBAL_FIELD_ID_LABEL'); ?>
+                        <label class="form-label" for="jform_extension">
+                            <?php echo Text::_('COM_JLCONTENTFIELDSFILTER_HEADING_EXTENSION'); ?>
                         </label>
-                        <input type="text" id="jform_id" class="form-control" value="<?php echo htmlspecialchars($this->item->id ?? '', ENT_QUOTES, 'UTF-8'); ?>" disabled>
+                        <?php
+                        $extension = '';
+                        if (!empty($this->item->catid)) {
+                            $db = Factory::getContainer()->get('DatabaseDriver');
+                            $query = $db->getQuery(true)
+                                ->select($db->quoteName('extension'))
+                                ->from($db->quoteName('#__categories'))
+                                ->where($db->quoteName('id') . ' = ' . (int)$this->item->catid);
+                            $db->setQuery($query);
+                            $extension = $db->loadResult();
+                        }
+                        ?>
+                        <input type="text" class="form-control" value="<?php echo htmlspecialchars($extension, ENT_QUOTES, 'UTF-8'); ?>" disabled>
                     </div>
                     
                     <div class="mb-3">
@@ -47,7 +82,6 @@ $wa->useScript('keepalive')
                             <?php echo Text::_('JCATEGORY'); ?>
                         </label>
                         <?php
-                        // Get category name from ID
                         $catName = '';
                         if (!empty($this->item->catid)) {
                             $categories = Categories::getInstance('Content');
@@ -55,134 +89,123 @@ $wa->useScript('keepalive')
                             $catName = $category ? $category->title : '';
                         }
                         ?>
-                        <input type="text" name="jform[catid]" id="jform_catid" class="form-control" value="<?php echo htmlspecialchars($catName, ENT_QUOTES, 'UTF-8'); ?>" disabled>
+                        <input type="text" class="form-control" value="<?php echo htmlspecialchars($catName, ENT_QUOTES, 'UTF-8'); ?>" disabled>
                         <input type="hidden" name="jform[catid]" value="<?php echo (int)($this->item->catid ?? 0); ?>">
+                        <small class="form-text text-muted"><?php echo Text::_('COM_JLCONTENTFIELDSFILTER_FIELD_CATEGORY_DESC'); ?></small>
                     </div>
                     
-                    <div class="mb-3">
-                        <label class="form-label" for="jform_meta_title">
-                            <?php echo Text::_('JGLOBAL_TITLE'); ?>
-                        </label>
-                        <input type="text" name="jform[meta_title]" id="jform_meta_title" class="form-control" value="<?php echo htmlspecialchars($this->item->meta_title ?? '', ENT_QUOTES, 'UTF-8'); ?>">
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label" for="jform_meta_desc">
-                            <?php echo Text::_('JFIELD_META_DESCRIPTION_LABEL'); ?>
-                        </label>
-                        <textarea name="jform[meta_desc]" id="jform_meta_desc" class="form-control" rows="3"><?php echo htmlspecialchars($this->item->meta_desc ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label" for="jform_meta_keywords">
-                            <?php echo Text::_('JFIELD_META_KEYWORDS_LABEL'); ?>
-                        </label>
-                        <textarea name="jform[meta_keywords]" id="jform_meta_keywords" class="form-control" rows="2"><?php echo htmlspecialchars($this->item->meta_keywords ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label" for="jform_filter">
-                            <?php echo Text::_('COM_JLCONTENTFIELDSFILTER_HEAD_FILTER'); ?>
-                        </label>
-                        <textarea name="jform[filter]" id="jform_filter" class="form-control" rows="2" disabled><?php echo htmlspecialchars($this->item->filter ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea>
-                        <small class="form-text text-muted"><?php echo Text::_('COM_JLCONTENTFIELDSFILTER_FILTER_READONLY'); ?></small>
-                    </div>
-                </div>
+                    <?php echo $this->form->renderField('id'); ?>
+                </fieldset>
             </div>
         </div>
+        <?php echo HTMLHelper::_('uitab.endTab'); ?>
         
-        <div class="col-lg-3">
-            <div class="card">
-                <div class="card-body">
-                    <h3><?php echo Text::_('JGLOBAL_FIELDSET_PUBLISHING'); ?></h3>
-                    
-                    <div class="mb-3">
-                        <label class="form-label" for="jform_state">
-                            <?php echo Text::_('JSTATUS'); ?>
-                        </label>
-                        <select name="jform[state]" id="jform_state" class="form-select">
-                            <option value="1" <?php echo ($this->item->state == 1) ? 'selected' : ''; ?>><?php echo Text::_('JPUBLISHED'); ?></option>
-                            <option value="0" <?php echo ($this->item->state == 0) ? 'selected' : ''; ?>><?php echo Text::_('JUNPUBLISHED'); ?></option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            
-            <?php if (!empty($this->item->filter)) : ?>
-            <div class="card mt-3">
-                <div class="card-body">
-                    <h3><?php echo Text::_('COM_JLCONTENTFIELDSFILTER_FILTER_VALUES'); ?></h3>
-                    <?php
-                    // Use FieldsHelper to get all article fields and create an ID->name mapping
-                    $fields = FieldsHelper::getFields('com_content.article');
-                    $fieldsMeta = array_column($fields, 'title', 'id');
-                    $filterPairs = explode('&', $this->item->filter);
-                    $rangeValues = [];
-                    $fieldOrder = [];
-                    // First pass: collect range and normal fields in order
-                    foreach ($filterPairs as $pair) {
-                        if (empty($pair)) continue;
-                        if (preg_match('/^([^=]+)\[([^\]]+)\]=(.*)$/', $pair, $matches)) {
-                            // Range field: fieldid[from]=val or fieldid[to]=val
-                            $fieldIdRaw = urldecode($matches[1]);
-                            $subKey = urldecode($matches[2]);
-                            $value = urldecode($matches[3]);
-                            if (!isset($rangeValues[$fieldIdRaw])) {
-                                $rangeValues[$fieldIdRaw] = ['from' => '', 'to' => '', 'order' => count($fieldOrder)];
-                                $fieldOrder[] = ['type' => 'range', 'id' => $fieldIdRaw];
+        <!-- Filter Details Tab -->
+        <?php if (!empty($this->item->filter)) : ?>
+        <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'filterdetails', Text::_('COM_JLCONTENTFIELDSFILTER_FIELDSET_FILTERDETAILS')); ?>
+        <div class="row">
+            <div class="col-12">
+                <fieldset class="options-form">
+                    <legend><?php echo Text::_('COM_JLCONTENTFIELDSFILTER_FILTER_VALUES'); ?></legend>
+                    <div class="row">
+                        <?php
+                        // Use FieldsHelper to get all article fields and create an ID->name mapping
+                        $fields = FieldsHelper::getFields('com_content.article');
+                        $fieldsMeta = array_column($fields, 'title', 'id');
+                        $filterPairs = explode('&', $this->item->filter);
+                        $rangeValues = [];
+                        $fieldGroups = [];
+                        
+                        // First pass: group values by field ID
+                        foreach ($filterPairs as $pair) {
+                            if (empty($pair)) continue;
+                            
+                            if (preg_match('/^([^=]+)\[([^\]]+)\]=(.*)$/', $pair, $matches)) {
+                                // Range field: fieldid[from]=val or fieldid[to]=val
+                                $fieldIdRaw = urldecode($matches[1]);
+                                $subKey = urldecode($matches[2]);
+                                $value = urldecode($matches[3]);
+                                
+                                if (!isset($fieldGroups[$fieldIdRaw])) {
+                                    $fieldGroups[$fieldIdRaw] = ['type' => 'range', 'values' => ['from' => '', 'to' => '']];
+                                }
+                                $fieldGroups[$fieldIdRaw]['values'][$subKey] = $value;
+                            } else {
+                                // Regular field=value1,value2
+                                list($fieldIdRaw, $valueStr) = explode('=', $pair, 2);
+                                $values = explode(',', urldecode($valueStr));
+                                
+                                if (!isset($fieldGroups[$fieldIdRaw])) {
+                                    $fieldGroups[$fieldIdRaw] = ['type' => 'normal', 'values' => []];
+                                }
+                                // Aggiungi valori (evita duplicati)
+                                foreach ($values as $val) {
+                                    if (!in_array($val, $fieldGroups[$fieldIdRaw]['values'])) {
+                                        $fieldGroups[$fieldIdRaw]['values'][] = $val;
+                                    }
+                                }
                             }
-                            $rangeValues[$fieldIdRaw][$subKey] = $value;
-                        } else {
-                            // Regular field=value1,value2
-                            list($fieldIdRaw, $value) = explode('=', $pair, 2);
-                            $fieldOrder[] = ['type' => 'normal', 'id' => $fieldIdRaw, 'value' => $value];
                         }
-                    }
 
-                    // Second pass: render fields in original order
-                    foreach ($fieldOrder as $fieldInfo) {
-                        if ($fieldInfo['type'] === 'normal') {
-                            $fieldIdRaw = $fieldInfo['id'];
+                        // Second pass: render fields as cards
+                        $colCount = 0;
+                        foreach ($fieldGroups as $fieldIdRaw => $fieldData) {
                             $fieldId = htmlspecialchars($fieldIdRaw, ENT_QUOTES, 'UTF-8');
                             $fieldName = isset($fieldsMeta[$fieldIdRaw]) ? $fieldsMeta[$fieldIdRaw] : $fieldId;
-                            $values = explode(',', urldecode($fieldInfo['value']));
-                            foreach ($values as $val) {
-                                $val = htmlspecialchars($val, ENT_QUOTES, 'UTF-8');
-                                ?>
-                                <div class="mb-3">
-                                    <label class="form-label d-flex align-items-center gap-2">
-                                        <span class="badge rounded-pill bg-primary" style="font-size:0.9em;">ID: <?php echo $fieldId; ?></span>
-                                        <span><?php echo htmlspecialchars($fieldName, ENT_QUOTES, 'UTF-8'); ?></span>
-                                    </label>
-                                    <input type="text" class="form-control" value="<?php echo $val; ?>" disabled>
-                                </div>
-                                <?php
-                            }
-                        } elseif ($fieldInfo['type'] === 'range') {
-                            $fieldIdRaw = $fieldInfo['id'];
-                            $fieldId = htmlspecialchars($fieldIdRaw, ENT_QUOTES, 'UTF-8');
-                            $fieldName = isset($fieldsMeta[$fieldIdRaw]) ? $fieldsMeta[$fieldIdRaw] : $fieldId;
-                            $from = isset($rangeValues[$fieldIdRaw]['from']) ? htmlspecialchars($rangeValues[$fieldIdRaw]['from'], ENT_QUOTES, 'UTF-8') : '';
-                            $to = isset($rangeValues[$fieldIdRaw]['to']) ? htmlspecialchars($rangeValues[$fieldIdRaw]['to'], ENT_QUOTES, 'UTF-8') : '';
-                                ?>
-                                <div class="mb-3">
-                                    <label class="form-label d-flex align-items-center gap-2">
-                                        <span class="badge rounded-pill bg-primary" style="font-size:0.9em;">ID: <?php echo $fieldId; ?></span>
-                                        <span><?php echo htmlspecialchars($fieldName, ENT_QUOTES, 'UTF-8'); ?></span>
-                                    </label>
-                                    <div class="d-flex gap-2">
-                                        <input type="text" class="form-control" style="max-width: 48%;" value="<?php echo $from; ?>" placeholder="From" disabled>
-                                        <input type="text" class="form-control" style="max-width: 48%;" value="<?php echo $to; ?>" placeholder="To" disabled>
+                            $colCount++;
+                            ?>
+                            <div class="col-lg-6 mb-3">
+                                <div class="card border">
+                                    <div class="card-header">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span class="badge bg-primary">ID: <?php echo $fieldId; ?></span>
+                                            <strong><?php echo htmlspecialchars($fieldName, ENT_QUOTES, 'UTF-8'); ?></strong>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <?php if ($fieldData['type'] === 'range') : ?>
+                                            <!-- Range Field (From/To) -->
+                                            <div class="row g-2">
+                                                <div class="col-6">
+                                                    <label class="form-label small text-muted"><?php echo Text::_('COM_JLCONTENTFIELDSFILTER_FROM'); ?></label>
+                                                    <input type="text" class="form-control" value="<?php echo htmlspecialchars($fieldData['values']['from'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" disabled>
+                                                </div>
+                                                <div class="col-6">
+                                                    <label class="form-label small text-muted"><?php echo Text::_('COM_JLCONTENTFIELDSFILTER_TO'); ?></label>
+                                                    <input type="text" class="form-control" value="<?php echo htmlspecialchars($fieldData['values']['to'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" disabled>
+                                                </div>
+                                            </div>
+                                        <?php else : ?>
+                                            <!-- Normal Field (Single or Multiple Values) -->
+                                            <?php if (count($fieldData['values']) === 1) : ?>
+                                                <!-- Single Value -->
+                                                <input type="text" class="form-control" value="<?php echo htmlspecialchars($fieldData['values'][0], ENT_QUOTES, 'UTF-8'); ?>" disabled>
+                                            <?php else : ?>
+                                                <!-- Multiple Values -->
+                                                <label class="form-label small text-muted"><?php echo Text::_('COM_JLCONTENTFIELDSFILTER_SELECTED_VALUES'); ?>:</label>
+                                                <ul class="list-group list-group-flush">
+                                                    <?php foreach ($fieldData['values'] as $val) : ?>
+                                                        <li class="list-group-item px-0 py-1">
+                                                            <span class="badge bg-secondary"><?php echo htmlspecialchars($val, ENT_QUOTES, 'UTF-8'); ?></span>
+                                                        </li>
+                                                    <?php endforeach; ?>
+                                                </ul>
+                                            <?php endif; ?>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
-                                <?php
+                            </div>
+                            <?php
                         }
-                    }
-                    ?>
-                </div>
+                        ?>
+                    </div>
+                </fieldset>
             </div>
-            <?php endif; ?>
         </div>
+        <?php echo HTMLHelper::_('uitab.endTab'); ?>
+        <?php endif; ?>
+        
+        <?php echo HTMLHelper::_('uitab.endTabSet'); ?>
     </div>
     
     <input type="hidden" name="task" value="">

@@ -244,9 +244,16 @@ class JlcontentfieldsfilterHelper
         $object->catid         = $catid;
         $object->filter        = JlcontentfieldsfilterHelper::createFilterString($filterData);
         $object->filter_hash   = JlcontentfieldsfilterHelper::createHash($object->filter);
-        $object->meta_title    = $catName.'. '.implode('; ', $titles);
-        $object->meta_desc     = $catName.'. '.implode('; ', $desc);
-        $object->meta_keywords = implode(', ', $keyvords);
+        
+        // Truncate meta fields to reasonable SEO limits (recommended max length)
+        $metaTitle = $catName.'. '.implode('; ', $titles);
+        $metaDesc = $catName.'. '.implode('; ', $desc);
+        $metaKeywords = implode(', ', $keyvords);
+        
+        // Limit meta fields: title=255, description=1000, keywords=500 (SEO best practices)
+        $object->meta_title    = mb_substr($metaTitle, 0, 255);
+        $object->meta_desc     = mb_substr($metaDesc, 0, 1000);
+        $object->meta_keywords = mb_substr($metaKeywords, 0, 500);
         $object->state         = 1;
 
         $db->insertObject('#__jlcontentfieldsfilter_data', $object, 'id');
