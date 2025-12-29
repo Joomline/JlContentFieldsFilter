@@ -138,7 +138,7 @@ $wa->useScript('keepalive')
                                 if (!isset($fieldGroups[$fieldIdRaw])) {
                                     $fieldGroups[$fieldIdRaw] = ['type' => 'normal', 'values' => []];
                                 }
-                                // Aggiungi valori (evita duplicati)
+                                // Add values (avoid duplicates)
                                 foreach ($values as $val) {
                                     if (!in_array($val, $fieldGroups[$fieldIdRaw]['values'])) {
                                         $fieldGroups[$fieldIdRaw]['values'][] = $val;
