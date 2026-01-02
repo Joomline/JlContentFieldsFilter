@@ -71,9 +71,7 @@ $listDirn = $this->escape($this->state->get('list.direction', 'DESC'));
                         <tbody>
                             <?php foreach ($this->items as $i => $item) :
                                 $canEdit    = $user->authorise('core.edit', 'com_jlcontentfieldsfilter');
-                                $canCheckin = $user->authorise('core.manage', 'com_checkin') || $item->checked_out == $userId || $item->checked_out == 0;
-                                $canEditOwn = $user->authorise('core.edit.own', 'com_jlcontentfieldsfilter') && $item->created_by == $userId;
-                                $canChange  = $user->authorise('core.edit.state', 'com_jlcontentfieldsfilter') && $canCheckin;
+                                $canChange  = $user->authorise('core.edit.state', 'com_jlcontentfieldsfilter');
                             ?>
                                 <tr class="row<?php echo $i % 2; ?>">
                                     <td class="text-center">
@@ -84,7 +82,7 @@ $listDirn = $this->escape($this->state->get('list.direction', 'DESC'));
                                     </td>
                                     <th scope="row" class="has-context">
                                         <div class="mb-1">
-                                            <?php if ($canEdit || $canEditOwn) : ?>
+                                            <?php if ($canEdit) : ?>
                                                 <a href="<?php echo Route::_('index.php?option=com_jlcontentfieldsfilter&task=item.edit&id=' . (int) $item->id); ?>" title="<?php echo Text::_('JACTION_EDIT'); ?> <?php echo $this->escape($item->meta_title); ?>">
                                                     <?php echo $this->escape($item->meta_title); ?>
                                                 </a>
@@ -153,13 +151,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
         });
     }
-    
+
+    // Escape HTML to prevent XSS attacks
+    function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
     function displayItems(items) {
         if (!items || items.length === 0) {
             itemsContainer.innerHTML = '<div class="alert alert-info"><?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?></div>';
             return;
         }
-        
+
         let html = '<table class="table table-striped">';
         html += '<thead><tr>';
         html += '<th><?php echo Text::_('JGLOBAL_FIELD_ID_LABEL'); ?></th>';
@@ -168,24 +174,24 @@ document.addEventListener('DOMContentLoaded', function() {
         html += '<th><?php echo Text::_('JSTATUS'); ?></th>';
         html += '<th><?php echo Text::_('COM_JLCONTENTFIELDSFILTER_ACTIONS'); ?></th>';
         html += '</tr></thead><tbody>';
-        
+
         items.forEach(function(item) {
-            const statusBadge = item.state == 1 
+            const statusBadge = item.state == 1
                 ? '<span class="badge bg-success"><?php echo Text::_('JPUBLISHED'); ?></span>'
                 : '<span class="badge bg-danger"><?php echo Text::_('JUNPUBLISHED'); ?></span>';
-                
+
             html += '<tr>';
-            html += '<td>' + item.id + '</td>';
-            html += '<td>' + (item.meta_title || '') + '</td>';
-            html += '<td><small>' + (item.filter || '') + '</small></td>';
+            html += '<td>' + parseInt(item.id) + '</td>';
+            html += '<td>' + escapeHtml(item.meta_title) + '</td>';
+            html += '<td><small>' + escapeHtml(item.filter) + '</small></td>';
             html += '<td>' + statusBadge + '</td>';
             html += '<td>';
-            html += '<a href="#" class="btn btn-sm btn-primary" onclick="editItem(' + item.id + '); return false;"><?php echo Text::_('JACTION_EDIT'); ?></a> ';
-            html += '<a href="#" class="btn btn-sm btn-danger" onclick="deleteItem(' + item.id + '); return false;"><?php echo Text::_('JACTION_DELETE'); ?></a>';
+            html += '<a href="#" class="btn btn-sm btn-primary" onclick="editItem(' + parseInt(item.id) + '); return false;"><?php echo Text::_('JACTION_EDIT'); ?></a> ';
+            html += '<a href="#" class="btn btn-sm btn-danger" onclick="deleteItem(' + parseInt(item.id) + '); return false;"><?php echo Text::_('JACTION_DELETE'); ?></a>';
             html += '</td>';
             html += '</tr>';
         });
-        
+
         html += '</tbody></table>';
         itemsContainer.innerHTML = html;
     }
@@ -197,12 +203,14 @@ function editItem(itemId) {
 
 function deleteItem(itemId) {
     if (confirm('<?php echo Text::_('COM_JLCONTENTFIELDSFILTER_CONFIRM_DELETE'); ?>')) {
-        // Send delete request
-        fetch('index.php?option=com_jlcontentfieldsfilter&task=items.delete&id=' + itemId + '&<?php echo \Joomla\CMS\Session\Session::getFormToken(); ?>=1', {
+        // Send delete request with CSRF token in body
+        const formData = new FormData();
+        formData.append('<?php echo \Joomla\CMS\Session\Session::getFormToken(); ?>', '1');
+        formData.append('id', itemId);
+
+        fetch('index.php?option=com_jlcontentfieldsfilter&task=items.delete', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            }
+            body: formData
         })
         .then(response => response.json())
         .then(data => {

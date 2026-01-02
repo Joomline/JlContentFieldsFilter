@@ -11,12 +11,8 @@
 
 namespace Joomla\Component\Jlcontentfieldsfilter\Administrator\Table;
 
-use Joomla\CMS\Access\Rules;
-use Joomla\CMS\Application\ApplicationHelper;
-use Joomla\CMS\Factory;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseInterface;
-use Joomla\Registry\Registry;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -53,40 +49,8 @@ class JlcontentfieldsfilterDataTable extends Table
      */
     public function bind($array, $ignore = '')
     {
-        if (empty($array['created_by'])) {
-            $user                = Factory::getApplication()->getIdentity();
-            $array['created_by'] = $user->id;
-        }
-        if (empty($array['created'])) {
-            $array['created'] = date('Y-m-d H:i:s');
-        }
-        if (isset($array['rules']) && \is_array($array['rules'])) {
-            $rules = new Rules($array['rules']);
-            $this->setRules($rules);
-        }
-        $array['alias'] = ApplicationHelper::stringURLSafe($array['alias']);
-        if (trim(str_replace('-', '', $array['alias'])) == '') {
-            $array['alias'] = ApplicationHelper::stringURLSafe($array['title']);
-        }
-
-        if (isset($array['text'])) {
-            $pattern = '#<hr\s+id=("|\')system-readmore("|\')\s*\/*>#i';
-            $tagPos  = preg_match($pattern, $array['text']);
-
-            if ($tagPos == 0) {
-                $this->introtext = $array['text'];
-                $this->fulltext  = '';
-            } else {
-                list($this->introtext, $this->fulltext) = preg_split($pattern, $array['text'], 2);
-            }
-        }
-
-        if (isset($array['params']) && \is_array($array['params'])) {
-            $registry = new Registry();
-            $registry->loadArray($array['params']);
-            $array['params'] = (string) $registry;
-        }
-
+        // This table only has: id, catid, filter_hash, filter, meta_title, meta_desc, meta_keywords, state
+        // No need for special processing like alias, created_by, etc.
         return parent::bind($array, $ignore);
     }
 

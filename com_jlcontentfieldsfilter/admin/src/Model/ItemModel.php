@@ -158,10 +158,24 @@ class ItemModel extends AdminModel
     {
         $db = $this->getDatabase();
         $pk = !empty($data['id']) ? (int) $data['id'] : 0;
-        
+
         try {
             // For existing items, use direct UPDATE query to avoid issues with required fields
             if ($pk > 0) {
+                // Check if item exists
+                $table = $this->getTable();
+                if (!$table->load($pk)) {
+                    $this->setError('Item not found');
+                    return false;
+                }
+
+                // Check user permissions
+                $user = Factory::getApplication()->getIdentity();
+                if (!$user->authorise('core.edit', 'com_jlcontentfieldsfilter')) {
+                    $this->setError('Permission denied');
+                    return false;
+                }
+
                 $query = $db->getQuery(true)
                     ->update($db->quoteName('#__jlcontentfieldsfilter_data'))
                     ->set($db->quoteName('meta_title') . ' = ' . $db->quote($data['meta_title'] ?? ''))
@@ -169,21 +183,21 @@ class ItemModel extends AdminModel
                     ->set($db->quoteName('meta_keywords') . ' = ' . $db->quote($data['meta_keywords'] ?? ''))
                     ->set($db->quoteName('state') . ' = ' . (int) ($data['state'] ?? 1))
                     ->where($db->quoteName('id') . ' = ' . $pk);
-                
+
                 $db->setQuery($query);
-                
+
                 if (!$db->execute()) {
                     $this->setError('Failed to update item');
                     return false;
                 }
-                
+
                 // Clean the cache
                 $this->cleanCache();
-                
+
                 // Set the ID in state
                 $this->setState('item.id', $pk);
                 $this->setState('item.new', false);
-                
+
                 return true;
             } else {
                 // For new items, we need all required fields including catid

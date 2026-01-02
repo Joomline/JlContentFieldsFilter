@@ -266,12 +266,18 @@ class ItemsController extends AdminController
                 // Get all items for this category
                 $db = Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
                 $query = $db->getQuery(true);
-                
-                $query->select('*')
+
+                $query->select([
+                        $db->quoteName('id'),
+                        $db->quoteName('catid'),
+                        $db->quoteName('meta_title'),
+                        $db->quoteName('filter'),
+                        $db->quoteName('state'),
+                    ])
                     ->from($db->quoteName('#__jlcontentfieldsfilter_data'))
                     ->where($db->quoteName('catid') . ' = ' . (int) $cid)
                     ->order($db->quoteName('id') . ' DESC');
-                
+
                 $db->setQuery($query);
                 $items = $db->loadObjectList();
             } catch (\Exception $e) {

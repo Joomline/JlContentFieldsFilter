@@ -98,7 +98,7 @@ class ItemsModel extends ListModel
         // Filter by search in title
         $search = $this->getState('filter.search');
         if (!empty($search)) {
-            $search = $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
+            $search = $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true)) . '%');
             $query->where('(a.meta_title LIKE ' . $search . ')');
         }
 

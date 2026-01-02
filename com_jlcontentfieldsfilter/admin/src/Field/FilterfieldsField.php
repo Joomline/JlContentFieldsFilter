@@ -77,8 +77,23 @@ class FilterfieldsField extends ListField
             $filterData = $formData->jlcontentfieldsfilter;
         }
 
-        // Get component option
-        $option = 'com_content';
+        // Get extension from category to determine the correct context
+        $db = Factory::getContainer()->get('DatabaseDriver');
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('extension'))
+            ->from($db->quoteName('#__categories'))
+            ->where($db->quoteName('id') . ' = ' . (int) $catid);
+        $db->setQuery($query);
+        $extension = $db->loadResult();
+
+        // Map extension to context
+        $contextMap = [
+            'com_content' => 'com_content.article',
+            'com_contact' => 'com_contact.contact',
+            'com_tags'    => 'com_tags.tag',
+        ];
+        $context = $contextMap[$extension] ?? 'com_content.article';
+        $option = $extension ?? 'com_content';
 
         // Create module params object
         $params = new Registry();
@@ -87,7 +102,6 @@ class FilterfieldsField extends ListField
         $params->set('show_title', 1);
 
         // Get available fields for this category
-        $context = 'com_content.article';
         $item    = new \stdClass();
         $item->language = $app->getLanguage()->getTag();
         $item->catid    = $catid;
