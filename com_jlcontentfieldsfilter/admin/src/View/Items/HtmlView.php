@@ -5,7 +5,7 @@
  *
  * @version 	@version@
  * @author		Joomline
- * @copyright  (C) 2017-2023 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
+ * @copyright  (C) 2017-2025 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
  * @license 	GNU General Public License version 2 or later; see	LICENSE.txt
  */
 
@@ -61,9 +61,12 @@ class HtmlView extends BaseHtmlView
      */
     public function display($tpl = null)
     {
+        $this->items           = $this->get('Items');
         $this->categoryOptions = $this->get('CategoryOptions');
         $this->pagination      = $this->get('Pagination');
         $this->state           = $this->get('State');
+        $this->filterForm      = $this->get('FilterForm');
+        $this->activeFilters   = $this->get('ActiveFilters');
         $this->user            = Factory::getApplication()->getIdentity();
         $this->loadHelper('jlcontentfieldsfilter');
         $this->addToolbar();
@@ -84,9 +87,18 @@ class HtmlView extends BaseHtmlView
         ToolBarHelper::title(Text::_('COM_JLCONTENTFIELDSFILTER'));
         $canDo = JlcontentfieldsfilterHelper::getActions('item');
 
+        if ($canDo->{'core.edit.state'}) {
+            ToolBarHelper::publish('items.publish', 'JTOOLBAR_PUBLISH', true);
+            ToolBarHelper::unpublish('items.unpublish', 'JTOOLBAR_UNPUBLISH', true);
+        }
+
+        if ($canDo->{'core.delete'}) {
+            ToolBarHelper::deleteList('JGLOBAL_CONFIRM_DELETE', 'items.delete');
+        }
+
         if ($canDo->{'core.admin'}) {
-            ToolBarHelper::preferences('com_jlcontentfieldsfilter');
             ToolBarHelper::divider();
+            ToolBarHelper::preferences('com_jlcontentfieldsfilter');
         }
     }
 
@@ -101,7 +113,7 @@ class HtmlView extends BaseHtmlView
     {
         return [
             'ordering'   => Text::_('JGRID_HEADING_ORDERING'),
-            'published'  => Text::_('JSTATUS'),
+            'state'      => Text::_('JSTATUS'),
             'title'      => Text::_('JGLOBAL_TITLE'),
             'created_by' => Text::_('JAUTHOR'),
             'created'    => Text::_('JDATE'),

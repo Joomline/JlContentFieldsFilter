@@ -13,6 +13,7 @@
 namespace Joomla\Component\Jlcontentfieldsfilter\Administrator\Controller;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -27,23 +28,85 @@ use Joomla\CMS\MVC\Controller\FormController;
 class ItemController extends FormController
 {
     /**
-     * Class constructor.
+     * The prefix to use with controller messages.
      *
-     * @param array $config Configuration array
+     * @var    string
+     * @since  1.0.0
+     */
+    protected $text_prefix = 'COM_JLCONTENTFIELDSFILTER_ITEM';
+
+    /**
+     * Method to save a record.
+     *
+     * @param   string  $key     The name of the primary key of the URL variable.
+     * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
+     *
+     * @return  boolean  True if successful, false otherwise.
      *
      * @since   1.0.0
      */
-    public function __construct($config = [])
+    public function save($key = null, $urlVar = null)
     {
-        $this->view_list = 'items';
-        parent::__construct($config);
+        // Check for request forgeries.
+        $this->checkToken();
+
+        $app   = Factory::getApplication();
+        $data  = $this->input->post->get('jform', [], 'array');
+        $task = $this->getTask();
+
+        // Get model
+        $model = $this->getModel('Item', 'Administrator');
+        
+        // Attempt to save the data.
+        if (!$model->save($data)) {
+            // Redirect back to the edit screen.
+            $app->enqueueMessage(Text::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $model->getError()), 'error');
+
+            $id = !empty($data['id']) ? (int) $data['id'] : 0;
+            $this->setRedirect(
+                \Joomla\CMS\Router\Route::_(
+                    'index.php?option=com_jlcontentfieldsfilter&view=item&layout=edit' . ($id > 0 ? '&id=' . $id : ''),
+                    false
+                )
+            );
+
+            return false;
+        }
+
+        // Success message
+        $app->enqueueMessage(
+            Text::_('COM_JLCONTENTFIELDSFILTER_ITEM_SAVE_SUCCESS'),
+            'success'
+        );
+
+        // Redirect the user based on the chosen task.
+        if ($task === 'save') {
+            // Redirect to list view
+            $this->setRedirect(
+                \Joomla\CMS\Router\Route::_(
+                    'index.php?option=com_jlcontentfieldsfilter&view=items',
+                    false
+                )
+            );
+        } else {
+            // Redirect back to the edit screen.
+            $savedId = $model->getState('item.id');
+            $this->setRedirect(
+                \Joomla\CMS\Router\Route::_(
+                    'index.php?option=com_jlcontentfieldsfilter&view=item&layout=edit&id=' . $savedId,
+                    false
+                )
+            );
+        }
+
+        return true;
     }
 
     /**
      * Method override to check if you can edit an existing record.
      *
-     * @param array $data An array of input data.
-     * @param string $key The name of the key for the primary key.
+     * @param array  $data An array of input data.
+     * @param string $key  The name of the key for the primary key.
      *
      * @return bool
      *

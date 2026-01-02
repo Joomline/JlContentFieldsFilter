@@ -6,7 +6,7 @@
  *
  * @version     @version@
  * @author      Joomline
- * @copyright   (C) 2017-2023 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
+ * @copyright   (C) 2017-2025 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -85,20 +85,29 @@ class JlcontentfieldsfilterHelper
         $data = [];
         foreach ($filter as $key => $item) {
             if (\is_array($item)) {
-                $val = [];
-                ksort($item);
-                foreach ($item as $k => $v) {
-
-                    if ($k === 'from' || $k === 'to') {
-                        continue;
+                // Special handling for range fields (from/to)
+                if (isset($item['from']) || isset($item['to'])) {
+                    // Range field: fieldid[from]=val1&fieldid[to]=val2
+                    if (!empty($item['from'])) {
+                        $val = $safe ? urlencode($item['from']) : $item['from'];
+                        $data[] = $key . '[from]=' . $val;
                     }
-
-                    if (!empty($v)) {
-                        $val[] = $safe ? urlencode($v) : $v;
+                    if (!empty($item['to'])) {
+                        $val = $safe ? urlencode($item['to']) : $item['to'];
+                        $data[] = $key . '[to]=' . $val;
                     }
-                }
-                if (\count($val)) {
-                    $data[] = $key . '=' . implode(',', $val);
+                } else {
+                    // Regular multi-value field: fieldid=val1,val2,val3
+                    $val = [];
+                    ksort($item);
+                    foreach ($item as $k => $v) {
+                        if (!empty($v)) {
+                            $val[] = $safe ? urlencode($v) : $v;
+                        }
+                    }
+                    if (\count($val)) {
+                        $data[] = $key . '=' . implode(',', $val);
+                    }
                 }
             } else {
                 // Security: Fix operator precedence - parentheses needed for ternary operator
@@ -235,10 +244,17 @@ class JlcontentfieldsfilterHelper
         $object->catid         = $catid;
         $object->filter        = JlcontentfieldsfilterHelper::createFilterString($filterData);
         $object->filter_hash   = JlcontentfieldsfilterHelper::createHash($object->filter);
-        $object->meta_title    = $catName.'. '.implode('; ', $titles);
-        $object->meta_desc     = $catName.'. '.implode('; ', $desc);
-        $object->meta_keywords = implode(', ', $keyvords);
-        $object->publish       = 1;
+        
+        // Truncate meta fields to reasonable SEO limits (recommended max length)
+        $metaTitle = $catName.'. '.implode('; ', $titles);
+        $metaDesc = $catName.'. '.implode('; ', $desc);
+        $metaKeywords = implode(', ', $keyvords);
+        
+        // Limit meta fields: title=255, description=1000, keywords=500 (SEO best practices)
+        $object->meta_title    = mb_substr($metaTitle, 0, 255);
+        $object->meta_desc     = mb_substr($metaDesc, 0, 1000);
+        $object->meta_keywords = mb_substr($metaKeywords, 0, 500);
+        $object->state         = 1;
 
         $db->insertObject('#__jlcontentfieldsfilter_data', $object, 'id');
 

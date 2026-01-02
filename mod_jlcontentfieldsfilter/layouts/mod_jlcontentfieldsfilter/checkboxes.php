@@ -6,7 +6,7 @@
  *
  * @version     @version@
  * @author      Joomline
- * @copyright   (C) 2017-2023 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
+ * @copyright   (C) 2017-2025 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -40,7 +40,7 @@ if (!is_array($options) || !count($options))
 }
 
 ?>
-<div class="jlmf-label"><?php echo $label; ?></div>
+<div class="jlmf-field-title"><?php echo $label; ?></div>
 <div class="jlmf-list-<?php echo $count_cols; ?>">
 
 	<?php

@@ -4,7 +4,7 @@
     <author>Joomline</author>
     <authorEmail>sale@joomline.ru</authorEmail>
     <authorUrl>https://joomline.ru</authorUrl>
-    <copyright>(C) 2017-2023 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.</copyright>
+    <copyright>(C) 2017-2025 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.</copyright>
     <license>GNU General Public License version 2 or later; see	LICENSE.txt</license>
     <version>@version@</version>
     <description>COM_JLCONTENTFIELDSFILTER_DESC</description>
@@ -24,12 +24,19 @@
         </sql>
     </uninstall>
 
+    <update>
+        <schemas>
+            <schemapath type="mysql">sql/updates/mysql</schemapath>
+        </schemas>
+    </update>
+
     <administration>
         <menu>COM_JLCONTENTFIELDSFILTER</menu>
 
         <files folder="admin">
             <filename>access.xml</filename>
             <filename>config.xml</filename>
+            <folder>forms</folder>
             <folder>language</folder>
             <folder>services</folder>
             <folder>sql</folder>
@@ -40,7 +47,6 @@
 
     <media folder="media/com_jlcontentfieldsfilter" destination="com_jlcontentfieldsfilter">
         <folder>css</folder>
-        <folder>js</folder>
     </media>
 
 	<updateservers>

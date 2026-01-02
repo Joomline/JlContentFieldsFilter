@@ -4,146 +4,222 @@
  *
  * @version          @version@
  * @author           Joomline
- * @copyright  (C) 2017-2023 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
+ * @copyright  (C) 2017-2025 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
  * @license          GNU General Public License version 2 or later; see    LICENSE.txt
  */
 
-/** @var $this JlcontentfieldsfilterViewItems */
-
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Router\Route;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-$doc = Factory::getApplication()->getDocument();
-$doc->addScript(Uri::root() . 'media/com_jlcontentfieldsfilter/js/vue.js');
-$doc->addScript(Uri::root() . 'media/com_jlcontentfieldsfilter/js/axios.min.js');
-$doc->addScript(Uri::root() . 'media/com_jlcontentfieldsfilter/js/script.js');
-$doc->addStyleSheet(Uri::root() . 'media/mod_jlcontentfieldsfilter/css/jlcontentfilter.css');
-$doc->addStyleSheet(Uri::root() . 'media/com_jlcontentfieldsfilter/css/style.css');
+$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+$wa->useScript('table.columns')
+    ->useScript('multiselect');
+
+$user = Factory::getApplication()->getIdentity();
+$userId = $user->get('id');
+$listOrder = $this->escape($this->state->get('list.ordering', 'a.id'));
+$listDirn = $this->escape($this->state->get('list.direction', 'DESC'));
 ?>
 
-<div id="app">
-    <form id="data-form" v-on:submit.prevent="loadRows" class="row">
-        <div id="j-sidebar-container" class="col-12 col-md-3 bg-light px-2 border">
-            <div id="j-toggle-sidebar-wrapper">
-                <div id="sidebar" class="sidebar">
-                    <div class="sidebar-nav">
-                        <ul id="submenu" class="nav nav-list">
-                            <li class="mb-3">
-                                <label class="form-label"><?php echo Text::_('JCATEGORY'); ?></label>
-                                <select name="cid" class="form-select" v-model="cid" v-on:change="loadFilter">
-                                    <option value=""><?php echo Text::_('SELECT_CATEGORY'); ?></option>
-									<?php echo $this->categoryOptions; ?>
-                                </select>
-                            </li>
-
-                            <li v-for="field in fields">
-                                <span v-html="field"></span>
-                            </li>
-
-                            <li v-if="cid">
-                                <br><button type="submit" class="btn btn-primary btn-sm">Apply</button>
-                            </li>
-                        </ul>
+<form action="<?php echo Route::_('index.php?option=com_jlcontentfieldsfilter&view=items'); ?>" method="post" name="adminForm" id="adminForm">
+    <div class="row">
+        <div class="col-md-12">
+            <div id="j-main-container" class="j-main-container">
+                <?php echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]); ?>
+                
+                <?php if (empty($this->items)) : ?>
+                    <div class="alert alert-info">
+                        <span class="icon-info-circle" aria-hidden="true"></span><span class="visually-hidden"><?php echo Text::_('INFO'); ?></span>
+                        <?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
                     </div>
-                </div>
-                <div id="j-toggle-sidebar"></div>
-            </div>
-
-        </div>
-        <div id="j-main-container" class="col-12 col-md-9">
-            <button class="btn btn-success" id="show-modal" v-on:click="AddRow">Add New</button>
-            <br>
-            <br>
-            <demo-grid :rows="gridData" :columns="gridColumns"></demo-grid>
-        </div>
-
-        <!-- use the modal component, pass in the prop -->
-        <modal v-if="showModal" @close="showModal = false">
-            <h3 slot="header">Edit item</h3>
-            <div slot="body">
-                <input type="hidden" name="id" v-bind:value="id">
-                <input type="hidden" name="cid" v-bind:value="cid">
-                <div class="mb-3">
-                    <label class="form-label" for="meta_title">Title</label>
-                    <input type="text" name="meta_title" id="meta_title" class="form-control" v-bind:value="title">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label" for="meta_desc">Meta Description</label>
-                    <textarea name="meta_desc" id="meta_desc" class="form-control">{{meta_desc}}</textarea>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label" for="meta_keywords">Meta Keywords</label>
-                    <textarea name="meta_keywords" id="meta_keywords" class="form-control">{{meta_keywords}}</textarea>
-                </div>
-                <div class="mb-3 form-check form-switch">
-                    <input type="checkbox" name="publish" id="publish" class="form-check-input" value="1"
-                           v-bind:checked="publish == 1">
-                    <label class="form-check-label" for="publish">Publish</label>
-                </div>
-            </div>
-            <div slot="footer">
-                <button class="modal-default-button btn btn-sm btn-danger" @click="SaveRow">Save</button>
-                <button class="modal-default-button btn btn-sm btn-success" @click="Chancel">Cancel</button>
-            </div>
-        </modal>
-    </form>
-</div>
-
-
-<!-- template for the modal component -->
-<script type="text/x-template" id="modal-template">
-    <transition name="modal">
-        <div class="modal-mask">
-            <div class="modal-wrapper">
-                <div class="vue-modal-container">
-
-                    <div class="vue-modal-header">
-                        <slot name="header">
-                            default header
-                        </slot>
-                    </div>
-
-                    <div class="vue-modal-body">
-                        <slot name="body">
-                            default body
-                        </slot>
-                    </div>
-
-                    <div class="vue-modal-footer">
-                        <slot name="footer">
-                            <button class="modal-default-button" @click="$emit('close')">OK</button>
-                        </slot>
-                    </div>
-                </div>
+                <?php else : ?>
+                    <table class="table table-striped" id="itemsList">
+                        <caption class="visually-hidden">
+                            <?php echo Text::_('COM_JLCONTENTFIELDSFILTER_ITEMS_TABLE_CAPTION'); ?>,
+                            <span id="orderedBy"><?php echo Text::_('JGLOBAL_SORTED_BY'); ?> </span>,
+                            <span id="filteredBy"><?php echo Text::_('JGLOBAL_FILTERED_BY'); ?></span>
+                        </caption>
+                        <thead>
+                            <tr>
+                                <td class="w-1 text-center">
+                                    <?php echo HTMLHelper::_('grid.checkall'); ?>
+                                </td>
+                                <th scope="col" class="w-1 text-center">
+                                    <?php echo HTMLHelper::_('searchtools.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
+                                </th>
+                                <th scope="col">
+                                    <?php echo HTMLHelper::_('searchtools.sort', 'JGLOBAL_TITLE', 'a.meta_title', $listDirn, $listOrder); ?>
+                                </th>
+                                <th scope="col" class="w-10 d-none d-md-table-cell">
+                                    <?php echo HTMLHelper::_('searchtools.sort', 'COM_JLCONTENTFIELDSFILTER_HEADING_EXTENSION', 'category_extension', $listDirn, $listOrder); ?>
+                                </th>
+                                <th scope="col" class="w-15 d-none d-md-table-cell">
+                                    <?php echo HTMLHelper::_('searchtools.sort', 'JCATEGORY', 'category_title', $listDirn, $listOrder); ?>
+                                </th>
+                                <th scope="col" class="w-5 d-none d-md-table-cell text-center">
+                                    <?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($this->items as $i => $item) :
+                                $canEdit    = $user->authorise('core.edit', 'com_jlcontentfieldsfilter');
+                                $canCheckin = $user->authorise('core.manage', 'com_checkin') || $item->checked_out == $userId || $item->checked_out == 0;
+                                $canEditOwn = $user->authorise('core.edit.own', 'com_jlcontentfieldsfilter') && $item->created_by == $userId;
+                                $canChange  = $user->authorise('core.edit.state', 'com_jlcontentfieldsfilter') && $canCheckin;
+                            ?>
+                                <tr class="row<?php echo $i % 2; ?>">
+                                    <td class="text-center">
+                                        <?php echo HTMLHelper::_('grid.id', $i, $item->id, false, 'cid', 'cb', $item->meta_title); ?>
+                                    </td>
+                                    <td class="text-center">
+                                        <?php echo HTMLHelper::_('jgrid.published', $item->state, $i, 'items.', $canChange, 'cb'); ?>
+                                    </td>
+                                    <th scope="row" class="has-context">
+                                        <div class="mb-1">
+                                            <?php if ($canEdit || $canEditOwn) : ?>
+                                                <a href="<?php echo Route::_('index.php?option=com_jlcontentfieldsfilter&task=item.edit&id=' . (int) $item->id); ?>" title="<?php echo Text::_('JACTION_EDIT'); ?> <?php echo $this->escape($item->meta_title); ?>">
+                                                    <?php echo $this->escape($item->meta_title); ?>
+                                                </a>
+                                            <?php else : ?>
+                                                <?php echo $this->escape($item->meta_title); ?>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div class="small break-word">
+                                            <?php echo Text::_('COM_JLCONTENTFIELDSFILTER_FILTER_VALUES'); ?>: <?php echo $this->escape($item->filter); ?>
+                                        </div>
+                                    </th>
+                                    <td class="d-none d-md-table-cell">
+                                        <?php echo $this->escape($item->category_extension); ?>
+                                    </td>
+                                    <td class="d-none d-md-table-cell">
+                                        <?php echo $this->escape($item->category_title); ?>
+                                    </td>
+                                    <td class="d-none d-md-table-cell text-center">
+                                        <?php echo (int) $item->id; ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                    <?php echo $this->pagination->getListFooter(); ?>
+                <?php endif; ?>
+                
+                <input type="hidden" name="task" value="">
+                <input type="hidden" name="boxchecked" value="0">
+                <?php echo HTMLHelper::_('form.token'); ?>
             </div>
         </div>
-    </transition>
-</script>
+    </div>
+</form>
 
-<!-- grid template -->
-<script type="text/x-template" id="grid-template">
-    <table width="100%">
-        <thead>
-        <tr>
-            <th v-for="key in columns" class="key">{{ key | capitalize }}</th>
-            <th>Action</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="entry in sortedRows">
-            <td v-for="key in columns">
-                {{entry[key]}}
-            </td>
-            <td>
-                <a class="btn btn-small btn-success" href="#" v-on:click="EditRow(entry.id);">Edit</a>
-                <a class="btn btn-small btn-danger" href="#" v-on:click="DeleteRow(entry.id);">Delete</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const categorySelect = document.getElementById('filter-category');
+    const itemsContainer = document.getElementById('items-container');
+    
+    if (categorySelect) {
+        categorySelect.addEventListener('change', function() {
+            const categoryId = this.value;
+            
+            if (!categoryId) {
+                itemsContainer.innerHTML = '<p class="text-muted"><?php echo Text::_('COM_JLCONTENTFIELDSFILTER_SELECT_CATEGORY_FIRST'); ?></p>';
+                return;
+            }
+            
+            // Show loading
+            itemsContainer.innerHTML = '<div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>';
+            
+            // Load items for this category
+            fetch('index.php?option=com_jlcontentfieldsfilter&task=items.getItems&cid=' + categoryId + '&format=json')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.data) {
+                        displayItems(data.data);
+                    } else {
+                        itemsContainer.innerHTML = '<div class="alert alert-warning"><?php echo Text::_('COM_JLCONTENTFIELDSFILTER_NO_ITEMS_FOUND'); ?></div>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading items:', error);
+                    itemsContainer.innerHTML = '<div class="alert alert-danger">Error loading items</div>';
+                });
+        });
+    }
+    
+    function displayItems(items) {
+        if (!items || items.length === 0) {
+            itemsContainer.innerHTML = '<div class="alert alert-info"><?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?></div>';
+            return;
+        }
+        
+        let html = '<table class="table table-striped">';
+        html += '<thead><tr>';
+        html += '<th><?php echo Text::_('JGLOBAL_FIELD_ID_LABEL'); ?></th>';
+        html += '<th><?php echo Text::_('JGLOBAL_TITLE'); ?></th>';
+        html += '<th><?php echo Text::_('COM_JLCONTENTFIELDSFILTER_HEAD_FILTER'); ?></th>';
+        html += '<th><?php echo Text::_('JSTATUS'); ?></th>';
+        html += '<th><?php echo Text::_('COM_JLCONTENTFIELDSFILTER_ACTIONS'); ?></th>';
+        html += '</tr></thead><tbody>';
+        
+        items.forEach(function(item) {
+            const statusBadge = item.state == 1 
+                ? '<span class="badge bg-success"><?php echo Text::_('JPUBLISHED'); ?></span>'
+                : '<span class="badge bg-danger"><?php echo Text::_('JUNPUBLISHED'); ?></span>';
+                
+            html += '<tr>';
+            html += '<td>' + item.id + '</td>';
+            html += '<td>' + (item.meta_title || '') + '</td>';
+            html += '<td><small>' + (item.filter || '') + '</small></td>';
+            html += '<td>' + statusBadge + '</td>';
+            html += '<td>';
+            html += '<a href="#" class="btn btn-sm btn-primary" onclick="editItem(' + item.id + '); return false;"><?php echo Text::_('JACTION_EDIT'); ?></a> ';
+            html += '<a href="#" class="btn btn-sm btn-danger" onclick="deleteItem(' + item.id + '); return false;"><?php echo Text::_('JACTION_DELETE'); ?></a>';
+            html += '</td>';
+            html += '</tr>';
+        });
+        
+        html += '</tbody></table>';
+        itemsContainer.innerHTML = html;
+    }
+});
+
+function editItem(itemId) {
+    window.location.href = 'index.php?option=com_jlcontentfieldsfilter&view=item&layout=edit&id=' + itemId;
+}
+
+function deleteItem(itemId) {
+    if (confirm('<?php echo Text::_('COM_JLCONTENTFIELDSFILTER_CONFIRM_DELETE'); ?>')) {
+        // Send delete request
+        fetch('index.php?option=com_jlcontentfieldsfilter&task=items.delete&id=' + itemId + '&<?php echo \Joomla\CMS\Session\Session::getFormToken(); ?>=1', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.error) {
+                // Reload the current category items
+                const categorySelect = document.getElementById('filter-category');
+                if (categorySelect && categorySelect.value) {
+                    categorySelect.dispatchEvent(new Event('change'));
+                }
+            } else {
+                alert('Error deleting item: ' + (data.message || 'Unknown error'));
+            }
+        })
+        .catch(error => {
+            console.error('Error deleting item:', error);
+            alert('Error deleting item');
+        });
+    }
+}
 </script>

@@ -6,7 +6,7 @@
  *
  * @version     @version@
  * @author      Joomline
- * @copyright   (C) 2017-2023 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
+ * @copyright   (C) 2017-2025 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -46,10 +46,10 @@ $wa->registerAndUseScript('mod_jlcontentfieldsfilter.nouislider.script', 'mod_jl
     ->registerAndUseStyle('mod_jlcontentfieldsfilter.range.style', 'mod_jlcontentfieldsfilter/range.css');
 
 ?>
-<div class="jlmf-label"><?php echo $label; ?></div>
+<div class="jlmf-field-title"><?php echo $label; ?></div>
 <div class="jlmf-list-2 range-sliders">
     <div>
-        <label class="jlmf-label"
+        <label class="jlmf-field-title"
                for="<?php echo $field->name . '-from-' . $moduleId; ?>"><?php echo Text::_('MOD_JLCONTENTFIELDSFILTER_FROM'); ?></label>
         <input
                 type="text"
@@ -62,7 +62,7 @@ $wa->registerAndUseScript('mod_jlcontentfieldsfilter.nouislider.script', 'mod_jl
         />
     </div>
     <div>
-        <label class="jlmf-label"
+        <label class="jlmf-field-title"
                for="<?php echo $field->name . '-to-' . $moduleId; ?>"><?php echo Text::_('MOD_JLCONTENTFIELDSFILTER_TO'); ?></label>
         <input
                 type="text"

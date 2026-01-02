@@ -6,7 +6,7 @@
  *
  * @version     @version@
  * @author      Joomline
- * @copyright   (C) 2017-2023 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
+ * @copyright   (C) 2017-2025 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -42,7 +42,42 @@ class ItemModel extends AdminModel
      */
     public function getForm($data = [], $loadData = true)
     {
-        return false;
+        // Load the form from XML
+        $form = $this->loadForm(
+            'com_jlcontentfieldsfilter.item',
+            'item',
+            [
+                'control'   => 'jform',
+                'load_data' => $loadData
+            ]
+        );
+
+        if (empty($form))
+        {
+            return false;
+        }
+
+        return $form;
+    }
+
+    /**
+     * Method to get the data that should be injected in the form.
+     *
+     * @return mixed The data for the form
+     *
+     * @since   1.0.0
+     */
+    protected function loadFormData()
+    {
+        // Check the session for previously entered form data
+        $app = Factory::getApplication();
+        $data = $app->getUserState('com_jlcontentfieldsfilter.edit.item.data', []);
+
+        if (empty($data)) {
+            $data = $this->getItem();
+        }
+
+        return $data;
     }
 
     /**
@@ -64,14 +99,14 @@ class ItemModel extends AdminModel
      * @param string $meta_title Meta title
      * @param string $meta_desc Meta description
      * @param string $meta_keywords Meta keywords
-     * @param int $publish Published state
+     * @param int $state Item state
      * @param array $filterData Filter data array
      *
      * @return bool True on success, false otherwise
      *
      * @since   1.0.0
      */
-    public function saveItem($id, $cid, $meta_title, $meta_desc, $meta_keywords, $publish, $filterData)
+    public function saveItem($id, $cid, $meta_title, $meta_desc, $meta_keywords, $state, $filterData)
     {
         if (!\is_array($filterData) || !\count($filterData)) {
             return false;
@@ -100,7 +135,7 @@ class ItemModel extends AdminModel
             'meta_title'    => $meta_title,
             'meta_desc'     => $meta_desc,
             'meta_keywords' => $meta_keywords,
-            'publish'       => $publish,
+            'state'         => $state,
         ];
 
         if ($id == 0) {
@@ -108,6 +143,57 @@ class ItemModel extends AdminModel
         }
 
         return $table->save($data);
+    }
+
+    /**
+     * Method to save the form data.
+     *
+     * @param   array  $data  The form data.
+     *
+     * @return  boolean  True on success, False on error.
+     *
+     * @since   1.0.0
+     */
+    public function save($data)
+    {
+        $db = $this->getDatabase();
+        $pk = !empty($data['id']) ? (int) $data['id'] : 0;
+        
+        try {
+            // For existing items, use direct UPDATE query to avoid issues with required fields
+            if ($pk > 0) {
+                $query = $db->getQuery(true)
+                    ->update($db->quoteName('#__jlcontentfieldsfilter_data'))
+                    ->set($db->quoteName('meta_title') . ' = ' . $db->quote($data['meta_title'] ?? ''))
+                    ->set($db->quoteName('meta_desc') . ' = ' . $db->quote($data['meta_desc'] ?? ''))
+                    ->set($db->quoteName('meta_keywords') . ' = ' . $db->quote($data['meta_keywords'] ?? ''))
+                    ->set($db->quoteName('state') . ' = ' . (int) ($data['state'] ?? 1))
+                    ->where($db->quoteName('id') . ' = ' . $pk);
+                
+                $db->setQuery($query);
+                
+                if (!$db->execute()) {
+                    $this->setError('Failed to update item');
+                    return false;
+                }
+                
+                // Clean the cache
+                $this->cleanCache();
+                
+                // Set the ID in state
+                $this->setState('item.id', $pk);
+                $this->setState('item.new', false);
+                
+                return true;
+            } else {
+                // For new items, we need all required fields including catid
+                $this->setError('Cannot create new items through edit form');
+                return false;
+            }
+        } catch (\Exception $e) {
+            $this->setError($e->getMessage());
+            return false;
+        }
     }
 
     /**
@@ -158,6 +244,68 @@ class ItemModel extends AdminModel
                 $this->setError($table->getError());
                 return false;
             }
+        }
+
+        return true;
+    }
+
+    /**
+     * Method to get a single record.
+     *
+     * @param integer $pk The id of the primary key
+     *
+     * @return mixed Object on success, false on failure
+     *
+     * @since   1.0.0
+     */
+    public function getItem($pk = null)
+    {
+        if ($pk === null) {
+            $pk = $this->getState('item.id', 0);
+        }
+
+        $table = $this->getTable();
+
+        if ($pk > 0 && $table->load($pk)) {
+            return $table;
+        }
+
+        // Return empty object for new items
+        $item = new \stdClass();
+        $item->id = 0;
+        $item->catid = 0;
+        $item->meta_title = '';
+        $item->meta_desc = '';
+        $item->meta_keywords = '';
+        $item->filter = '';
+        $item->state = 1;
+        $item->created = '';
+
+        return $item;
+    }
+
+    /**
+     * Method to change the published state of one or more records.
+     *
+     * @param   array    &$pks   A list of the primary keys to change.
+     * @param   integer  $value  The value of the published state.
+     *
+     * @return  boolean  True on success.
+     *
+     * @since   1.0.0
+     */
+    public function publish(&$pks, $value = 1)
+    {
+        $pks = (array) $pks;
+        $db = $this->getDatabase();
+
+        foreach ($pks as $pk) {
+            $query = $db->getQuery(true)
+                ->update($db->quoteName('#__jlcontentfieldsfilter_data'))
+                ->set($db->quoteName('state') . ' = ' . (int) $value)
+                ->where($db->quoteName('id') . ' = ' . (int) $pk);
+            $db->setQuery($query);
+            $db->execute();
         }
 
         return true;

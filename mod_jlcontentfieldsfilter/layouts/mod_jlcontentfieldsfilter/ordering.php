@@ -6,7 +6,7 @@
  *
  * @version     @version@
  * @author      Joomline
- * @copyright   (C) 2017-2023 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
+ * @copyright   (C) 2017-2025 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -32,7 +32,7 @@ if (!is_array($options) || !count($options))
 }
 
 ?>
-<label class="jlmf-label"
+<label class="jlmf-field-title"
        for="jlcontentfieldsfilter-ordering-<?php echo $moduleId; ?>"><?php echo Text::_('MOD_JLCONTENTFIELDSFILTER_ORDERING'); ?></label>
 <?php
 echo HTMLHelper::_('select.genericlist', $options, 'jlcontentfieldsfilter[ordering]',

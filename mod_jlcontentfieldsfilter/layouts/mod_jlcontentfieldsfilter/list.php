@@ -6,7 +6,7 @@
  *
  * @version     @version@
  * @author      Joomline
- * @copyright   (C) 2017-2023 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
+ * @copyright   (C) 2017-2025 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -47,7 +47,7 @@ if (!count($options))
 	return;
 }
 ?>
-<label class="jlmf-label" for="<?php echo $field->name . '-' . $moduleId; ?>"><?php echo $label; ?></label>
+<label class="jlmf-field-title" for="<?php echo $field->name . '-' . $moduleId; ?>"><?php echo $label; ?></label>
 <select
         name="jlcontentfieldsfilter[<?php echo $field->id; ?>]"
         id="<?php echo $field->name . '-' . $moduleId; ?>"

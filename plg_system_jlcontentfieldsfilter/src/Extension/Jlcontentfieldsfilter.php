@@ -6,7 +6,7 @@
  *
  * @version     @version@
  * @author      Joomline
- * @copyright   (C) 2017-2023 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
+ * @copyright   (C) 2017-2025 Arkadiy Sedelnikov, Sergey Tolkachyov, Joomline. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -393,7 +393,7 @@ class Jlcontentfieldsfilter extends CMSPlugin
             ->from($db->quoteName('#__jlcontentfieldsfilter_data'))
             ->where($db->quoteName('filter_hash') . ' = ' . $db->quote($hash), 'OR')
             ->where($db->quoteName('filter_hash') . ' = ' . $db->quote($unsafe_hash))
-            ->andWhere($db->quoteName('publish') . ' = 1');
+            ->andWhere($db->quoteName('state') . ' = 1');
 
         $result = $db->setQuery($query, 0, 1)->loadObject();
         if (empty($result->filter_hash)) {
