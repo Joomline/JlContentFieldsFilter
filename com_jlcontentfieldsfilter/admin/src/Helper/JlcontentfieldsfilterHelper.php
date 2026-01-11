@@ -145,6 +145,11 @@ class JlcontentfieldsfilterHelper
      */
     public static function createMeta($catid, $filterData)
     {
+        // Load component language files from component directory (not global language folder)
+        // Component language files are in: administrator/components/com_jlcontentfieldsfilter/language/
+        $lang = Factory::getApplication()->getLanguage();
+        $lang->load('com_jlcontentfieldsfilter', JPATH_ADMINISTRATOR . '/components/com_jlcontentfieldsfilter');
+        
         $object                = new \stdClass();
         $object->meta_title    = '';
         $object->meta_desc     = '';
@@ -201,28 +206,64 @@ class JlcontentfieldsfilterHelper
                 continue;
             }
             $fname = $fields[$key]['name'];
+            
             if (\is_array($f)) {
-                $fValues = [];
-                foreach ($f as $fk => $fv) {
-                    if (\in_array($fk, ['from', 'to'])) {
-                        continue;
+                // Handle range fields (from/to)
+                if (isset($f['from']) || isset($f['to'])) {
+                    $rangeValues = [];
+                    if (!empty($f['from'])) {
+                        $rangeValues[] = $f['from'];
                     }
-                    if (empty($fv)) {
-                        continue;
+                    if (!empty($f['to'])) {
+                        $rangeValues[] = $f['to'];
                     }
-                    if (is_numeric($fv)) {
-                        $fv = (int)$fv;
+                    
+                    if (\count($rangeValues)) {
+                        $fValue = implode('-', $rangeValues);
+                        // For meta description, use more natural language
+                        if (\count($rangeValues) === 2) {
+                            $fValueDesc = Text::_('COM_JLCONTENTFIELDSFILTER_META_FROM') . ' ' . $rangeValues[0] . ' ' . Text::_('COM_JLCONTENTFIELDSFILTER_META_TO') . ' ' . $rangeValues[1];
+                        } elseif (!empty($f['from'])) {
+                            $fValueDesc = Text::_('COM_JLCONTENTFIELDSFILTER_META_FROM') . ' ' . $rangeValues[0];
+                        } else {
+                            $fValueDesc = Text::_('COM_JLCONTENTFIELDSFILTER_META_UP_TO') . ' ' . $rangeValues[0];
+                        }
+                        
+                        // Title: compact format "Field: 500-1000"
+                        $titles[] = $fname . ': ' . $fValue;
+                        // Description: natural format "Field from 500 to 1000"
+                        $desc[] = $fname . ' ' . $fValueDesc;
+                        // Keywords: just the values
+                        $keyvords[] = $fValue;
                     }
-                    if ($fields[$key]['values'] === false) {
-                        $fValues[] = $fv;
-                    } elseif (isset($fields[$key]['values'][$fv])) {
-                        $fValues[] = $fields[$key]['values'][$fv];
-                    } else {
-                        $fValues[] = $fv;
+                } else {
+                    // Handle regular multi-value fields (checkboxes, list)
+                    $fValues = [];
+                    foreach ($f as $fk => $fv) {
+                        if (empty($fv)) {
+                            continue;
+                        }
+                        if (is_numeric($fv)) {
+                            $fv = (int)$fv;
+                        }
+                        if ($fields[$key]['values'] === false) {
+                            $fValues[] = $fv;
+                        } elseif (isset($fields[$key]['values'][$fv])) {
+                            $fValues[] = $fields[$key]['values'][$fv];
+                        } else {
+                            $fValues[] = $fv;
+                        }
+                    }
+                    
+                    if (\count($fValues)) {
+                        $fValue = implode(', ', $fValues);
+                        $titles[] = $fname . ': ' . $fValue;
+                        $desc[] = $fname . ': ' . $fValue;
+                        $keyvords[] = $fValue;
                     }
                 }
-                $fValue = implode(', ', $fValues);
             } else {
+                // Handle single value fields (radio, text)
                 if (is_numeric($f)) {
                     $f = (int)$f;
                 }
@@ -233,24 +274,40 @@ class JlcontentfieldsfilterHelper
                 } else {
                     $fValue = $f;
                 }
+                
+                if (!empty($fValue)) {
+                    $titles[] = $fname . ': ' . $fValue;
+                    $desc[] = $fname . ': ' . $fValue;
+                    $keyvords[] = $fValue;
+                }
             }
-
-            if (empty($fValue)) {
-                continue;
-            }
-            $titles[]   = $desc[] = $fname.': '.$fValue;
-            $keyvords[] = $fValue;
         }
         $object->catid         = $catid;
         $object->filter        = JlcontentfieldsfilterHelper::createFilterString($filterData);
         $object->filter_hash   = JlcontentfieldsfilterHelper::createHash($object->filter);
         
-        // Truncate meta fields to reasonable SEO limits (recommended max length)
-        $metaTitle = $catName.'. '.implode('; ', $titles);
-        $metaDesc = $catName.'. '.implode('; ', $desc);
+        // Build SEO-optimized meta tags
+        // Title: Compact format for better display in search results
+        // Format: "Category - Filter1: Value1; Filter2: Value2"
+        if (\count($titles) > 0) {
+            $metaTitle = $catName . ' - ' . implode('; ', $titles);
+        } else {
+            $metaTitle = $catName;
+        }
+        
+        // Description: Natural language format with category context
+        // Format: "Browse Category filtered by Filter1: Value1, Filter2: Value2"
+        if (\count($desc) > 0) {
+            $metaDesc = Text::_('COM_JLCONTENTFIELDSFILTER_META_BROWSE') . ' ' . $catName . ' ' . Text::_('COM_JLCONTENTFIELDSFILTER_META_FILTERED_BY') . ' ' . implode(', ', $desc);
+        } else {
+            $metaDesc = $catName;
+        }
+        
+        // Keywords: Clean list of filter values only
         $metaKeywords = implode(', ', $keyvords);
         
-        // Limit meta fields: title=255, description=1000, keywords=500 (SEO best practices)
+        // Limit meta fields to database column sizes and SEO best practices
+        // Title: 255 chars (database limit), Description: 1000 chars, Keywords: 500 chars
         $object->meta_title    = mb_substr($metaTitle, 0, 255);
         $object->meta_desc     = mb_substr($metaDesc, 0, 1000);
         $object->meta_keywords = mb_substr($metaKeywords, 0, 500);
